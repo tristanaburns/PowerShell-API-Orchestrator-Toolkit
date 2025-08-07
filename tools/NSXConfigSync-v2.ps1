@@ -1825,7 +1825,7 @@ function Invoke-ConfigurationImport {
 }
 
 # Function to filter configuration by resource types
-function Filter-ConfigurationByResourceTypes {
+function Select-ConfigurationByResourceType {
     param(
         [object]$Configuration,
         [string[]]$ResourceTypes
@@ -1845,7 +1845,7 @@ function Filter-ConfigurationByResourceTypes {
 }
 
 # Function to filter configuration by domain
-function Filter-ConfigurationByDomain {
+function Select-ConfigurationByDomain {
     param(
         [object]$Configuration,
         [string]$DomainName
