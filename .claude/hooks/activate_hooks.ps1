@@ -1,4 +1,4 @@
-#  MCP Enforcement Hook Activation Script
+﻿#  MCP Enforcement Hook Activation Script
 # Activates MCP enforcement hooks for Claude Code
 
 Write-Host "=== MCP Enforcement Hook Activation ===" -ForegroundColor Green
@@ -7,7 +7,7 @@ Write-Host ""
 # Check if hook files exist
 $HookFiles = @(
   ".claude\hooks\mcp_enforcement_hook.py",
-  ".claude\hooks\mcp_post_enforcement_hook.py", 
+  ".claude\hooks\mcp_post_enforcement_hook.py",
   ".claude\hooks\mcp_workflow_assistant.py",
   ".claude\hooks\ollama_code_generator_hook.py",
   ".claude\hooks\mcp_enforcement_config.json"
@@ -38,7 +38,7 @@ Write-Host "Checking MCP configuration..." -ForegroundColor Cyan
 
 if (Test-Path ".claude\mcp.json") {
   Write-Host "  [OK] MCP configuration found" -ForegroundColor Green
-    
+
   $Config = Get-Content ".claude\mcp.json" -Raw | ConvertFrom-Json
   if ($Config.hookIntegration -and $Config.hookIntegration.enabled) {
     Write-Host "  [OK] Hook integration enabled" -ForegroundColor Green
@@ -71,7 +71,7 @@ $StatusContent = @"
   },
   "enforcement_features": {
     "mandatory_mcp_usage": true,
-    "tool_first_approach": true, 
+    "tool_first_approach": true,
     "workflow_chaining": true,
     "context_retention": true,
     "strict_mode": true,
@@ -93,7 +93,7 @@ $StatusContent = @"
   "workflow_patterns": {
     "development": ["context7", "task-orchestrator", "filesystem", "memory"],
     "research": ["context7", "sequential-thinking", "memory"],
-    "data_analysis": ["task-orchestrator", "filesystem", "sequential-thinking", "memory"], 
+    "data_analysis": ["task-orchestrator", "filesystem", "sequential-thinking", "memory"],
     "web_tasks": ["fetch", "context7", "memory"]
   }
 }

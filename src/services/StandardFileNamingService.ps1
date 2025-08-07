@@ -1,4 +1,4 @@
-# StandardFileNamingService.ps1
+﻿# StandardFileNamingService.ps1
 # Helper service for consistent file naming across the NSX PowerShell Toolkit
 # Provides standardized naming: (datestamp)-(nsxmgrname)-(nsxdomain)-(function/purpose)
 

@@ -1,4 +1,4 @@
-# CoreSSLManager.ps1
+﻿# CoreSSLManager.ps1
 # GLOBAL AGGRESSIVE SSL/TLS BYPASS MANAGER for NSX-T Automation
 # Applies session-wide SSL certificate bypass for PowerShell 5.1+ and NSX-T self-signed certificates
 # Uses proven brute-force approach inherited from legacy NSX automation scripts

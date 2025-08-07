@@ -1,4 +1,4 @@
-# WorkflowOperationsService.ps1 - Phase 3: Operational Excellence
+﻿# WorkflowOperationsService.ps1 - Phase 3: Operational Excellence
 # Centralized configuration management, logging/telemetry, and performance monitoring
 
 # Import dependencies

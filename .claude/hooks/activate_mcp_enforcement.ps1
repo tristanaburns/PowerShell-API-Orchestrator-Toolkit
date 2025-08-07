@@ -1,4 +1,4 @@
-# MCP Enforcement Hook Activation Script for Windows
+﻿# MCP Enforcement Hook Activation Script for Windows
 # Activates MCP enforcement hooks to ensure Claude Code prioritizes MCP tools
 
 param(
@@ -27,50 +27,50 @@ function Write-Log {
 
 function Test-HookFiles {
   Write-Log "Validating MCP enforcement hook files..."
-    
+
   $RequiredHooks = @(
     ".claude\hooks\mcp_enforcement_hook.py",
     ".claude\hooks\mcp_post_enforcement_hook.py",
     ".claude\hooks\mcp_workflow_assistant.py",
     ".claude\hooks\mcp_enforcement_config.json"
   )
-    
+
   $MissingFiles = @()
   foreach ($HookFile in $RequiredHooks) {
     if (-not (Test-Path $HookFile)) {
       $MissingFiles += $HookFile
     }
   }
-    
+
   if ($MissingFiles.Count -gt 0) {
     Write-Log "Missing required hook files: $($MissingFiles -join ', ')" "ERROR"
     return $false
   }
-    
+
   Write-Log "All required hook files validated "
   return $true
 }
 
 function Test-MCPConfig {
   Write-Log "Checking MCP configuration for hook integration..."
-    
+
   $MCPConfigPath = ".claude\mcp.json"
   if (-not (Test-Path $MCPConfigPath)) {
     Write-Log "MCP configuration file not found" "ERROR"
     return $false
   }
-    
+
   try {
     $Config = Get-Content $MCPConfigPath -Raw | ConvertFrom-Json
-        
+
     if (-not $Config.hookIntegration -or -not $Config.hookIntegration.enabled) {
       Write-Log "Hook integration not enabled in MCP config" "WARNING"
       return $false
     }
-        
+
     Write-Log "MCP configuration validated for hook integration "
     return $true
-        
+
   }
   catch {
     Write-Log "Error reading MCP configuration: $($_.Exception.Message)" "ERROR"
@@ -80,7 +80,7 @@ function Test-MCPConfig {
 
 function Start-MCPEnforcementHooks {
   Write-Log "Activating MCP enforcement hooks..."
-    
+
   $ActivationStatus = @{
     mcp_enforcement_hook      = $false
     mcp_post_enforcement_hook = $false
@@ -88,52 +88,52 @@ function Start-MCPEnforcementHooks {
     config_validated          = $false
     activation_timestamp      = $null
   }
-    
+
   try {
     # Validate hook files
     if (-not (Test-HookFiles)) {
       return $ActivationStatus
     }
-        
+
     # Check MCP config
     if (-not (Test-MCPConfig)) {
       return $ActivationStatus
     }
-        
+
     # Load enforcement config
     $ConfigPath = ".claude\hooks\mcp_enforcement_config.json"
     $EnforcementConfig = Get-Content $ConfigPath -Raw | ConvertFrom-Json
-        
+
     # Validate enforcement config
     if (-not $EnforcementConfig.hooks.enabled) {
       Write-Log "Hook enforcement not enabled in config" "ERROR"
       return $ActivationStatus
     }
-        
+
     if ($DryRun) {
       Write-Log "DRY RUN: Would activate MCP enforcement hooks" "INFO"
       return $ActivationStatus
     }
-        
+
     # Mark hooks as activated
     $ActivationStatus.mcp_enforcement_hook = $true
     $ActivationStatus.mcp_post_enforcement_hook = $true
     $ActivationStatus.mcp_workflow_assistant = $true
     $ActivationStatus.config_validated = $true
     $ActivationStatus.activation_timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-        
+
     Write-Log "MCP enforcement hooks successfully activated "
     Write-Log "Claude Code will now prioritize MCP tools for all operations"
-        
+
     # Log enforcement settings
     $EnforcementSettings = $EnforcementConfig.mcpEnforcementSettings
     Write-Log "Strict mode: $($EnforcementSettings.strictMode)"
     Write-Log "Required MCP for file ops: $($EnforcementSettings.requireMcpForFileOps)"
     Write-Log "Required MCP for web ops: $($EnforcementSettings.requireMcpForWebOps)"
     Write-Log "Tool chaining enforced: $($EnforcementSettings.enforceToolChaining)"
-        
+
     return $ActivationStatus
-        
+
   }
   catch {
     Write-Log "Error activating enforcement hooks: $($_.Exception.Message)" "ERROR"
@@ -143,11 +143,11 @@ function Start-MCPEnforcementHooks {
 
 function New-ActivationSummary {
   param([hashtable]$Status)
-    
+
   Write-Log "Creating activation summary report..."
-    
+
   $SummaryPath = ".claude\hooks\activation_summary.json"
-    
+
   $Summary = @{
     "activation_status"    = $Status
     "enforcement_features" = @{
@@ -165,7 +165,7 @@ function New-ActivationSummary {
     )
     "enforced_mcp_tools"   = @(
       "context7",
-      "task-orchestrator", 
+      "task-orchestrator",
       "memory",
       "sequential-thinking",
       "e2b",
@@ -180,11 +180,11 @@ function New-ActivationSummary {
       "automation"    = @("browserbase", "make", "memory")
     }
   }
-    
+
   try {
     $Summary | ConvertTo-Json -Depth 10 | Set-Content -Path $SummaryPath
     Write-Log "Activation summary saved to $SummaryPath "
-        
+
   }
   catch {
     Write-Log "Error saving activation summary: $($_.Exception.Message)" "ERROR"
@@ -210,24 +210,24 @@ $Status = Start-MCPEnforcementHooks
 New-ActivationSummary -Status $Status
 
 # Final status
-$AllHooksActive = $Status.mcp_enforcement_hook -and 
-$Status.mcp_post_enforcement_hook -and 
+$AllHooksActive = $Status.mcp_enforcement_hook -and
+$Status.mcp_post_enforcement_hook -and
 $Status.mcp_workflow_assistant
 
 if ($AllHooksActive) {
   Write-Log " MCP enforcement hooks successfully activated" "SUCCESS"
   Write-Log "Claude Code will now prioritize MCP tools for all operations"
   Write-Log "Enforcement includes: mandatory MCP usage, tool chaining, context retention"
-    
+
   Write-Host ""
   Write-Host " MCP Enforcement Active! " -ForegroundColor Green
   Write-Host "Claude Code is now configured to:"
   Write-Host "   Use MCP tools for ALL operations" -ForegroundColor Cyan
-  Write-Host "   Chain tools for complex workflows" -ForegroundColor Cyan  
+  Write-Host "   Chain tools for complex workflows" -ForegroundColor Cyan
   Write-Host "   Retain context across interactions" -ForegroundColor Cyan
   Write-Host "   Prioritize Context7 for documentation" -ForegroundColor Cyan
   Write-Host "   Use Task Orchestrator for complex tasks" -ForegroundColor Cyan
-    
+
 }
 else {
   Write-Log " Hook activation failed - check logs for details" "ERROR"

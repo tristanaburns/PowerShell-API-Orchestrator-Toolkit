@@ -1,4 +1,4 @@
-# NSXConfigValidator.ps1
+﻿# NSXConfigValidator.ps1
 # Service for validating NSX-T configuration JSON against API schema and best practices
 # Prevents 400 Bad Request errors by ensuring proper JSON structure and content
 

@@ -1,4 +1,4 @@
-# LoggingService.ps1
+﻿# LoggingService.ps1
 # Consolidated logging service implementing Single Responsibility Principle
 # Combines functionality from multiple logging services into one cohesive implementation
 

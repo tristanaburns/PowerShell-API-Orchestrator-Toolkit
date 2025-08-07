@@ -1,4 +1,4 @@
-# WorkflowDefinitionService.ps1 - Phase 3: Advanced Tool Orchestration
+﻿# WorkflowDefinitionService.ps1 - Phase 3: Advanced Tool Orchestration
 # Workflow Definition Service for complex operations, pipeline composition, and rollback
 
 class WorkflowDefinitionService {

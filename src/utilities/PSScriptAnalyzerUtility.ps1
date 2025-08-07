@@ -1,11 +1,11 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 
 <#
 .SYNOPSIS
     PSScriptAnalyzer Utility Service - MANDATORY CODE QUALITY ENFORCEMENT TOOL
 
 .DESCRIPTION
-      CRITICAL SYSTEM UTILITY - DO NOT REMOVE OR MODIFY  
+      CRITICAL SYSTEM UTILITY - DO NOT REMOVE OR MODIFY
 
     This utility service provides PowerShell static code analysis
     capabilities using PSScriptAnalyzer for the NSX PowerShell Toolkit codebase.

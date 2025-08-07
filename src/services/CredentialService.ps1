@@ -1,4 +1,4 @@
-# CredentialService.ps1
+﻿# CredentialService.ps1
 # Consolidated credential management service following Single Responsibility Principle
 # Replaces multiple credential management classes with one cohesive implementation
 

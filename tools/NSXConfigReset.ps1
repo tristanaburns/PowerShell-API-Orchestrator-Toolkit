@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 NSX Configuration Reset - Inventory and reset NSX DFW configuration objects
 

@@ -1,4 +1,4 @@
-# NSXConnectionTest.ps1 - with Endpoint Discovery
+﻿# NSXConnectionTest.ps1 - with Endpoint Discovery
 <#
 .SYNOPSIS
     diagnostic test for NSX-T Manager connections with endpoint discovery and caching.

@@ -1,4 +1,4 @@
-# ToolOrchestrationService.ps1 - Phase 2: Tool-to-Tool Communication Service
+﻿# ToolOrchestrationService.ps1 - Phase 2: Tool-to-Tool Communication Service
 # Enables standardized tool orchestration and parameter passing between NSX toolkit tools
 
 class ToolOrchestrationService {

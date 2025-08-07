@@ -1,4 +1,4 @@
-# ConfigurationService.ps1
+﻿# ConfigurationService.ps1
 # Consolidated configuration management service following Single Responsibility Principle
 # Handles all configuration-related operations with dependency injection
 

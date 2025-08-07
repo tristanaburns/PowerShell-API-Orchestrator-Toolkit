@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     NSX Configuration Sync - Synchronize, export, import, and compare NSX-T configurations between managers with robust credential, automation, and advanced sync options.
 

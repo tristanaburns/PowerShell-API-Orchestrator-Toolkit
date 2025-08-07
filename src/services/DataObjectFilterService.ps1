@@ -1,4 +1,4 @@
-#DataObjectFilterService.ps1
+﻿#DataObjectFilterService.ps1
 # Configuration-driven service for filtering system objects from NSX configurations
 # Following SOLID principles for NSX configuration management
 # Property-level inclusion/exclusion filtering with multi-step nested processing

@@ -1,4 +1,4 @@
-# ApplyNSXConfigDifferential.ps1
+﻿# ApplyNSXConfigDifferential.ps1
 # NSX configuration application tool with differential management
 
 <#

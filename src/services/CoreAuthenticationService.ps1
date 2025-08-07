@@ -1,4 +1,4 @@
-# CoreAuthenticationService.ps1
+﻿# CoreAuthenticationService.ps1
 # Consolidated authentication service following SOLID principles
 # Single responsibility for all authentication operations with dependency injection
 

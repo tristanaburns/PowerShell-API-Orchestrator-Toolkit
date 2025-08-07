@@ -1,4 +1,4 @@
-# NSX Configuration Reset Module
+﻿# NSX Configuration Reset Module
 # Provides functionality to inventory and delete all custom NSX DFW configuration objects
 # Supports both dry-run and destructive modes for safe testing and cleanup
 

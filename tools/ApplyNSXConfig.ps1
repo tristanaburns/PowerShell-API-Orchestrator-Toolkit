@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Apply NSX Configuration - Safely apply configurations to NSX managers using the hierarchical API.
 

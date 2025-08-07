@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     NSX Policy Config Export - Export NSX-T policies and configurations with robust credential and automation support.
 

@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Shared Tool Credential Service - Eliminates credential collection duplication across all tools
 

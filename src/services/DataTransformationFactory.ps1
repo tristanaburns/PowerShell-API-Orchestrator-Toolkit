@@ -1,4 +1,4 @@
-# DataTransformationFactory.ps1
+﻿# DataTransformationFactory.ps1
 # Factory for creating data transformation services and pipelines
 # Simplified version using standard PowerShell object creation patterns
 

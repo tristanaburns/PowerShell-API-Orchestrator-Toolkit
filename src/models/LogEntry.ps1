@@ -1,4 +1,4 @@
-# LogEntry.ps1
+﻿# LogEntry.ps1
 # Domain model for log entries
 
 <#

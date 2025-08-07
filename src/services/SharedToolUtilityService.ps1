@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Shared Tool Utility Service - Eliminates common utility function duplication across all tools
 
