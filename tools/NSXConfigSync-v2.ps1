@@ -1579,7 +1579,7 @@ function Get-OperationMode {
 }
 
 # Function to get export resource types (uses consolidated logic)
-function Get-ExportResourceTypes {
+function Get-ExportResourceType {
     $flags = [PSCustomObject]@{
         'IncludeGroups'           = $IncludeGroups
         'IncludeServices'         = $IncludeServices
@@ -1600,7 +1600,7 @@ function Get-ExportResourceTypes {
 }
 
 # Function to get import resource types (uses consolidated logic)
-function Get-ImportResourceTypes {
+function Get-ImportResourceType {
     $flags = [PSCustomObject]@{
         'ImportGroups'           = $ImportGroups
         'ImportServices'         = $ImportServices
@@ -2103,7 +2103,7 @@ switch ($operationMode) {
         if (-not $SourceNSXManager) {
             throw "Export mode requires -SourceNSXManager parameter"
         }
-        $resourceTypesToSync = Get-ExportResourceTypes
+        $resourceTypesToSync = Get-ExportResourceType
         if ($ExportFiltered -and $resourceTypesToSync.Count -eq 0) {
             throw "Export filtered mode requires at least one -Include* parameter"
         }
@@ -2115,7 +2115,7 @@ switch ($operationMode) {
         if (-not $InputPath) {
             throw "Import mode requires -InputPath parameter"
         }
-        $resourceTypesToSync = Get-ImportResourceTypes
+        $resourceTypesToSync = Get-ImportResourceType
     }
     "Sync" {
         if (-not $SourceNSXManager -or -not $TargetNSXManager) {
