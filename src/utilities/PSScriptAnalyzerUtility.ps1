@@ -268,7 +268,7 @@ function New-FileBackup {
 # ===================================================================
 
 # Fix PSAvoidUsingWriteHost - Convert to Write-Output or Write-Information
-function Fix-WriteHost {
+function Repair-WriteHost {
   param([string]$Line)
 
   if ($Line -match 'Write-Host\s+(.+)') {
@@ -281,7 +281,7 @@ function Fix-WriteHost {
 }
 
 # Fix PSAvoidUsingCmdletAliases - Expand aliases to full cmdlet names
-function Fix-CmdletAliases {
+function Repair-CmdletAlias {
   param([string]$Line)
 
   $aliasMap = [PSCustomObject]@{
@@ -367,7 +367,7 @@ function Fix-CmdletAliases {
 }
 
 # Fix PSUseDeclaredVarsMoreThanAssignments - Add variable usage or remove unused vars
-function Fix-UnusedVariables {
+function Repair-UnusedVariable {
   param([string]$Line)
 
   # This is complex and may require manual intervention
@@ -379,7 +379,7 @@ function Fix-UnusedVariables {
 }
 
 # Fix PSAvoidUsingPlainTextForPassword - Mark for manual review
-function Fix-PlainTextPassword {
+function Repair-PlainTextPassword {
   param([string]$Line)
 
   Write-Log "PlainTextPassword detected (manual review required): $($Line.Trim())" -Level "WARNING"
@@ -387,7 +387,7 @@ function Fix-PlainTextPassword {
 }
 
 # Fix PSAvoidUsingConvertToSecureStringWithPlainText - Mark for manual review
-function Fix-ConvertToSecureString {
+function Repair-ConvertToSecureString {
   param([string]$Line)
 
   Write-Log "ConvertToSecureString detected (manual review required): $($Line.Trim())" -Level "WARNING"
@@ -395,7 +395,7 @@ function Fix-ConvertToSecureString {
 }
 
 # Fix PSAvoidUsingEmptyCatchBlock - Add logging to empty catch blocks
-function Fix-EmptyCatchBlock {
+function Repair-EmptyCatchBlock {
   param([string]$Line)
 
   if ($Line -match '^\s*catch\s*\{\s*\}') {
@@ -407,7 +407,7 @@ function Fix-EmptyCatchBlock {
 }
 
 # Fix PSUseApprovedVerbs - Mark for manual review
-function Fix-UnapprovedVerbs {
+function Repair-UnapprovedVerb {
   param([string]$Line)
 
   Write-Log "UnapprovedVerbs detected (manual review required): $($Line.Trim())" -Level "WARNING"
@@ -415,7 +415,7 @@ function Fix-UnapprovedVerbs {
 }
 
 # Fix PSUseSingularNouns - Mark for manual review
-function Fix-PluralNouns {
+function Repair-PluralNoun {
   param([string]$Line)
 
   Write-Log "PluralNouns detected (manual review required): $($Line.Trim())" -Level "WARNING"
@@ -423,7 +423,7 @@ function Fix-PluralNouns {
 }
 
 # Fix PSAvoidDefaultValueForMandatoryParameter - Remove default values from mandatory parameters
-function Fix-MandatoryParameterDefaults {
+function Repair-MandatoryParameterDefault {
   param([string]$Line)
 
   if ($Line -match '\[Parameter\(.*Mandatory\s*=\s*\$true.*\)\]') {
@@ -438,15 +438,15 @@ function Get-AutoFixFunction {
   param([string]$RuleName)
 
   $fixMap = [PSCustomObject]@{
-    'PSAvoidUsingWriteHost'                          = 'Fix-WriteHost'
-    'PSAvoidUsingCmdletAliases'                      = 'Fix-CmdletAliases'
-    'PSUseDeclaredVarsMoreThanAssignments'           = 'Fix-UnusedVariables'
-    'PSAvoidUsingPlainTextForPassword'               = 'Fix-PlainTextPassword'
-    'PSAvoidUsingConvertToSecureStringWithPlainText' = 'Fix-ConvertToSecureString'
-    'PSAvoidUsingEmptyCatchBlock'                    = 'Fix-EmptyCatchBlock'
-    'PSUseApprovedVerbs'                             = 'Fix-UnapprovedVerbs'
-    'PSUseSingularNouns'                             = 'Fix-PluralNouns'
-    'PSAvoidDefaultValueForMandatoryParameter'       = 'Fix-MandatoryParameterDefaults'
+    'PSAvoidUsingWriteHost'                          = 'Repair-WriteHost'
+    'PSAvoidUsingCmdletAliases'                      = 'Repair-CmdletAlias'
+    'PSUseDeclaredVarsMoreThanAssignments'           = 'Repair-UnusedVariable'
+    'PSAvoidUsingPlainTextForPassword'               = 'Repair-PlainTextPassword'
+    'PSAvoidUsingConvertToSecureStringWithPlainText' = 'Repair-ConvertToSecureString'
+    'PSAvoidUsingEmptyCatchBlock'                    = 'Repair-EmptyCatchBlock'
+    'PSUseApprovedVerbs'                             = 'Repair-UnapprovedVerb'
+    'PSUseSingularNouns'                             = 'Repair-PluralNoun'
+    'PSAvoidDefaultValueForMandatoryParameter'       = 'Repair-MandatoryParameterDefault'
   }
 
   if ($fixMap.PSObject.Properties.Name -contains $RuleName) {
