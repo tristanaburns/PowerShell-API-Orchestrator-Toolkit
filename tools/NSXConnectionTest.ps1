@@ -1416,7 +1416,7 @@ function Test-NSXEndpointsWithSchemaValidation {
   return $results
 }
 
-function Save-ValidatedEndpointsForTools {
+function Save-ValidatedEndpointForTool {
   param(
     [string]$NSXManager,
     [array]$ValidatedEndpoints,
@@ -1643,7 +1643,7 @@ function Start-ComprehensiveNSXConnectionTest {
 
       # Save endpoint cache
       if ($comprehensiveResult.CachedEndpoints.Count -gt 0) {
-        $cacheResult = Save-ValidatedEndpointsForTools -NSXManager $NSXManager -ValidatedEndpoints $comprehensiveResult.CachedEndpoints -OptimizedEndpoints $comprehensiveResult.OptimizedExports
+        $cacheResult = Save-ValidatedEndpointForTool -NSXManager $NSXManager -ValidatedEndpoints $comprehensiveResult.CachedEndpoints -OptimizedEndpoints $comprehensiveResult.OptimizedExports
       }
     }
 
