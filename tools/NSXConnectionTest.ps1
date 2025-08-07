@@ -2225,7 +2225,7 @@ function Invoke-NSXConnectionTestPrerequisite {
   }
 }
 
-function Assert-NSXToolkitPrerequisites {
+function Assert-NSXToolkitPrerequisite {
   <#
   .SYNOPSIS
     Enforces mandatory NSX toolkit prerequisites with fail-fast behavior.
@@ -2357,6 +2357,9 @@ function Assert-NSXToolkitPrerequisites {
 
   return $result
 }
+
+# Backward compatible alias for Assert-NSXToolkitPrerequisite
+Set-Alias -Name Assert-NSXToolkitPrerequisites -Value Assert-NSXToolkitPrerequisite
 
 # ===================================================================
 # CONNECTION TEST WORKFLOW

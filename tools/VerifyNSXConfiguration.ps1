@@ -230,7 +230,7 @@ function Test-NSXConfig {
                 )
 
                 # Run mandatory prerequisite check
-                $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $Manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "VerifyNSXConfiguration-$ManagerName" -AllowLimitedFunctionality
+                $prerequisiteResult = Assert-NSXToolkitPrerequisite -NSXManager $Manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "VerifyNSXConfiguration-$ManagerName" -AllowLimitedFunctionality
 
                 # Store prerequisite results for use during verification operations
                 $script:prerequisiteData = $prerequisiteResult

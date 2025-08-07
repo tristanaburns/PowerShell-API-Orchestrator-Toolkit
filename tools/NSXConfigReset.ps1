@@ -240,7 +240,7 @@ try {
             )
 
             # Run mandatory prerequisite check
-            $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
+            $prerequisiteResult = Assert-NSXToolkitPrerequisite -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
 
             Write-Host -Object "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
             $logger.LogInfo("NSX toolkit prerequisites validated for $manager - endpoint cache available with $($prerequisiteResult.Statistics.ValidEndpoints) valid endpoints", "ConfigReset")
@@ -320,7 +320,7 @@ try {
         )
 
         # Run mandatory prerequisite check
-        $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
+        $prerequisiteResult = Assert-NSXToolkitPrerequisite -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
 
         Write-Host -Object "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
         $logger.LogInfo("NSX toolkit prerequisites validated for $manager - endpoint cache available with $($prerequisiteResult.Statistics.ValidEndpoints) valid endpoints", "ConfigReset")
@@ -440,7 +440,7 @@ try {
         )
 
         # Run mandatory prerequisite check
-        $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
+        $prerequisiteResult = Assert-NSXToolkitPrerequisite -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
 
         Write-Host -Object "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
         $logger.LogInfo("NSX toolkit prerequisites validated for $manager - endpoint cache available with $($prerequisiteResult.Statistics.ValidEndpoints) valid endpoints", "ConfigReset")

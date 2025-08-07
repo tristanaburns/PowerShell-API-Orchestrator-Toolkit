@@ -254,7 +254,7 @@ try {
             if ($ValidatedState) {
                 $prerequisiteParams.ValidatedState = $ValidatedState
             }
-            $prerequisiteResult = Assert-NSXToolkitPrerequisites @prerequisiteParams
+            $prerequisiteResult = Assert-NSXToolkitPrerequisite @prerequisiteParams
 
             # Store prerequisite results for use during operations
             $script:prerequisiteData = $prerequisiteResult

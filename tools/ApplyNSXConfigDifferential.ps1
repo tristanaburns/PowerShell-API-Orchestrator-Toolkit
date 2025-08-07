@@ -247,7 +247,7 @@ else {
     )
 
     # Run mandatory prerequisite check
-    $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $NSXManager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "ApplyNSXConfigDifferential" -AllowLimitedFunctionality
+    $prerequisiteResult = Assert-NSXToolkitPrerequisite -NSXManager $NSXManager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "ApplyNSXConfigDifferential" -AllowLimitedFunctionality
 
     # Store prerequisite results for use during operations
     $script:prerequisiteData = $prerequisiteResult
