@@ -41,6 +41,7 @@ try {
     . "$PSScriptRoot\..\src\services\ConfigurationService.ps1"
     . "$PSScriptRoot\..\src\services\CredentialService.ps1"
     . "$PSScriptRoot\..\src\services\CoreAuthenticationService.ps1"
+    . "$PSScriptRoot\..\src\services\AuthenticationFailureRecoveryService.ps1"
     . "$PSScriptRoot\..\src\services\GenericAPIService.ps1"
 }
 catch {

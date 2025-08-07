@@ -236,7 +236,9 @@ class AuthenticationFailureRecoveryService {
             $commonApiKeyHeaders = @("X-API-Key", "X-API-TOKEN", "Authorization", "X-Auth-Token")
             $suggestedHeaders = @()
             foreach ($header in $commonApiKeyHeaders) {
-                if ($content -match $header) {
+                # Get content for header matching analysis
+                $contentToAnalyze = if ($response.ErrorDetails) { $response.ErrorDetails.Message } else { if ($response.Content) { $response.Content } else { "" } }
+                if ($contentToAnalyze -match $header) {
                     $detectedType = "ApiKey"
                     $suggestedHeaders += $header
                     $authHints += "Detected required header: $header"
@@ -352,6 +354,7 @@ class AuthenticationFailureRecoveryService {
                     $authType = "Custom"
                     $headers = @{}
                     Write-Host "Enter custom headers (press Enter with empty header name to finish):" -ForegroundColor Cyan
+                    $headerName = $null
                     do {
                         $headerName = Read-Host "Header name"
                         if (-not [string]::IsNullOrWhiteSpace($headerName)) {
@@ -401,6 +404,9 @@ class AuthenticationFailureRecoveryService {
             # Create a safe filename from the base URL
             $safeUrl = $baseUrl -replace "https?://" -replace "[^a-zA-Z0-9\-\.]", "_"
             
+            # Initialize credential variable
+            $credential = $null
+            
             # Create credential object based on auth type
             switch ($authDetails.AuthDetails.Type) {
                 "ApiKey" {
@@ -444,6 +450,15 @@ class AuthenticationFailureRecoveryService {
                     }
                     $this.SaveAuthMetadata($safeUrl, $metadata)
                 }
+                default {
+                    $this.logger.LogWarning("Unknown authentication type: $($authDetails.AuthDetails.Type)", "AuthRecovery")
+                    throw "Unsupported authentication type: $($authDetails.AuthDetails.Type)"
+                }
+            }
+            
+            # Validate that credential was created
+            if ($null -eq $credential) {
+                throw "Failed to create credential object for authentication type: $($authDetails.AuthDetails.Type)"
             }
             
             $success = $this.credentialService.SaveCredentials($safeUrl, $credential)
