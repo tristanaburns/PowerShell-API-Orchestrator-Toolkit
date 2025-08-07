@@ -203,7 +203,8 @@ function Get-CredentialInput {
     return New-Object System.Management.Automation.PSCredential($Username, $Password)
 }
 
-function Show-StoredCredentials {
+# New compliant function name (singular)
+function Show-StoredCredential {
     Write-Host "=== STORED CREDENTIALS (READ) ===" -ForegroundColor Yellow
     Write-Host ""
     try {
@@ -233,6 +234,9 @@ function Show-StoredCredentials {
     }
     Write-Host ""
 }
+
+# Backward compatible alias
+Set-Alias -Name Show-StoredCredentials -Value Show-StoredCredential
 
 function Invoke-CredentialCreate {
     param([string]$Manager)
@@ -425,7 +429,7 @@ function Start-InteractiveMode {
 
     do {
         Write-Host ""
-        Show-StoredCredentials
+        Show-StoredCredential
 
         Write-Host "=== CRUD OPERATIONS MENU ===" -ForegroundColor Yellow
         Write-Host "1. CREATE new credentials" -ForegroundColor Green
@@ -449,7 +453,7 @@ function Start-InteractiveMode {
                 }
             }
             "2" {
-                Show-StoredCredentials
+                Show-StoredCredential
             }
             "3" {
                 if (Get-Command Invoke-CredentialUpdate -ErrorAction SilentlyContinue) {
@@ -517,7 +521,7 @@ try {
     }
 
     if ($ListCredentials) {
-        Show-StoredCredentials
+        Show-StoredCredential
         exit 0
     }
 
