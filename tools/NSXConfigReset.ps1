@@ -118,7 +118,8 @@ $workflowOpsService = $services.WorkflowOperationsService
 # Use centralised credential management from CoreAuthenticationService
 
 # Helper function for standardized credential collection using SharedToolCredentialService
-function Get-ManagerCredentials {
+# New compliant function name (singular)
+function Get-ManagerCredential {
   param(
     [string]$Manager,
     [bool]$UseCurrentUser,
@@ -147,6 +148,9 @@ function Get-ManagerCredentials {
     exit 1
   }
 }
+
+# Backward compatible alias
+Set-Alias -Name Get-ManagerCredentials -Value Get-ManagerCredential
 
 # Main execution
 try {
@@ -208,7 +212,7 @@ try {
 
         try {
           # Use SharedToolCredentialService for credential collection (eliminates duplication)
-          $credentials = Get-ManagerCredentials -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-Inventory"
+          $credentials = Get-ManagerCredential -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-Inventory"
 
           # ===================================================================
           # MANDATORY NSX TOOLKIT PREREQUISITE CHECK
@@ -288,7 +292,7 @@ try {
 
       # Use SharedToolCredentialService for credential collection (eliminates duplication)
       $manager = $nsxManagers[0]
-      $credentials = Get-ManagerCredentials -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-SingleInventory"
+      $credentials = Get-ManagerCredential -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-SingleInventory"
 
       # ===================================================================
       # MANDATORY NSX TOOLKIT PREREQUISITE CHECK
@@ -368,7 +372,7 @@ try {
 
       # Use SharedToolCredentialService to validate credentials for all managers first (eliminates duplication)
       foreach ($manager in $nsxManagers) {
-        $credentials = Get-ManagerCredentials -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-MultiReset"
+        $credentials = Get-ManagerCredential -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-MultiReset"
       }
 
       # Proceed with reset using validated credentials approach
@@ -408,7 +412,7 @@ try {
 
       # Use SharedToolCredentialService for credential collection (eliminates duplication)
       $manager = $nsxManagers[0]
-      $credentials = Get-ManagerCredentials -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-SingleReset"
+      $credentials = Get-ManagerCredential -Manager $manager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "ResetTool-SingleReset"
 
       # ===================================================================
       # MANDATORY NSX TOOLKIT PREREQUISITE CHECK
