@@ -598,10 +598,10 @@ class DataTransformationPipeline {
   [object] GetPipelineStatus() {
     return @{
       working_directory       = $this.workingDirectory
-      csv_parser_ready        = $this.csvParser -ne $null
-      hierarchy_service_ready = $this.hierarchyService -ne $null
-      config_manager_ready    = $this.configManager -ne $null
-      config_validator_ready  = $this.configValidator -ne $null
+      csv_parser_ready        = $null -ne $this.csvParser
+      hierarchy_service_ready = $null -ne $this.hierarchyService
+      config_manager_ready    = $null -ne $this.configManager
+      config_validator_ready  = $null -ne $this.configValidator
       pipeline_config         = $this.pipelineConfig
     }
   }

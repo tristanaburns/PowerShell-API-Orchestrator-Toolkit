@@ -1934,7 +1934,7 @@ function Get-ExportMainFilePath {
         # Find the actual export result object within the array (ignore string output)
         foreach ($item in $ExportResult) {
             # Skip strings and null items
-            if ($item -eq $null -or $item -is [string]) {
+            if ($null -eq $item -or $item -is [string]) {
                 $logger.LogDebug("Skipping null or string item: $($item)", "FilePathExtraction")
                 continue
             }
@@ -1958,7 +1958,7 @@ function Get-ExportMainFilePath {
 
             if ($isExportResult -and -not $isConnectionTest) {
                 $actualExportResult = $item
-                $logger.LogDebug("Found export result object with properties: saved_files=$($hasSavedFiles -ne $null), success=$($hasSuccess -ne $null), object_count=$($hasObjectCount -ne $null), total_object_count=$($hasTotalObjectCount -ne $null), summary_file=$($hasSummaryFile -ne $null), domain_results=$($hasDomainResults -ne $null)", "FilePathExtraction")
+                $logger.LogDebug("Found export result object with properties: saved_files=$($null -ne $hasSavedFiles), success=$($null -ne $hasSuccess), object_count=$($null -ne $hasObjectCount), total_object_count=$($null -ne $hasTotalObjectCount), summary_file=$($null -ne $hasSummaryFile), domain_results=$($null -ne $hasDomainResults)", "FilePathExtraction")
                 break
             }
             else {

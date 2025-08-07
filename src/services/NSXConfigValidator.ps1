@@ -935,7 +935,7 @@ class NSXConfigValidator {
 
   # Recursively remove system objects
   hidden [void] RemoveSystemObjectsRecursive([object] $obj, [string[]] $systemResourceTypes) {
-    if ($obj -eq $null) { return }
+    if ($null -eq $obj) { return }
 
     if ($obj -is [PSCustomObject]) {
       # Check if this object has children array
@@ -955,7 +955,7 @@ class NSXConfigValidator {
 
       # Process other properties recursively
       foreach ($property in $obj.PSObject.Properties) {
-        if ($property.Name -ne "children" -and $property.Value -ne $null) {
+        if ($property.Name -ne "children" -and $null -ne $property.Value) {
           $this.RemoveSystemObjectsRecursive($property.Value, $systemResourceTypes)
         }
       }
@@ -963,7 +963,7 @@ class NSXConfigValidator {
     elseif ($obj -is [System.Collections.IEnumerable] -and $obj -isnot [string]) {
       # Process arrays
       foreach ($item in $obj) {
-        if ($item -ne $null) {
+        if ($null -ne $item) {
           $this.RemoveSystemObjectsRecursive($item, $systemResourceTypes)
         }
       }
@@ -1057,7 +1057,7 @@ class NSXConfigValidator {
 
   # Recursively fix PolicyContextProfile objects
   hidden [void] FixPolicyContextProfileRecursive([object] $obj) {
-    if ($obj -eq $null) { return }
+    if ($null -eq $obj) { return }
 
     if ($obj -is [PSCustomObject]) {
       # Check if this is a PolicyContextProfile object and needs fixing
@@ -1119,7 +1119,7 @@ class NSXConfigValidator {
 
       # Recursively process properties, but skip attributes array for PolicyContextProfile to prevent infinite recursion
       foreach ($property in $obj.PSObject.Properties) {
-        if ($property.Value -ne $null) {
+        if ($null -ne $property.Value) {
           # Skip recursing into attributes array for PolicyContextProfile to prevent circular references
           if ($obj.resource_type -eq "PolicyContextProfile" -and $property.Name -eq "attributes") {
             continue
@@ -1131,7 +1131,7 @@ class NSXConfigValidator {
     elseif ($obj -is [System.Collections.IEnumerable] -and $obj -isnot [string]) {
       # Process arrays
       foreach ($item in $obj) {
-        if ($item -ne $null) {
+        if ($null -ne $item) {
           $this.FixPolicyContextProfileRecursive($item)
         }
       }
@@ -1148,7 +1148,7 @@ class NSXConfigValidator {
           if ($property.Name -eq "marked_for_delete") {
             $propertiesToRemove += $property.Name
           }
-          elseif ($property.Value -ne $null) {
+          elseif ($null -ne $property.Value) {
             $this.RemoveMarkedForDeleteRecursive($property.Value)
           }
         }
@@ -1163,7 +1163,7 @@ class NSXConfigValidator {
           if ($key -eq "marked_for_delete") {
             $keysToRemove += $key
           }
-          elseif ($obj[$key] -ne $null) {
+          elseif ($null -ne $obj[$key]) {
             $this.RemoveMarkedForDeleteRecursive($obj[$key])
           }
         }
@@ -1174,7 +1174,7 @@ class NSXConfigValidator {
       elseif ($obj -is [System.Collections.IEnumerable] -and $obj -isnot [string]) {
         # Handle arrays and lists
         foreach ($item in $obj) {
-          if ($item -ne $null) {
+          if ($null -ne $item) {
             $this.RemoveMarkedForDeleteRecursive($item)
           }
         }

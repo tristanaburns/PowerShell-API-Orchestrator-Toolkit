@@ -740,7 +740,7 @@ class NSXConfigManager {
       $configData = $configuration.configuration
 
       # Debug logging to understand data structure
-      $this.logger.LogInfo("ConfigData structure - Has children: $($configData.children -ne $null), Has infra: $($configData.infra -ne $null)", "NSXConfig")
+      $this.logger.LogInfo("ConfigData structure - Has children: $($null -ne $configData.children), Has infra: $($null -ne $configData.infra)", "NSXConfig")
 
       # Transform configuration to hierarchical structure required by NSX-T Policy API
       $hierarchicalChildren = @()

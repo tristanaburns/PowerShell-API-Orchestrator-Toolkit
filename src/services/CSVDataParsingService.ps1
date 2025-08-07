@@ -372,7 +372,7 @@ class CSVDataParsingService {
 
         # Process special field types
         $processedValue = $this.ProcessFieldValue($csvValue, $jsonProperty, $schema.resource_type)
-        if ($processedValue -ne $null) {
+        if ($null -ne $processedValue) {
           $jsonObj[$jsonProperty] = $processedValue
         }
       }

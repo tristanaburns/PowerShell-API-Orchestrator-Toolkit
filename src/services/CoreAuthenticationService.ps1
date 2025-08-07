@@ -248,7 +248,7 @@ class CoreAuthenticationService {
                         $this.logger.LogDebug("PowerShell 5.x detected - using global SSL bypass", "Authentication")
                         # Global SSL bypass should already be configured during initialization
                         # Additional verification that SSL bypass is active
-                        if ([System.Net.ServicePointManager]::CertificatePolicy -eq $null) {
+                        if ($null -eq [System.Net.ServicePointManager]::CertificatePolicy) {
                             $this.logger.LogDebug("Re-applying global SSL bypass for PowerShell 5.x", "Authentication")
                             $this.SetupGlobalSSLBypass()
                         }

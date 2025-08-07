@@ -291,7 +291,7 @@ class SharedToolUtilityService {
       }
     }
     elseif ($obj -is [PSCustomObject]) {
-      return ($obj | Get-Member -Name $propertyName -ErrorAction SilentlyContinue) -ne $null
+      return $null -ne ($obj | Get-Member -Name $propertyName -ErrorAction SilentlyContinue)
     }
     else {
       return $false

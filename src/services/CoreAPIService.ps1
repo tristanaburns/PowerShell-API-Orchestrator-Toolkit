@@ -265,7 +265,7 @@ class CoreAPIService {
                     Uri       = $endpoint.Uri
                     ItemCount = if ($result.results) { $result.results.Count } else { if ($result) { 1 } else { 0 } }
                     Error     = $null
-                    HasBody   = $testBody -ne $null
+                    HasBody   = $null -ne $testBody
                     Category  = if ($endpoint.Category) { $endpoint.Category } else { "General" }
                 }
                 $this.logger.LogInfo("Endpoint test successful: $($endpoint.Name) using $methodUpper", "API")
@@ -277,7 +277,7 @@ class CoreAPIService {
                     Uri       = $endpoint.Uri
                     ItemCount = 0
                     Error     = $_.Exception.Message
-                    HasBody   = $testBody -ne $null
+                    HasBody   = $null -ne $testBody
                     Category  = if ($endpoint.Category) { $endpoint.Category } else { "General" }
                 }
                 $this.logger.LogWarning("Endpoint test failed: $($endpoint.Name) using $methodUpper - $($_.Exception.Message)", "API")
