@@ -341,7 +341,7 @@ function Repair-SSLConfiguration {
 # CREDENTIAL DIAGNOSTIC AND REPAIR FUNCTIONS
 # ===================================================================
 
-function Test-StoredCredentials {
+function Test-StoredCredential {
   param([string]$NSXManager, $services)
 
   Write-DiagnosticOutput "=== TESTING STORED CREDENTIALS ===" "INFO"
@@ -444,7 +444,7 @@ function Test-CredentialValidity {
   }
 }
 
-function Repair-Credentials {
+function Repair-Credential {
   param([string]$NSXManager, $services)
 
   Write-DiagnosticOutput "=== CREDENTIAL REPAIR PROCESS ===" "INFO"
@@ -500,7 +500,7 @@ function Repair-Credentials {
 # MAIN DIAGNOSTIC WORKFLOW
 # ===================================================================
 
-function Start-ComprehensiveDiagnostics {
+function Start-ComprehensiveDiagnostic {
   param([string]$NSXManager)
 
   Write-DiagnosticOutput "STARTING NSX CONNECTION DIAGNOSTICS" "INFO"
@@ -532,7 +532,7 @@ function Start-ComprehensiveDiagnostics {
 
   # Phase 4: Credential Tests
   if ($null -ne $services) {
-    $storedCredentials = Test-StoredCredentials -NSXManager $NSXManager -services $services
+    $storedCredentials = Test-StoredCredential -NSXManager $NSXManager -services $services
 
     if ($null -ne $storedCredentials) {
       $credentialsValid = Test-CredentialValidity -NSXManager $NSXManager -Credential $storedCredentials -services $services
@@ -540,11 +540,11 @@ function Start-ComprehensiveDiagnostics {
       if (-not $credentialsValid) {
         if ($RepairCredentials -or $ForceCredentialReset) {
           Write-DiagnosticOutput "Attempting automatic credential repair..." "INFO"
-          $repairResult = Repair-Credentials -NSXManager $NSXManager -services $services
+          $repairResult = Repair-Credential -NSXManager $NSXManager -services $services
 
           if ($repairResult) {
             # Retest with new credentials
-            $newCredentials = Test-StoredCredentials -NSXManager $NSXManager -services $services
+            $newCredentials = Test-StoredCredential -NSXManager $NSXManager -services $services
             Test-CredentialValidity -NSXManager $NSXManager -Credential $newCredentials -services $services
           }
         }
@@ -557,7 +557,7 @@ function Start-ComprehensiveDiagnostics {
     else {
       if ($RepairCredentials -or $ForceCredentialReset) {
         Write-DiagnosticOutput "No stored credentials found - setting up new credentials..." "INFO"
-        Repair-Credentials -NSXManager $NSXManager -services $services
+        Repair-Credential -NSXManager $NSXManager -services $services
       }
       else {
         Write-DiagnosticOutput "No stored credentials - use -RepairCredentials to set up" "WARN"
@@ -658,7 +658,7 @@ Write-DiagnosticOutput "Target: $NSXManager" "INFO"
 Write-DiagnosticOutput "Options: RepairCredentials=$RepairCredentials, ResetSSL=$ResetSSL, TestNetwork=$TestNetwork" "INFO"
 
 # Run diagnostics
-Start-ComprehensiveDiagnostics -NSXManager $NSXManager
+Start-ComprehensiveDiagnostic -NSXManager $NSXManager
 
 # Show summary report
 Show-DiagnosticSummary
