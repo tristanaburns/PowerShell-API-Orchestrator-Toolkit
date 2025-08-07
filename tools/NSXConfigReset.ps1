@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
 NSX Configuration Reset - Inventory and reset NSX DFW configuration objects
 
@@ -143,45 +143,45 @@ function Get-ManagerCredentials {
   }
   catch {
     # SharedToolCredentialService handles all error types and logging internally
-    Write-Host "FAILED: Credential collection failed for $Manager" -ForegroundColor Red
+    Write-Host -Object "FAILED: Credential collection failed for $Manager" -ForegroundColor Red
     exit 1
   }
 }
 
 # Main execution
 try {
-  Write-Host ""
-  Write-Host ("=" * 80) -ForegroundColor Cyan
-  Write-Host "  NSX Configuration Reset" -ForegroundColor Cyan
-  Write-Host ("=" * 80) -ForegroundColor Cyan
-  Write-Host ""
+  Write-Host -Object ""
+  Write-Host -Object ("=" * 80) -ForegroundColor Cyan
+  Write-Host -Object "  NSX Configuration Reset" -ForegroundColor Cyan
+  Write-Host -Object ("=" * 80) -ForegroundColor Cyan
+  Write-Host -Object ""
 
   # Parse NSX managers (support comma-separated list)
   # Force to array to handle single manager case properly
   $nsxManagers = @($NSXManager -split ',' | ForEach-Object { $_.Trim() })
   $isMultiManager = $nsxManagers.Count -gt 1
 
-  Write-Host "Target NSX Manager(s): $($nsxManagers -join ', ')" -ForegroundColor Yellow
-  Write-Host "Operation Mode: $(if ($InventoryOnly) { 'Inventory Only' } elseif ($ActualReset) { 'ACTUAL RESET (DESTRUCTIVE)' } else { 'WhatIf Mode' })" -ForegroundColor $(if ($ActualReset) { 'Red' } else { 'Green' })
-  Write-Host "Verbose Logging: $VerboseLogging" -ForegroundColor Gray
-  Write-Host ""
+  Write-Host -Object "Target NSX Manager(s): $($nsxManagers -join ', ')" -ForegroundColor Yellow
+  Write-Host -Object "Operation Mode: $(if ($InventoryOnly) { 'Inventory Only' } elseif ($ActualReset) { 'ACTUAL RESET (DESTRUCTIVE)' } else { 'WhatIf Mode' })" -ForegroundColor $(if ($ActualReset) { 'Red' } else { 'Green' })
+  Write-Host -Object "Verbose Logging: $VerboseLogging" -ForegroundColor Gray
+  Write-Host -Object ""
 
   # Safety checks for destructive operations
   if ($ActualReset) {
     if (-not $ConfirmDestruction) {
-      Write-Host "ERROR: -ActualReset requires -ConfirmDestruction flag for safety" -ForegroundColor Red
-      Write-Host "This operation will permanently delete NSX configuration objects!" -ForegroundColor Red
+      Write-Host -Object "ERROR: -ActualReset requires -ConfirmDestruction flag for safety" -ForegroundColor Red
+      Write-Host -Object "This operation will permanently delete NSX configuration objects!" -ForegroundColor Red
       exit 1
     }
 
     if (-not $NonInteractive) {
-      Write-Host "WARNING: This will permanently delete NSX configuration objects!" -ForegroundColor Red
-      Write-Host "This includes custom services, groups, security policies, and context profiles." -ForegroundColor Red
-      Write-Host ""
+      Write-Host -Object "WARNING: This will permanently delete NSX configuration objects!" -ForegroundColor Red
+      Write-Host -Object "This includes custom services, groups, security policies, and context profiles." -ForegroundColor Red
+      Write-Host -Object ""
 
       $confirmation = Read-Host "Are you absolutely sure you want to proceed? Type 'DELETE' to confirm"
       if ($confirmation -ne 'DELETE') {
-        Write-Host "Operation cancelled by user" -ForegroundColor Yellow
+        Write-Host -Object "Operation cancelled by user" -ForegroundColor Yellow
         exit 0
       }
     }
@@ -192,19 +192,19 @@ try {
   $isWhatIfMode = $WhatIfPreference -or (-not $ActualReset)
 
   if ($InventoryOnly) {
-    Write-Host "-" * 60
-    Write-Host "INVENTORY OPERATION"
-    Write-Host "-" * 60
-    Write-Host ""
+    Write-Host -Object "-" * 60
+    Write-Host -Object "INVENTORY OPERATION"
+    Write-Host -Object "-" * 60
+    Write-Host -Object ""
 
     if ($isMultiManager) {
-      Write-Host "Processing multiple NSX managers..."
+      Write-Host -Object "Processing multiple NSX managers..."
       $allResults = [PSCustomObject]@{}
 
       foreach ($manager in $nsxManagers) {
-        Write-Host ""
-        Write-Host "Processing manager: $manager" -ForegroundColor Cyan
-        Write-Host "-" * 40
+        Write-Host -Object ""
+        Write-Host -Object "Processing manager: $manager" -ForegroundColor Cyan
+        Write-Host -Object "-" * 40
 
         try {
           # Use SharedToolCredentialService for credential collection (eliminates duplication)
@@ -213,7 +213,7 @@ try {
           # ===================================================================
           # MANDATORY NSX TOOLKIT PREREQUISITE CHECK
           # ===================================================================
-          Write-Host "Performing mandatory NSX toolkit prerequisite checks for $manager..." -ForegroundColor Cyan
+          Write-Host -Object "Performing mandatory NSX toolkit prerequisite checks for $manager..." -ForegroundColor Cyan
 
           try {
             # Load NSXConnectionTest functions
@@ -238,24 +238,24 @@ try {
             # Run mandatory prerequisite check
             $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
 
-            Write-Host "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
+            Write-Host -Object "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
             $logger.LogInfo("NSX toolkit prerequisites validated for $manager - endpoint cache available with $($prerequisiteResult.Statistics.ValidEndpoints) valid endpoints", "ConfigReset")
           }
           catch {
             $logger.LogError("NSX toolkit prerequisite check failed for $manager : $($_.Exception.Message)", "ConfigReset")
-            Write-Host ""
-            Write-Host "[ERROR] NSX CONFIG RESET CANNOT PROCEED" -ForegroundColor Red
-            Write-Host "Manager: $manager" -ForegroundColor Yellow
-            Write-Host "Reason: Prerequisite check failed" -ForegroundColor Yellow
-            Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
-            Write-Host ""
-            Write-Host "RESOLUTION:" -ForegroundColor Cyan
-            Write-Host "1. Verify NSX Manager connectivity and credentials" -ForegroundColor White
-            Write-Host "2. Run NSXConnectionTest.ps1 to diagnose connectivity issues" -ForegroundColor White
-            Write-Host "3. Ensure NSX Manager is accessible and endpoints are responding" -ForegroundColor White
-            Write-Host ""
-            Write-Host "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$manager'" -ForegroundColor Green
-            Write-Host ""
+            Write-Host -Object ""
+            Write-Host -Object "[ERROR] NSX CONFIG RESET CANNOT PROCEED" -ForegroundColor Red
+            Write-Host -Object "Manager: $manager" -ForegroundColor Yellow
+            Write-Host -Object "Reason: Prerequisite check failed" -ForegroundColor Yellow
+            Write-Host -Object "Error: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host -Object ""
+            Write-Host -Object "RESOLUTION:" -ForegroundColor Cyan
+            Write-Host -Object "1. Verify NSX Manager connectivity and credentials" -ForegroundColor White
+            Write-Host -Object "2. Run NSXConnectionTest.ps1 to diagnose connectivity issues" -ForegroundColor White
+            Write-Host -Object "3. Ensure NSX Manager is accessible and endpoints are responding" -ForegroundColor White
+            Write-Host -Object ""
+            Write-Host -Object "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$manager'" -ForegroundColor Green
+            Write-Host -Object ""
             throw "NSX toolkit prerequisites not met for $manager"
           }
 
@@ -268,15 +268,15 @@ try {
           $allResults[$manager] = $inventory
 
           # Display summary
-          Write-Host "SUCCESS: Inventory completed for $manager" -ForegroundColor Green
-          Write-Host "  Services: $($inventory.summary.services_count)" -ForegroundColor Cyan
-          Write-Host "  Groups: $($inventory.summary.groups_count)" -ForegroundColor Cyan
-          Write-Host "  Security Policies: $($inventory.summary.security_policies_count)" -ForegroundColor Cyan
-          Write-Host "  Context Profiles: $($inventory.summary.context_profiles_count)" -ForegroundColor Cyan
-          Write-Host "  Total Objects: $($inventory.summary.total_objects)" -ForegroundColor Yellow
+          Write-Host -Object "SUCCESS: Inventory completed for $manager" -ForegroundColor Green
+          Write-Host -Object "  Services: $($inventory.summary.services_count)" -ForegroundColor Cyan
+          Write-Host -Object "  Groups: $($inventory.summary.groups_count)" -ForegroundColor Cyan
+          Write-Host -Object "  Security Policies: $($inventory.summary.security_policies_count)" -ForegroundColor Cyan
+          Write-Host -Object "  Context Profiles: $($inventory.summary.context_profiles_count)" -ForegroundColor Cyan
+          Write-Host -Object "  Total Objects: $($inventory.summary.total_objects)" -ForegroundColor Yellow
         }
         catch {
-          Write-Host "ERROR: Failed to inventory $manager - $($_.Exception.Message)" -ForegroundColor Red
+          Write-Host -Object "ERROR: Failed to inventory $manager - $($_.Exception.Message)" -ForegroundColor Red
           $allResults[$manager] = [PSCustomObject]@{ error = $_.Exception.Message }
         }
       }
@@ -284,7 +284,7 @@ try {
       $results = $allResults
     }
     else {
-      Write-Host "Processing single NSX manager: $($nsxManagers[0])" -ForegroundColor Cyan
+      Write-Host -Object "Processing single NSX manager: $($nsxManagers[0])" -ForegroundColor Cyan
 
       # Use SharedToolCredentialService for credential collection (eliminates duplication)
       $manager = $nsxManagers[0]
@@ -293,7 +293,7 @@ try {
       # ===================================================================
       # MANDATORY NSX TOOLKIT PREREQUISITE CHECK
       # ===================================================================
-      Write-Host "Performing mandatory NSX toolkit prerequisite checks for $manager..." -ForegroundColor Cyan
+      Write-Host -Object "Performing mandatory NSX toolkit prerequisite checks for $manager..." -ForegroundColor Cyan
 
       try {
         # Load NSXConnectionTest functions
@@ -318,24 +318,24 @@ try {
         # Run mandatory prerequisite check
         $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
 
-        Write-Host "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
+        Write-Host -Object "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
         $logger.LogInfo("NSX toolkit prerequisites validated for $manager - endpoint cache available with $($prerequisiteResult.Statistics.ValidEndpoints) valid endpoints", "ConfigReset")
       }
       catch {
         $logger.LogError("NSX toolkit prerequisite check failed for $manager : $($_.Exception.Message)", "ConfigReset")
-        Write-Host ""
-        Write-Host "[ERROR] NSX CONFIG RESET CANNOT PROCEED" -ForegroundColor Red
-        Write-Host "Manager: $manager" -ForegroundColor Yellow
-        Write-Host "Reason: Prerequisite check failed" -ForegroundColor Yellow
-        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
-        Write-Host ""
-        Write-Host "RESOLUTION:" -ForegroundColor Cyan
-        Write-Host "1. Verify NSX Manager connectivity and credentials" -ForegroundColor White
-        Write-Host "2. Run NSXConnectionTest.ps1 to diagnose connectivity issues" -ForegroundColor White
-        Write-Host "3. Ensure NSX Manager is accessible and endpoints are responding" -ForegroundColor White
-        Write-Host ""
-        Write-Host "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$manager'" -ForegroundColor Green
-        Write-Host ""
+        Write-Host -Object ""
+        Write-Host -Object "[ERROR] NSX CONFIG RESET CANNOT PROCEED" -ForegroundColor Red
+        Write-Host -Object "Manager: $manager" -ForegroundColor Yellow
+        Write-Host -Object "Reason: Prerequisite check failed" -ForegroundColor Yellow
+        Write-Host -Object "Error: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host -Object ""
+        Write-Host -Object "RESOLUTION:" -ForegroundColor Cyan
+        Write-Host -Object "1. Verify NSX Manager connectivity and credentials" -ForegroundColor White
+        Write-Host -Object "2. Run NSXConnectionTest.ps1 to diagnose connectivity issues" -ForegroundColor White
+        Write-Host -Object "3. Ensure NSX Manager is accessible and endpoints are responding" -ForegroundColor White
+        Write-Host -Object ""
+        Write-Host -Object "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$manager'" -ForegroundColor Green
+        Write-Host -Object ""
         throw "NSX toolkit prerequisites not met for $manager"
       }
 
@@ -348,23 +348,23 @@ try {
       $results = [PSCustomObject]@{ $nsxManagers[0] = $inventory }
 
       # Display detailed results
-      Write-Host ""
-      Write-Host "=== INVENTORY RESULTS ===" -ForegroundColor Green
-      Write-Host "Services: $($inventory.summary.services_count)" -ForegroundColor Cyan
-      Write-Host "Groups: $($inventory.summary.groups_count)" -ForegroundColor Cyan
-      Write-Host "Security Policies: $($inventory.summary.security_policies_count)" -ForegroundColor Cyan
-      Write-Host "Context Profiles: $($inventory.summary.context_profiles_count)" -ForegroundColor Cyan
-      Write-Host "Total Objects: $($inventory.summary.total_objects)" -ForegroundColor Yellow
+      Write-Host -Object ""
+      Write-Host -Object "=== INVENTORY RESULTS ===" -ForegroundColor Green
+      Write-Host -Object "Services: $($inventory.summary.services_count)" -ForegroundColor Cyan
+      Write-Host -Object "Groups: $($inventory.summary.groups_count)" -ForegroundColor Cyan
+      Write-Host -Object "Security Policies: $($inventory.summary.security_policies_count)" -ForegroundColor Cyan
+      Write-Host -Object "Context Profiles: $($inventory.summary.context_profiles_count)" -ForegroundColor Cyan
+      Write-Host -Object "Total Objects: $($inventory.summary.total_objects)" -ForegroundColor Yellow
     }
   }
   else {
-    Write-Host "-" * 60
-    Write-Host "RESET OPERATION ($(if ($isWhatIfMode) { 'WhatIf Mode' } else { 'ACTUAL RESET' }))"
-    Write-Host "-" * 60
-    Write-Host ""
+    Write-Host -Object "-" * 60
+    Write-Host -Object "RESET OPERATION ($(if ($isWhatIfMode) { 'WhatIf Mode' } else { 'ACTUAL RESET' }))"
+    Write-Host -Object "-" * 60
+    Write-Host -Object ""
 
     if ($isMultiManager) {
-      Write-Host "Processing multiple NSX managers..."
+      Write-Host -Object "Processing multiple NSX managers..."
 
       # Use SharedToolCredentialService to validate credentials for all managers first (eliminates duplication)
       foreach ($manager in $nsxManagers) {
@@ -375,36 +375,36 @@ try {
       $results = $resetService.ResetMultipleManagers($nsxManagers, $isWhatIfMode, $VerboseLogging, $UseCurrentUserCredentials, $NonInteractive, $AuthenticationConfigFile, $ForceNewCredentials)
 
       # Display multi-manager results
-      Write-Host ""
-      Write-Host "=== MULTI-MANAGER RESET RESULTS ===" -ForegroundColor Green
-      Write-Host "Total Managers: $($results.summary.total_managers)" -ForegroundColor Cyan
-      Write-Host "Successful Resets: $($results.summary.successful_resets)" -ForegroundColor Green
-      Write-Host "Failed Resets: $($results.summary.failed_resets)" -ForegroundColor Red
-      Write-Host "Total Objects $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($results.summary.total_objects_deleted)" -ForegroundColor Yellow
+      Write-Host -Object ""
+      Write-Host -Object "=== MULTI-MANAGER RESET RESULTS ===" -ForegroundColor Green
+      Write-Host -Object "Total Managers: $($results.summary.total_managers)" -ForegroundColor Cyan
+      Write-Host -Object "Successful Resets: $($results.summary.successful_resets)" -ForegroundColor Green
+      Write-Host -Object "Failed Resets: $($results.summary.failed_resets)" -ForegroundColor Red
+      Write-Host -Object "Total Objects $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($results.summary.total_objects_deleted)" -ForegroundColor Yellow
 
       foreach ($manager in $results.managers.Keys) {
         $managerResult = $results.managers[$manager]
-        Write-Host ""
-        Write-Host "Manager: $manager" -ForegroundColor Cyan
+        Write-Host -Object ""
+        Write-Host -Object "Manager: $manager" -ForegroundColor Cyan
         if ($managerResult.success) {
-          Write-Host "  Status: SUCCESS" -ForegroundColor Green
+          Write-Host -Object "  Status: SUCCESS" -ForegroundColor Green
           if ($managerResult.summary) {
-            Write-Host "  Services: $($managerResult.summary.services_deleted)" -ForegroundColor Cyan
-            Write-Host "  Groups: $($managerResult.summary.groups_deleted)" -ForegroundColor Cyan
-            Write-Host "  Security Policies: $($managerResult.summary.security_policies_deleted)" -ForegroundColor Cyan
-            Write-Host "  Context Profiles: $($managerResult.summary.context_profiles_deleted)" -ForegroundColor Cyan
+            Write-Host -Object "  Services: $($managerResult.summary.services_deleted)" -ForegroundColor Cyan
+            Write-Host -Object "  Groups: $($managerResult.summary.groups_deleted)" -ForegroundColor Cyan
+            Write-Host -Object "  Security Policies: $($managerResult.summary.security_policies_deleted)" -ForegroundColor Cyan
+            Write-Host -Object "  Context Profiles: $($managerResult.summary.context_profiles_deleted)" -ForegroundColor Cyan
           }
         }
         else {
-          Write-Host "  Status: FAILED" -ForegroundColor Red
+          Write-Host -Object "  Status: FAILED" -ForegroundColor Red
           if ($managerResult.error) {
-            Write-Host "  Error: $($managerResult.error)" -ForegroundColor Red
+            Write-Host -Object "  Error: $($managerResult.error)" -ForegroundColor Red
           }
         }
       }
     }
     else {
-      Write-Host "Processing single NSX manager: $($nsxManagers[0])" -ForegroundColor Cyan
+      Write-Host -Object "Processing single NSX manager: $($nsxManagers[0])" -ForegroundColor Cyan
 
       # Use SharedToolCredentialService for credential collection (eliminates duplication)
       $manager = $nsxManagers[0]
@@ -413,7 +413,7 @@ try {
       # ===================================================================
       # MANDATORY NSX TOOLKIT PREREQUISITE CHECK
       # ===================================================================
-      Write-Host "Performing mandatory NSX toolkit prerequisite checks for $manager..." -ForegroundColor Cyan
+      Write-Host -Object "Performing mandatory NSX toolkit prerequisite checks for $manager..." -ForegroundColor Cyan
 
       try {
         # Load NSXConnectionTest functions
@@ -438,24 +438,24 @@ try {
         # Run mandatory prerequisite check
         $prerequisiteResult = Assert-NSXToolkitPrerequisites -NSXManager $manager -Credential $credentials -RequiredEndpoints $requiredEndpoints -ToolName "NSXConfigReset-$manager" -AllowLimitedFunctionality
 
-        Write-Host "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
+        Write-Host -Object "NSX toolkit prerequisites validated successfully for $manager" -ForegroundColor Green
         $logger.LogInfo("NSX toolkit prerequisites validated for $manager - endpoint cache available with $($prerequisiteResult.Statistics.ValidEndpoints) valid endpoints", "ConfigReset")
       }
       catch {
         $logger.LogError("NSX toolkit prerequisite check failed for $manager : $($_.Exception.Message)", "ConfigReset")
-        Write-Host ""
-        Write-Host "[ERROR] NSX CONFIG RESET CANNOT PROCEED" -ForegroundColor Red
-        Write-Host "Manager: $manager" -ForegroundColor Yellow
-        Write-Host "Reason: Prerequisite check failed" -ForegroundColor Yellow
-        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
-        Write-Host ""
-        Write-Host "RESOLUTION:" -ForegroundColor Cyan
-        Write-Host "1. Verify NSX Manager connectivity and credentials" -ForegroundColor White
-        Write-Host "2. Run NSXConnectionTest.ps1 to diagnose connectivity issues" -ForegroundColor White
-        Write-Host "3. Ensure NSX Manager is accessible and endpoints are responding" -ForegroundColor White
-        Write-Host ""
-        Write-Host "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$manager'" -ForegroundColor Green
-        Write-Host ""
+        Write-Host -Object ""
+        Write-Host -Object "[ERROR] NSX CONFIG RESET CANNOT PROCEED" -ForegroundColor Red
+        Write-Host -Object "Manager: $manager" -ForegroundColor Yellow
+        Write-Host -Object "Reason: Prerequisite check failed" -ForegroundColor Yellow
+        Write-Host -Object "Error: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host -Object ""
+        Write-Host -Object "RESOLUTION:" -ForegroundColor Cyan
+        Write-Host -Object "1. Verify NSX Manager connectivity and credentials" -ForegroundColor White
+        Write-Host -Object "2. Run NSXConnectionTest.ps1 to diagnose connectivity issues" -ForegroundColor White
+        Write-Host -Object "3. Ensure NSX Manager is accessible and endpoints are responding" -ForegroundColor White
+        Write-Host -Object ""
+        Write-Host -Object "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$manager'" -ForegroundColor Green
+        Write-Host -Object ""
         throw "NSX toolkit prerequisites not met for $manager"
       }
 
@@ -468,24 +468,24 @@ try {
       $results = [PSCustomObject]@{ $nsxManagers[0] = $resetResult }
 
       # Display detailed results
-      Write-Host ""
-      Write-Host "=== RESET RESULTS ===" -ForegroundColor Green
-      Write-Host "Operation: $(if ($isWhatIfMode) { 'WhatIf Mode' } else { 'ACTUAL RESET' })" -ForegroundColor Yellow
-      Write-Host "Success: $($resetResult.success)" -ForegroundColor $(if ($resetResult.success) { 'Green' } else { 'Red' })
+      Write-Host -Object ""
+      Write-Host -Object "=== RESET RESULTS ===" -ForegroundColor Green
+      Write-Host -Object "Operation: $(if ($isWhatIfMode) { 'WhatIf Mode' } else { 'ACTUAL RESET' })" -ForegroundColor Yellow
+      Write-Host -Object "Success: $($resetResult.success)" -ForegroundColor $(if ($resetResult.success) { 'Green' } else { 'Red' })
 
       if ($resetResult.summary) {
-        Write-Host "Services $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.services_deleted)" -ForegroundColor Cyan
-        Write-Host "Groups $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.groups_deleted)" -ForegroundColor Cyan
-        Write-Host "Security Policies $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.security_policies_deleted)" -ForegroundColor Cyan
-        Write-Host "Context Profiles $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.context_profiles_deleted)" -ForegroundColor Cyan
-        Write-Host "Total Objects $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.total_deleted)" -ForegroundColor Yellow
+        Write-Host -Object "Services $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.services_deleted)" -ForegroundColor Cyan
+        Write-Host -Object "Groups $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.groups_deleted)" -ForegroundColor Cyan
+        Write-Host -Object "Security Policies $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.security_policies_deleted)" -ForegroundColor Cyan
+        Write-Host -Object "Context Profiles $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.context_profiles_deleted)" -ForegroundColor Cyan
+        Write-Host -Object "Total Objects $(if ($isWhatIfMode) { 'Would Be ' } else { '' })Deleted: $($resetResult.summary.total_deleted)" -ForegroundColor Yellow
       }
 
       if ($resetResult.failed_deletions -and $resetResult.failed_deletions.Count -gt 0) {
-        Write-Host ""
-        Write-Host "Failed Deletions:" -ForegroundColor Red
+        Write-Host -Object ""
+        Write-Host -Object "Failed Deletions:" -ForegroundColor Red
         foreach ($failure in $resetResult.failed_deletions) {
-          Write-Host "  $($failure.object_type): $($failure.object_name) - $($failure.error)" -ForegroundColor Red
+          Write-Host -Object "  $($failure.object_type): $($failure.object_name) - $($failure.error)" -ForegroundColor Red
         }
       }
     }
@@ -500,25 +500,25 @@ try {
       }
 
       $results | ConvertTo-Json -Depth 10 | Out-File -FilePath $OutputFile -Encoding UTF8
-      Write-Host ""
-      Write-Host "Results saved to: $OutputFile" -ForegroundColor Green
+      Write-Host -Object ""
+      Write-Host -Object "Results saved to: $OutputFile" -ForegroundColor Green
     }
     catch {
-      Write-Host "Warning: Failed to save results to file: $($_.Exception.Message)" -ForegroundColor Yellow
+      Write-Host -Object "Warning: Failed to save results to file: $($_.Exception.Message)" -ForegroundColor Yellow
     }
   }
 
-  Write-Host ""
-  Write-Host "Operation completed successfully!" -ForegroundColor Green
+  Write-Host -Object ""
+  Write-Host -Object "Operation completed successfully!" -ForegroundColor Green
 
   if ($isWhatIfMode -and $performReset) {
-    Write-Host ""
-    Write-Host "NOTE: This was a WhatIf Mode. Use -ActualReset -ConfirmDestruction to perform actual deletions." -ForegroundColor Yellow
+    Write-Host -Object ""
+    Write-Host -Object "NOTE: This was a WhatIf Mode. Use -ActualReset -ConfirmDestruction to perform actual deletions." -ForegroundColor Yellow
   }
 }
 catch {
-  Write-Host ""
-  Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red
+  Write-Host -Object ""
+  Write-Host -Object "ERROR: $($_.Exception.Message)" -ForegroundColor Red
   $logger.LogError("NSXConfigReset failed: $($_.Exception.Message)", "ResetTool")
   exit 1
 }

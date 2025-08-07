@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     NSX Configuration Sync - Synchronize, export, import, and compare NSX-T configurations between managers with robust credential, automation, and advanced sync options.
 
@@ -694,7 +694,7 @@ try {
         throw "One or more services failed to initialize properly"
     }
 
-    Write-Host "NSXConfigSync: Service framework initialized successfully" -ForegroundColor Green
+    Write-Host -Object "NSXConfigSync: Service framework initialized successfully" -ForegroundColor Green
 
     # Ensure WorkflowOperationsService type is loaded for static path resolution
     if (-not [type]::GetType('WorkflowOperationsService', $false)) {
@@ -737,7 +737,7 @@ function Get-SyncManagerCredentials {
     }
     catch {
         # SharedToolCredentialService handles all error types and logging internally
-        Write-Host "FAILED: Credential collection failed for $Manager" -ForegroundColor Red
+        Write-Host -Object "FAILED: Credential collection failed for $Manager" -ForegroundColor Red
         exit 1
     }
 }
@@ -749,9 +749,9 @@ function Get-SyncManagerCredentials {
 # Function to handle export operations (Single Responsibility: Export only)
 function Invoke-ExportOperation {
     # EXPORT MODE - Export configuration from source NSX Manager
-    Write-Host "`n" + "-"*80
-    Write-Host "EXPORT MODE: Exporting Configuration"
-    Write-Host "-"*80
+    Write-Host -Object "`n" + "-"*80
+    Write-Host -Object "EXPORT MODE: Exporting Configuration"
+    Write-Host -Object "-"*80
 
     # Use SharedToolCredentialService for credential collection (eliminates duplication)
     $credential = Get-SyncManagerCredentials -Manager $SourceNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Export-Source"
@@ -759,10 +759,10 @@ function Invoke-ExportOperation {
     # Test source connection (optional)
     if (-not $SkipConnectionTest) {
         $logger.LogInfo("Testing connection to source NSX manager", "Export")
-        Write-Host "`nTesting connection to source..."
+        Write-Host -Object "`nTesting connection to source..."
         $sourceResult = $authService.TestConnection($SourceNSXManager, $credential, $SkipSSLCheck)
         if ($sourceResult.Success) {
-            Write-Host "[SUCCESS] Source connection: $SourceNSXManager"
+            Write-Host -Object "[SUCCESS] Source connection: $SourceNSXManager"
         }
         else {
             throw "Failed to connect to source NSX Manager: $($sourceResult.Error)"
@@ -770,7 +770,7 @@ function Invoke-ExportOperation {
     }
     else {
         $logger.LogInfo("Connection testing skipped for source NSX manager", "Export")
-        Write-Host "`nConnection testing skipped - proceeding with source operations..."
+        Write-Host -Object "`nConnection testing skipped - proceeding with source operations..."
     }
 
     # Configure SSL handling
@@ -808,12 +808,12 @@ function Invoke-ExportOperation {
         $exportParamsHash = ConvertTo-ParameterHashtable -ParameterSet $exportParams
         $exportResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @exportParamsHash
         if ($exportResult -and (Test-Path $exportResult)) {
-            Write-Host "`n" + "="*80
-            Write-Host "EXPORT COMPLETED SUCCESSFULLY" -ForegroundColor Green
-            Write-Host "="*80
-            Write-Host "Configuration exported to: $exportResult" -ForegroundColor Cyan
-            Write-Host "Operation Mode: Export" -ForegroundColor Cyan
-            Write-Host "Domain: $Domain" -ForegroundColor Cyan
+            Write-Host -Object "`n" + "="*80
+            Write-Host -Object "EXPORT COMPLETED SUCCESSFULLY" -ForegroundColor Green
+            Write-Host -Object "="*80
+            Write-Host -Object "Configuration exported to: $exportResult" -ForegroundColor Cyan
+            Write-Host -Object "Operation Mode: Export" -ForegroundColor Cyan
+            Write-Host -Object "Domain: $Domain" -ForegroundColor Cyan
         }
         else {
             throw "Export failed or output file not found."
@@ -829,9 +829,9 @@ function Invoke-ExportOperation {
 # Function to handle import operations (Single Responsibility: Import only)
 function Invoke-ImportOperation {
     # IMPORT MODE - Import configuration to target NSX Manager
-    Write-Host "`n" + "-"*80
-    Write-Host "IMPORT MODE: Importing Configuration"
-    Write-Host "-"*80
+    Write-Host -Object "`n" + "-"*80
+    Write-Host -Object "IMPORT MODE: Importing Configuration"
+    Write-Host -Object "-"*80
 
     # Use SharedToolCredentialService for credential collection (eliminates duplication)
     $credential = Get-SyncManagerCredentials -Manager $TargetNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Import-Target"
@@ -839,10 +839,10 @@ function Invoke-ImportOperation {
     # Test target connection (optional)
     if (-not $SkipConnectionTest) {
         $logger.LogInfo("Testing connection to target NSX manager", "Import")
-        Write-Host "`nTesting connection to target..."
+        Write-Host -Object "`nTesting connection to target..."
         $targetResult = $authService.TestConnection($TargetNSXManager, $credential, $SkipSSLCheck)
         if ($targetResult.Success) {
-            Write-Host "[SUCCESS] Target connection: $TargetNSXManager"
+            Write-Host -Object "[SUCCESS] Target connection: $TargetNSXManager"
         }
         else {
             throw "Failed to connect to target NSX Manager: $($targetResult.Error)"
@@ -850,7 +850,7 @@ function Invoke-ImportOperation {
     }
     else {
         $logger.LogInfo("Connection testing skipped for target NSX manager", "Import")
-        Write-Host "`nConnection testing skipped - proceeding with target operations..."
+        Write-Host -Object "`nConnection testing skipped - proceeding with target operations..."
     }
 
     # Configure SSL handling
@@ -862,21 +862,21 @@ function Invoke-ImportOperation {
     # Perform import
     Invoke-ConfigurationImport -Manager $TargetNSXManager -Credential $credential -InputFilePath $InputPath -ResourceTypes $resourceTypesToSync
 
-    Write-Host "`n" + "="*80
-    Write-Host "IMPORT COMPLETED SUCCESSFULLY" -ForegroundColor Green
-    Write-Host "="*80
-    Write-Host "Configuration imported from: $(Split-Path $InputPath -Leaf)" -ForegroundColor Cyan
-    Write-Host "Operation Mode: Import" -ForegroundColor Cyan
-    Write-Host "Resource Types: $($resourceTypesToSync -join ', ')" -ForegroundColor Cyan
-    Write-Host "Domain: $Domain" -ForegroundColor Cyan
+    Write-Host -Object "`n" + "="*80
+    Write-Host -Object "IMPORT COMPLETED SUCCESSFULLY" -ForegroundColor Green
+    Write-Host -Object "="*80
+    Write-Host -Object "Configuration imported from: $(Split-Path $InputPath -Leaf)" -ForegroundColor Cyan
+    Write-Host -Object "Operation Mode: Import" -ForegroundColor Cyan
+    Write-Host -Object "Resource Types: $($resourceTypesToSync -join ', ')" -ForegroundColor Cyan
+    Write-Host -Object "Domain: $Domain" -ForegroundColor Cyan
 }
 
 # Function to handle sync operations (Single Responsibility: Sync only)
 function Invoke-SyncOperation {
     # SYNC MODE - Synchronize between source and target NSX Managers
-    Write-Host "`n" + "-"*80
-    Write-Host "SYNC MODE: Synchronizing Configurations"
-    Write-Host "-"*80
+    Write-Host -Object "`n" + "-"*80
+    Write-Host -Object "SYNC MODE: Synchronizing Configurations"
+    Write-Host -Object "-"*80
 
     # Use SharedToolCredentialService for credential collection (eliminates duplication)
     $credential = Get-SyncManagerCredentials -Manager $SourceNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Sync-Source"
@@ -893,23 +893,23 @@ function Invoke-SyncOperation {
     }
 
     # Display sync operation parameters
-    Write-Host "`nSync Operation Parameters:" -ForegroundColor Cyan
-    Write-Host "Source Manager: $SourceNSXManager" -ForegroundColor White
-    Write-Host "Target Manager: $TargetNSXManager" -ForegroundColor White
-    Write-Host "Resource Types: $($resourceTypesToSync -join ', ')" -ForegroundColor White
-    Write-Host "Sync Mode: $(Get-EffectiveSyncMode)" -ForegroundColor White
+    Write-Host -Object "`nSync Operation Parameters:" -ForegroundColor Cyan
+    Write-Host -Object "Source Manager: $SourceNSXManager" -ForegroundColor White
+    Write-Host -Object "Target Manager: $TargetNSXManager" -ForegroundColor White
+    Write-Host -Object "Resource Types: $($resourceTypesToSync -join ', ')" -ForegroundColor White
+    Write-Host -Object "Sync Mode: $(Get-EffectiveSyncMode)" -ForegroundColor White
 
     if ($WhatIfPreference) {
-        Write-Host "WhatIf Mode: ENABLED - No changes will be made" -ForegroundColor Yellow
+        Write-Host -Object "WhatIf Mode: ENABLED - No changes will be made" -ForegroundColor Yellow
     }
 
     try {
         #######################################################
         # Phase 1: Export source configuration
         #######################################################
-        Write-Host "`n" + "-"*60 -ForegroundColor Cyan
-        Write-Host "PHASE 1: Exporting Source Configuration" -ForegroundColor Cyan
-        Write-Host "-"*60 -ForegroundColor Cyan
+        Write-Host -Object "`n" + "-"*60 -ForegroundColor Cyan
+        Write-Host -Object "PHASE 1: Exporting Source Configuration" -ForegroundColor Cyan
+        Write-Host -Object "-"*60 -ForegroundColor Cyan
 
         $sourceExportDir = $script:workflowOpsService.GetToolkitPath('Exports')
         if (-not (Test-Path $sourceExportDir)) {
@@ -990,22 +990,22 @@ function Invoke-SyncOperation {
         $sourceConfigPath = Get-ExportMainFilePath -ExportResult $sourceExportResult -Context "Source Export"
         $objectCount = Get-ExportObjectCount -ExportResult $sourceExportResult -Context "Source Export"
 
-        Write-Host "Source exported: $objectCount objects" -ForegroundColor Green
+        Write-Host -Object "Source exported: $objectCount objects" -ForegroundColor Green
 
         ##########################################################################
         # Phase 2: Apply configuration to target using differential approach
         ###########################################################################
-        Write-Host "`n" + "-"*60 -ForegroundColor Cyan
-        Write-Host "PHASE 2: Applying Configuration to Target" -ForegroundColor Cyan
-        Write-Host "-"*60 -ForegroundColor Cyan
+        Write-Host -Object "`n" + "-"*60 -ForegroundColor Cyan
+        Write-Host -Object "PHASE 2: Applying Configuration to Target" -ForegroundColor Cyan
+        Write-Host -Object "-"*60 -ForegroundColor Cyan
 
         # CANONICAL FIX: Ensure WhatIfPreference is properly initialized
         $whatIfValue = if ($null -ne $WhatIfPreference) { $WhatIfPreference } else { $false }
 
-        Write-Host "DEBUG: Target Manager: $TargetNSXManager" -ForegroundColor Yellow
-        Write-Host "DEBUG: Config File: $sourceConfigPath" -ForegroundColor Yellow
-        Write-Host "DEBUG: WhatIf Value: $whatIfValue" -ForegroundColor Yellow
-        Write-Host "DEBUG: DomainId: $DomainId" -ForegroundColor Yellow
+        Write-Host -Object "DEBUG: Target Manager: $TargetNSXManager" -ForegroundColor Yellow
+        Write-Host -Object "DEBUG: Config File: $sourceConfigPath" -ForegroundColor Yellow
+        Write-Host -Object "DEBUG: WhatIf Value: $whatIfValue" -ForegroundColor Yellow
+        Write-Host -Object "DEBUG: DomainId: $DomainId" -ForegroundColor Yellow
 
         $applyParams = [PSCustomObject]@{
             NSXManager = $TargetNSXManager
@@ -1015,9 +1015,9 @@ function Invoke-SyncOperation {
         if ($DomainId) { $applyParams.DomainId = $DomainId }
         if ($UseCurrentUserCredentials) { $applyParams.UseCurrentUserCredentials = $true }
 
-        Write-Host "DEBUG: About to call ApplyNSXConfig.ps1..." -ForegroundColor Yellow
+        Write-Host -Object "DEBUG: About to call ApplyNSXConfig.ps1..." -ForegroundColor Yellow
         $applyResult = & "$scriptPath\ApplyNSXConfig.ps1" @applyParams
-        Write-Host "DEBUG: ApplyNSXConfig.ps1 call completed" -ForegroundColor Yellow
+        Write-Host -Object "DEBUG: ApplyNSXConfig.ps1 call completed" -ForegroundColor Yellow
 
         # Check if ApplyNSXConfig.ps1 returned a valid result
         if ($null -eq $applyResult) {
@@ -1038,10 +1038,10 @@ function Invoke-SyncOperation {
         }
 
         if ($operationSucceeded) {
-            Write-Host "`n" + "="*80 -ForegroundColor Green
-            Write-Host "SYNC COMPLETED SUCCESSFULLY" -ForegroundColor Green
-            Write-Host "="*80 -ForegroundColor Green
-            Write-Host "Source Objects: $objectCount" -ForegroundColor Cyan
+            Write-Host -Object "`n" + "="*80 -ForegroundColor Green
+            Write-Host -Object "SYNC COMPLETED SUCCESSFULLY" -ForegroundColor Green
+            Write-Host -Object "="*80 -ForegroundColor Green
+            Write-Host -Object "Source Objects: $objectCount" -ForegroundColor Cyan
             # Safe access to changes_applied property
             $changesApplied = "Unknown"
             if ($applyResult -and ($applyResult | Get-Member -Name 'changes_applied' -ErrorAction SilentlyContinue)) {
@@ -1050,8 +1050,8 @@ function Invoke-SyncOperation {
             elseif ($applyResult -and ($applyResult | Get-Member -Name 'changes_applied' -ErrorAction SilentlyContinue)) {
                 $changesApplied = $applyResult.changes_applied
             }
-            Write-Host "Changes Applied: $changesApplied" -ForegroundColor Cyan
-            Write-Host "Sync Mode: $(Get-EffectiveSyncMode)" -ForegroundColor Cyan
+            Write-Host -Object "Changes Applied: $changesApplied" -ForegroundColor Cyan
+            Write-Host -Object "Sync Mode: $(Get-EffectiveSyncMode)" -ForegroundColor Cyan
 
             $logger.LogInfo("Sync operation completed successfully - $changesApplied changes applied", "Sync")
         }
@@ -1074,7 +1074,7 @@ function Invoke-SyncOperation {
     catch {
         $errorMsg = "Sync operation failed: $($_.Exception.Message)"
         $logger.LogError($errorMsg, "Sync")
-        Write-Host "`nERROR: $errorMsg" -ForegroundColor Red
+        Write-Host -Object "`nERROR: $errorMsg" -ForegroundColor Red
         throw $errorMsg
     }
 }
@@ -1345,18 +1345,18 @@ function Resolve-InteractiveConflict {
         [string]$ObjectPath
     )
 
-    Write-Host "`nCONFLICT DETECTED: $ObjectPath" -ForegroundColor Yellow
-    Write-Host "Source: $($SourceObject.display_name)" -ForegroundColor Cyan
-    Write-Host "Target: $($TargetObject.display_name)" -ForegroundColor Cyan
+    Write-Host -Object "`nCONFLICT DETECTED: $ObjectPath" -ForegroundColor Yellow
+    Write-Host -Object "Source: $($SourceObject.display_name)" -ForegroundColor Cyan
+    Write-Host -Object "Target: $($TargetObject.display_name)" -ForegroundColor Cyan
 
     do {
-        Write-Host "`nConflict Resolution Options:" -ForegroundColor Yellow
-        Write-Host "1. Use Source (overwrite target)"
-        Write-Host "2. Use Target (keep current)"
-        Write-Host "3. Merge (combine both)"
-        Write-Host "4. Skip (don't sync this object)"
-        Write-Host "5. Use Source for All remaining conflicts"
-        Write-Host "6. Use Target for All remaining conflicts"
+        Write-Host -Object "`nConflict Resolution Options:" -ForegroundColor Yellow
+        Write-Host -Object "1. Use Source (overwrite target)"
+        Write-Host -Object "2. Use Target (keep current)"
+        Write-Host -Object "3. Merge (combine both)"
+        Write-Host -Object "4. Skip (don't sync this object)"
+        Write-Host -Object "5. Use Source for All remaining conflicts"
+        Write-Host -Object "6. Use Target for All remaining conflicts"
 
         $choice = Read-Host "Enter your choice (1-6)"
 
@@ -1373,7 +1373,7 @@ function Resolve-InteractiveConflict {
                 $script:ConflictResolution = "TargetWins"
                 return $TargetObject
             }
-            default { Write-Host "Invalid choice. Please enter 1-6." -ForegroundColor Red }
+            default { Write-Host -Object "Invalid choice. Please enter 1-6." -ForegroundColor Red }
         }
     } while ($true)
 }
@@ -1431,9 +1431,9 @@ function Show-SyncPreview {
         [string[]]$ResourceTypes
     )
 
-    Write-Host "`n" + "="*80 -ForegroundColor Cyan
-    Write-Host "SYNC PREVIEW - Using VerifyNSXConfiguration.ps1 for comparison analysis" -ForegroundColor Cyan
-    Write-Host "="*80 -ForegroundColor Cyan
+    Write-Host -Object "`n" + "="*80 -ForegroundColor Cyan
+    Write-Host -Object "SYNC PREVIEW - Using VerifyNSXConfiguration.ps1 for comparison analysis" -ForegroundColor Cyan
+    Write-Host -Object "="*80 -ForegroundColor Cyan
 
     try {
         # CANONICAL FIX: Use proper path management instead of hardcoded temporary files
@@ -1514,32 +1514,32 @@ function Show-SyncPreview {
 
         # Display changes using standardized format
         if (@($changes.Added).Count -gt 0) {
-            Write-Host "`nOBJECTS TO BE ADDED:" -ForegroundColor Green
+            Write-Host -Object "`nOBJECTS TO BE ADDED:" -ForegroundColor Green
             foreach ($change in $changes.Added) {
-                Write-Host "  + [$($change.Type)] $($change.Name)" -ForegroundColor Green
+                Write-Host -Object "  + [$($change.Type)] $($change.Name)" -ForegroundColor Green
             }
         }
 
         if (@($changes.Modified).Count -gt 0) {
-            Write-Host "`nOBJECTS TO BE MODIFIED:" -ForegroundColor Yellow
+            Write-Host -Object "`nOBJECTS TO BE MODIFIED:" -ForegroundColor Yellow
             foreach ($change in $changes.Modified) {
-                Write-Host "  ~ [$($change.Type)] $($change.Name)" -ForegroundColor Yellow
+                Write-Host -Object "  ~ [$($change.Type)] $($change.Name)" -ForegroundColor Yellow
             }
         }
 
         if (@($changes.Deleted).Count -gt 0) {
-            Write-Host "`nOBJECTS TO BE DELETED:" -ForegroundColor Red
+            Write-Host -Object "`nOBJECTS TO BE DELETED:" -ForegroundColor Red
             foreach ($change in $changes.Deleted) {
-                Write-Host "  - [$($change.Type)] $($change.Name)" -ForegroundColor Red
+                Write-Host -Object "  - [$($change.Type)] $($change.Name)" -ForegroundColor Red
             }
         }
 
-        Write-Host "`nSUMMARY:" -ForegroundColor Cyan
-        Write-Host "  Objects to Add: $(@($changes.Added).Count)" -ForegroundColor Green
-        Write-Host "  Objects to Modify: $(@($changes.Modified).Count)" -ForegroundColor Yellow
-        Write-Host "  Objects to Delete: $(@($changes.Deleted).Count)" -ForegroundColor Red
-        Write-Host "  Total Changes: $(@($changes.Added).Count + @($changes.Modified).Count + @($changes.Deleted).Count)"
-        Write-Host "  Comparison via: VerifyNSXConfiguration.ps1" -ForegroundColor Cyan
+        Write-Host -Object "`nSUMMARY:" -ForegroundColor Cyan
+        Write-Host -Object "  Objects to Add: $(@($changes.Added).Count)" -ForegroundColor Green
+        Write-Host -Object "  Objects to Modify: $(@($changes.Modified).Count)" -ForegroundColor Yellow
+        Write-Host -Object "  Objects to Delete: $(@($changes.Deleted).Count)" -ForegroundColor Red
+        Write-Host -Object "  Total Changes: $(@($changes.Added).Count + @($changes.Modified).Count + @($changes.Deleted).Count)"
+        Write-Host -Object "  Comparison via: VerifyNSXConfiguration.ps1" -ForegroundColor Cyan
 
         # Cleanup temporary files
         Remove-Item $sourceConfigFile -Force -ErrorAction SilentlyContinue
@@ -1549,8 +1549,8 @@ function Show-SyncPreview {
 
     }
     catch {
-        Write-Host "Warning: Sync preview via VerifyNSXConfiguration.ps1 failed: $($_.Exception.Message)" -ForegroundColor Yellow
-        Write-Host "Falling back to basic comparison..." -ForegroundColor Yellow
+        Write-Host -Object "Warning: Sync preview via VerifyNSXConfiguration.ps1 failed: $($_.Exception.Message)" -ForegroundColor Yellow
+        Write-Host -Object "Falling back to basic comparison..." -ForegroundColor Yellow
 
         # Basic fallback comparison
         $changes = [PSCustomObject]@{
@@ -1560,9 +1560,9 @@ function Show-SyncPreview {
             "Conflicts" = @()
         }
 
-        Write-Host "`nSUMMARY:" -ForegroundColor Cyan
-        Write-Host "  Comparison method: Basic fallback" -ForegroundColor Yellow
-        Write-Host "  Note: Use VerifyNSXConfiguration.ps1 directly for detailed analysis" -ForegroundColor Yellow
+        Write-Host -Object "`nSUMMARY:" -ForegroundColor Cyan
+        Write-Host -Object "  Comparison method: Basic fallback" -ForegroundColor Yellow
+        Write-Host -Object "  Note: Use VerifyNSXConfiguration.ps1 directly for detailed analysis" -ForegroundColor Yellow
 
         return $changes
     }
@@ -1653,10 +1653,10 @@ function Invoke-ConfigurationExport {
     $logger.LogInfo("Output Path: $OutputFilePath", "Export")
 
     try {
-        Write-Host "`nExporting configuration from NSX Manager using NSXPolicyConfigExport.ps1..."
-        Write-Host "Source: $Manager"
-        Write-Host "Resource Types: $($ResourceTypes -join ', ')"
-        Write-Host "Domain: $Domain"
+        Write-Host -Object "`nExporting configuration from NSX Manager using NSXPolicyConfigExport.ps1..."
+        Write-Host -Object "Source: $Manager"
+        Write-Host -Object "Resource Types: $($ResourceTypes -join ', ')"
+        Write-Host -Object "Domain: $Domain"
 
         # Build parameters for NSXPolicyConfigExport.ps1 using helper functions
         $exportParams = [PSCustomObject]@{
@@ -1715,11 +1715,11 @@ function Invoke-ConfigurationExport {
                 }
             }
 
-            Write-Host "`nExport Summary:" -ForegroundColor Green
-            Write-Host "Export completed via NSXPolicyConfigExport.ps1" -ForegroundColor Cyan
-            Write-Host "Domain: $Domain" -ForegroundColor Cyan
-            Write-Host "Resource Types: $($ResourceTypes -join ', ')" -ForegroundColor Cyan
-            Write-Host "Export saved to: $configFilePath" -ForegroundColor Green
+            Write-Host -Object "`nExport Summary:" -ForegroundColor Green
+            Write-Host -Object "Export completed via NSXPolicyConfigExport.ps1" -ForegroundColor Cyan
+            Write-Host -Object "Domain: $Domain" -ForegroundColor Cyan
+            Write-Host -Object "Resource Types: $($ResourceTypes -join ', ')" -ForegroundColor Cyan
+            Write-Host -Object "Export saved to: $configFilePath" -ForegroundColor Green
 
             $logger.LogInfo("Configuration exported successfully via tool orchestration", "Export")
             $logger.LogInfo("Export file: $configFilePath", "Export")
@@ -1758,11 +1758,11 @@ function Invoke-ConfigurationImport {
             throw "Input file not found: $InputFilePath"
         }
 
-        Write-Host "`nImporting configuration to NSX Manager using ApplyNSXConfig.ps1..."
-        Write-Host "Target: $Manager"
-        Write-Host "Input File: $(Split-Path $InputFilePath -Leaf)"
-        Write-Host "Resource Types: $($ResourceTypes -join ', ')"
-        Write-Host "Domain: $Domain"
+        Write-Host -Object "`nImporting configuration to NSX Manager using ApplyNSXConfig.ps1..."
+        Write-Host -Object "Target: $Manager"
+        Write-Host -Object "Input File: $(Split-Path $InputFilePath -Leaf)"
+        Write-Host -Object "Resource Types: $($ResourceTypes -join ', ')"
+        Write-Host -Object "Domain: $Domain"
 
         # Build parameters for ApplyNSXConfig.ps1
         $applyParams = [PSCustomObject]@{
@@ -1831,12 +1831,12 @@ function Invoke-ConfigurationImport {
         }
 
         if ($operationSucceeded) {
-            Write-Host "`nImport Summary:" -ForegroundColor Green
-            Write-Host "Import completed via ApplyNSXConfig.ps1" -ForegroundColor Cyan
-            Write-Host "Target Manager: $Manager" -ForegroundColor Cyan
-            Write-Host "Resource Types: $($ResourceTypes -join ', ')" -ForegroundColor Cyan
-            Write-Host "Domain: $Domain" -ForegroundColor Cyan
-            Write-Host "Input File: $(Split-Path $InputFilePath -Leaf)" -ForegroundColor Cyan
+            Write-Host -Object "`nImport Summary:" -ForegroundColor Green
+            Write-Host -Object "Import completed via ApplyNSXConfig.ps1" -ForegroundColor Cyan
+            Write-Host -Object "Target Manager: $Manager" -ForegroundColor Cyan
+            Write-Host -Object "Resource Types: $($ResourceTypes -join ', ')" -ForegroundColor Cyan
+            Write-Host -Object "Domain: $Domain" -ForegroundColor Cyan
+            Write-Host -Object "Input File: $(Split-Path $InputFilePath -Leaf)" -ForegroundColor Cyan
 
             $logger.LogInfo("Configuration import completed successfully via tool orchestration", "Import")
 
@@ -2167,10 +2167,10 @@ $logger.LogInfo("Domain: $Domain", "ConfigSync")
 <#endregion Start of script Logging#>
 
 <#region Display script header#>
-Write-Host ""
-Write-Host ("=" * 100) -ForegroundColor Cyan
-Write-Host "  NSX-T Configuration Config Sync - Hierarchical API" -ForegroundColor Cyan
-Write-Host ("=" * 100) -ForegroundColor Cyan
+Write-Host -Object ""
+Write-Host -Object ("=" * 100) -ForegroundColor Cyan
+Write-Host -Object "  NSX-T Configuration Config Sync - Hierarchical API" -ForegroundColor Cyan
+Write-Host -Object ("=" * 100) -ForegroundColor Cyan
 <#endregion Display script header#>
 
 
@@ -2182,17 +2182,17 @@ $logger.LogInfo("Operation Mode: $operationMode", "ConfigSync")
 $logger.LogInfo("Resource Types: $($resourceTypesToSync -join ', ')", "ConfigSync")
 
 <#region Output operation configuration#>
-Write-Host "`nOperation Configuration:" -ForegroundColor Yellow
-Write-Host "  Operation Mode: $operationMode"
+Write-Host -Object "`nOperation Configuration:" -ForegroundColor Yellow
+Write-Host -Object "  Operation Mode: $operationMode"
 if ($operationMode -eq "Sync") {
-    Write-Host "  Sync Mode: $effectiveSyncMode"
-    Write-Host "  Conflict Resolution: $ConflictResolution"
+    Write-Host -Object "  Sync Mode: $effectiveSyncMode"
+    Write-Host -Object "  Conflict Resolution: $ConflictResolution"
 }
-Write-Host "  Resource Types: $($resourceTypesToSync -join ', ')"
-Write-Host "  Domain: $Domain"
-if ($WhatIfPreference) { Write-Host "  Preview Mode: ENABLED (no changes will be made)" -ForegroundColor Cyan }
-if ($ValidateBeforeImport) { Write-Host "  Validation: ENABLED" -ForegroundColor Green }
-if ($CreateRollbackConfig) { Write-Host "  Rollback Config: ENABLED" -ForegroundColor Green }
+Write-Host -Object "  Resource Types: $($resourceTypesToSync -join ', ')"
+Write-Host -Object "  Domain: $Domain"
+if ($WhatIfPreference) { Write-Host -Object "  Preview Mode: ENABLED (no changes will be made)" -ForegroundColor Cyan }
+if ($ValidateBeforeImport) { Write-Host -Object "  Validation: ENABLED" -ForegroundColor Green }
+if ($CreateRollbackConfig) { Write-Host -Object "  Rollback Config: ENABLED" -ForegroundColor Green }
 
 <#endregion Output operation configuration#>
 
@@ -2210,7 +2210,7 @@ $managerSyncDir = Join-Path $SyncPath $sourceHostname
 if (-not (Test-Path $managerSyncDir)) {
     $logger.LogInfo("Creating manager sync directory: $managerSyncDir", "ConfigSync")
     New-Item -Path $managerSyncDir -ItemType Directory -Force | Out-Null
-    Write-Host "Created manager sync directory: $managerSyncDir"
+    Write-Host -Object "Created manager sync directory: $managerSyncDir"
 }
 else {
     $logger.LogInfo("Using existing manager sync directory: $managerSyncDir", "ConfigSync")
@@ -2232,7 +2232,7 @@ $logger.LogInfo("Migration session: $migrationSession", "ConfigSync")
 
 <#region Collect credentials using standardised approach (for Sync mode)#>
 # Collect credentials using standardised approach (for Sync mode)
-Write-Host "`nCollecting credentials for migration..."
+Write-Host -Object "`nCollecting credentials for migration..."
 
 # Use standardised credential collection for source
 try {
@@ -2241,7 +2241,7 @@ try {
 }
 catch {
     $errorMsg = "Failed to collect credentials for source $SourceNSXManager : $($_.Exception.Message)"
-    Write-Host "ERROR: $errorMsg" -ForegroundColor Red
+    Write-Host -Object "ERROR: $errorMsg" -ForegroundColor Red
     $logger.LogError($errorMsg, "ConfigSync")
     throw $errorMsg
 }
@@ -2258,14 +2258,14 @@ if ($SaveCredentials -and $credential) {
 }
 
 # For sync mode, we need credentials for both managers - get target credentials
-Write-Host "Collecting credentials for target manager..."
+Write-Host -Object "Collecting credentials for target manager..."
 try {
     $targetCredential = $authService.GetCredential($TargetNSXManager, $null, $UseCurrentUserCredentials, $ForceNewCredentials)
     $logger.LogInfo("Target credentials collected successfully", "Migration")
 }
 catch {
     $errorMsg = "Failed to collect credentials for target $TargetNSXManager : $($_.Exception.Message)"
-    Write-Host "ERROR: $errorMsg" -ForegroundColor Red
+    Write-Host -Object "ERROR: $errorMsg" -ForegroundColor Red
     $logger.LogError($errorMsg, "ConfigSync")
     throw $errorMsg
 }
@@ -2280,19 +2280,19 @@ catch {
 # Skip connection testing to avoid /api/v1/node 403 Forbidden errors
 # PHASE 1 FIX: Connection testing removed (matches NSXPolicyConfigExport.ps1 pattern)
 $logger.LogInfo("Connection testing skipped by default to avoid 403 Forbidden errors", "ConfigSync")
-Write-Host "`nConnection testing skipped - proceeding with sync operations..."
+Write-Host -Object "`nConnection testing skipped - proceeding with sync operations..."
 
 # Display migration parameters
-Write-Host "`nMigration Parameters:" -ForegroundColor Cyan
-Write-Host "Source NSX Manager: $SourceNSXManager"
-Write-Host "Target NSX Manager: $TargetNSXManager"
-Write-Host "Domain ID: $DomainId"
-Write-Host "Object Types: $ObjectTypes"
-Write-Host "Sync Path: $SyncPath"
-Write-Host "Migration Session: $migrationSession"
+Write-Host -Object "`nMigration Parameters:" -ForegroundColor Cyan
+Write-Host -Object "Source NSX Manager: $SourceNSXManager"
+Write-Host -Object "Target NSX Manager: $TargetNSXManager"
+Write-Host -Object "Domain ID: $DomainId"
+Write-Host -Object "Object Types: $ObjectTypes"
+Write-Host -Object "Sync Path: $SyncPath"
+Write-Host -Object "Migration Session: $migrationSession"
 
 if ($WhatIfPreference) {
-    Write-Host "WhatIf Mode MODE - No changes will be made"
+    Write-Host -Object "WhatIf Mode MODE - No changes will be made"
 }
 
 # Configure SSL handling
@@ -2303,11 +2303,11 @@ if ($SkipSSLCheck) {
 
 # Phase 1: Export/Backup from Source using Hierarchical Configuration Manager
 if (-not $RestoreOnly) {
-    Write-Host "`n" + "-"*80
-    Write-Host "PHASE 1: Exporting Configuration from Source (Hierarchical API)"
-    Write-Host "-"*80
+    Write-Host -Object "`n" + "-"*80
+    Write-Host -Object "PHASE 1: Exporting Configuration from Source (Hierarchical API)"
+    Write-Host -Object "-"*80
 
-    Write-Host "Retrieving entire configuration from source NSX Manager..."
+    Write-Host -Object "Retrieving entire configuration from source NSX Manager..."
     $logger.LogInfo("Phase 1: Retrieving entire configuration from source using hierarchical API", "Migration")
 
     # PHASE 2 FIX: Use working NSXPolicyExportService approach (matches NSXPolicyConfigExport.ps1)
@@ -2419,10 +2419,10 @@ if (-not $RestoreOnly) {
     }
 
     # Display summary using working export result
-    Write-Host "`nExport Summary:"
-    Write-Host "Manager Type: $managerType"
-    Write-Host "Total Objects: $objectCount"
-    Write-Host "Config File: $(Split-Path $configFilePath -Leaf)"
+    Write-Host -Object "`nExport Summary:"
+    Write-Host -Object "Manager Type: $managerType"
+    Write-Host -Object "Total Objects: $objectCount"
+    Write-Host -Object "Config File: $(Split-Path $configFilePath -Leaf)"
 
     # Convert relative path to absolute for file operations
     $absoluteConfigPath = if ([System.IO.Path]::IsPathRooted($configFilePath)) {
@@ -2432,8 +2432,8 @@ if (-not $RestoreOnly) {
         [System.IO.Path]::GetFullPath((Join-Path (Get-Location) $configFilePath))
     }
 
-    Write-Host "File Size: $([math]::Round((Get-Item $absoluteConfigPath).Length / 1KB, 2)) KB" -ForegroundColor Cyan
-    Write-Host "Backup saved to: $configFilePath" -ForegroundColor Cyan
+    Write-Host -Object "File Size: $([math]::Round((Get-Item $absoluteConfigPath).Length / 1KB, 2)) KB" -ForegroundColor Cyan
+    Write-Host -Object "Backup saved to: $configFilePath" -ForegroundColor Cyan
 
     $logger.LogInfo("Configuration exported successfully: $objectCount objects", "Migration")
     $logger.LogInfo("Configuration saved to: $configFilePath", "Migration")
@@ -2441,19 +2441,19 @@ if (-not $RestoreOnly) {
 
 # Phase 2: Import/Restore to Target using Hierarchical Configuration Manager
 if (-not $BackupOnly) {
-    Write-Host "`n" + "-"*80
-    Write-Host "PHASE 2: Importing Configuration to Target (Hierarchical API)"
-    Write-Host "-"*80
+    Write-Host -Object "`n" + "-"*80
+    Write-Host -Object "PHASE 2: Importing Configuration to Target (Hierarchical API)"
+    Write-Host -Object "-"*80
 
     # Determine configuration file to use
     $configToApply = $null
     if ($RestoreFromFile) {
-        Write-Host "Using specified restore file: $RestoreFromFile"
+        Write-Host -Object "Using specified restore file: $RestoreFromFile"
         $configToApply = $RestoreFromFile
         $logger.LogInfo("Using restore file: $RestoreFromFile", "Migration")
     }
     elseif ($configFilePath) {
-        Write-Host "Using configuration from Phase 1: $(Split-Path $configFilePath -Leaf)"
+        Write-Host -Object "Using configuration from Phase 1: $(Split-Path $configFilePath -Leaf)"
         $configToApply = $configFilePath
         $logger.LogInfo("Using Phase 1 configuration: $configFilePath", "Migration")
     }
@@ -2461,7 +2461,7 @@ if (-not $BackupOnly) {
         # Look for latest config file for this source manager
         $latestConfig = $configManager.GetLatestConfigurationFile($SourceNSXManager)
         if ($latestConfig) {
-            Write-Host "Using latest saved configuration: $(Split-Path $latestConfig -Leaf)"
+            Write-Host -Object "Using latest saved configuration: $(Split-Path $latestConfig -Leaf)"
             $configToApply = $latestConfig
             $logger.LogInfo("Using latest configuration: $latestConfig", "Migration")
         }
@@ -2490,7 +2490,7 @@ if (-not $BackupOnly) {
 
     # Create pre-import backup of target using working NSXPolicyExportService approach
     # PHASE 3 FIX: Replace with working NSXPolicyExportService.ExportPolicyConfiguration() approach
-    Write-Host "Creating pre-import backup of target..."
+    Write-Host -Object "Creating pre-import backup of target..."
     $logger.LogInfo("Creating pre-import backup of target using NSXPolicyConfigExport.ps1", "Migration")
     try {
         $useTargetCredential = if ($targetCredential) { $targetCredential } else { $credential }
@@ -2559,20 +2559,20 @@ if (-not $BackupOnly) {
 
         # CANONICAL FIX: Use centralized function to extract target backup file path
         $targetBackupFile = Get-ExportMainFilePath -ExportResult $targetBackupResult -Context "Target Backup Export"
-        Write-Host "[SUCCESS] Target backup saved to: $(Split-Path $targetBackupFile -Leaf)" -ForegroundColor Green
-        Write-Host "Target backup file: $targetBackupFile" -ForegroundColor Cyan
+        Write-Host -Object "[SUCCESS] Target backup saved to: $(Split-Path $targetBackupFile -Leaf)" -ForegroundColor Green
+        Write-Host -Object "Target backup file: $targetBackupFile" -ForegroundColor Cyan
         $logger.LogInfo("Target backup saved using NSXPolicyConfigExport.ps1: $targetBackupFile", "Migration")
     }
     catch {
         $errorMsg = "Could not create target backup: $($_.Exception.Message)"
-        Write-Host $errorMsg -ForegroundColor Red
+        Write-Host -Object $errorMsg -ForegroundColor Red
         $logger.LogError($errorMsg, "Export")
         throw $errorMsg
     }
 
     # VALIDATION AND PREVIEW
     if ($ValidateBeforeImport) {
-        Write-Host "`nValidating configuration before import..."
+        Write-Host -Object "`nValidating configuration before import..."
         $logger.LogInfo("Validating configuration before import", "Migration")
 
         # Load source configuration for validation
@@ -2614,13 +2614,13 @@ if (-not $BackupOnly) {
             $changes = Show-SyncPreview -SourceConfig $sourceConfig -TargetConfig $targetConfig -ResourceTypes $resourceTypesToSync
         }
         catch {
-            Write-Host "Preview analysis: Unable to compare configurations" -ForegroundColor Yellow
-            Write-Host "Would apply configuration from exported file to target" -ForegroundColor Yellow
+            Write-Host -Object "Preview analysis: Unable to compare configurations" -ForegroundColor Yellow
+            Write-Host -Object "Would apply configuration from exported file to target" -ForegroundColor Yellow
         }
 
         # Perform deep validation if requested
         if ($DeepValidation) {
-            Write-Host "Performing deep validation..."
+            Write-Host -Object "Performing deep validation..."
             $logger.LogInfo("Performing deep validation", "Migration")
 
             # Add deep validation logic here
@@ -2632,7 +2632,7 @@ if (-not $BackupOnly) {
     # Create rollback configuration if requested using working NSXPolicyExportService approach
     if ($CreateRollbackConfig) {
         # PHASE 3 FIX: Replace with working NSXPolicyExportService.ExportPolicyConfiguration() approach
-        Write-Host "Creating rollback configuration..."
+        Write-Host -Object "Creating rollback configuration..."
         $logger.LogInfo("Creating rollback configuration using NSXPolicyExportService", "Migration")
         try {
             $useTargetCredential = if ($targetCredential) { $targetCredential } else { $credential }
@@ -2667,25 +2667,25 @@ if (-not $BackupOnly) {
             $rollbackFile = Get-ExportMainFilePath -ExportResult $rollbackResult -Context "Rollback Export"
             $rollbackObjectCount = Get-ExportObjectCount -ExportResult $rollbackResult -Context "Rollback Export"
 
-            Write-Host "[SUCCESS] Rollback configuration saved to: $(Split-Path $rollbackFile -Leaf)" -ForegroundColor Green
-            Write-Host "Rollback objects: $rollbackObjectCount" -ForegroundColor Cyan
+            Write-Host -Object "[SUCCESS] Rollback configuration saved to: $(Split-Path $rollbackFile -Leaf)" -ForegroundColor Green
+            Write-Host -Object "Rollback objects: $rollbackObjectCount" -ForegroundColor Cyan
             $logger.LogInfo("Rollback configuration saved using NSXPolicyExportService: $rollbackFile", "Migration")
             $logger.LogInfo("Rollback object count: $rollbackObjectCount", "Migration")
         }
         catch {
-            Write-Host "Warning: Could not create rollback configuration - continuing anyway" -ForegroundColor Yellow
+            Write-Host -Object "Warning: Could not create rollback configuration - continuing anyway" -ForegroundColor Yellow
             $logger.LogWarning("Could not create rollback configuration: $($_.Exception.Message)", "Migration")
         }
     }
 
     # WhatIf Mode: Perform analysis with target export and differential comparison
     if ($WhatIfPreference) {
-        Write-Host "`n" + "-"*80
-        Write-Host "WHATIF MODE: Configuration Analysis"
-        Write-Host "-"*80
+        Write-Host -Object "`n" + "-"*80
+        Write-Host -Object "WHATIF MODE: Configuration Analysis"
+        Write-Host -Object "-"*80
 
         # PHASE 3: Export target baseline for comparison (WhatIf Mode)
-        Write-Host "`nExporting target NSX Manager configuration for comparison..."
+        Write-Host -Object "`nExporting target NSX Manager configuration for comparison..."
         $logger.LogInfo("WhatIf Mode: Starting target configuration export for comparison", "Migration")
 
         try {
@@ -2731,22 +2731,22 @@ if (-not $BackupOnly) {
             }
 
             # Display target export summary (matching source format)
-            Write-Host "`nTarget Export Summary:" -ForegroundColor Yellow
-            Write-Host "Manager Type: $targetManagerType" -ForegroundColor White
-            Write-Host "Total Objects: $targetObjectCount" -ForegroundColor White
-            Write-Host "Config File: $(Split-Path $targetMainExport -Leaf)" -ForegroundColor White
+            Write-Host -Object "`nTarget Export Summary:" -ForegroundColor Yellow
+            Write-Host -Object "Manager Type: $targetManagerType" -ForegroundColor White
+            Write-Host -Object "Total Objects: $targetObjectCount" -ForegroundColor White
+            Write-Host -Object "Config File: $(Split-Path $targetMainExport -Leaf)" -ForegroundColor White
             $targetFileSize = [math]::Round((Get-Item $targetMainExport).Length / 1KB, 2)
-            Write-Host "File Size: $targetFileSize KB" -ForegroundColor White
-            Write-Host "Backup saved to: $targetMainExport" -ForegroundColor White
+            Write-Host -Object "File Size: $targetFileSize KB" -ForegroundColor White
+            Write-Host -Object "Backup saved to: $targetMainExport" -ForegroundColor White
 
             $logger.LogInfo("WhatIf Mode: Target configuration exported successfully - $targetObjectCount objects", "Migration")
 
             # PHASE 4: Perform differential analysis (WhatIf Mode)
-            Write-Host "`n" + "-"*80
-            Write-Host "WHATIF MODE: Differential Analysis"
-            Write-Host "-"*80
+            Write-Host -Object "`n" + "-"*80
+            Write-Host -Object "WHATIF MODE: Differential Analysis"
+            Write-Host -Object "-"*80
 
-            Write-Host "Analyzing configuration differences..."
+            Write-Host -Object "Analyzing configuration differences..."
             $logger.LogInfo("WhatIf Mode: Starting differential analysis", "Migration")
 
             # Set up differential operation options for WhatIf analysis
@@ -2762,126 +2762,126 @@ if (-not $BackupOnly) {
             # Display differential analysis results
             if ($diffResult -and $diffResult.results.Differences) {
                 $diff = $diffResult.results.Differences
-                Write-Host "`nCONFIGURATION DIFFERENCES ANALYSIS:" -ForegroundColor Yellow
-                Write-Host "  - Objects to CREATE: $($diff.CreateCount)" -ForegroundColor Green
-                Write-Host "  - Objects to UPDATE: $($diff.UpdateCount)" -ForegroundColor Yellow
-                Write-Host "  - Objects to DELETE: $($diff.DeleteCount)" -ForegroundColor Red
-                Write-Host "  - Objects UNCHANGED: $($diff.UnchangedCount)" -ForegroundColor Cyan
-                Write-Host "  - Total Changes Required: $($diff.TotalChanges)" -ForegroundColor White
+                Write-Host -Object "`nCONFIGURATION DIFFERENCES ANALYSIS:" -ForegroundColor Yellow
+                Write-Host -Object "  - Objects to CREATE: $($diff.CreateCount)" -ForegroundColor Green
+                Write-Host -Object "  - Objects to UPDATE: $($diff.UpdateCount)" -ForegroundColor Yellow
+                Write-Host -Object "  - Objects to DELETE: $($diff.DeleteCount)" -ForegroundColor Red
+                Write-Host -Object "  - Objects UNCHANGED: $($diff.UnchangedCount)" -ForegroundColor Cyan
+                Write-Host -Object "  - Total Changes Required: $($diff.TotalChanges)" -ForegroundColor White
 
                 if ($diff.TotalChanges -eq 0) {
-                    Write-Host "`n[SUCCESS] NO CHANGES REQUIRED" -ForegroundColor Green
-                    Write-Host "   Source and target configurations are already synchronized" -ForegroundColor Gray
+                    Write-Host -Object "`n[SUCCESS] NO CHANGES REQUIRED" -ForegroundColor Green
+                    Write-Host -Object "   Source and target configurations are already synchronized" -ForegroundColor Gray
                 }
                 else {
-                    Write-Host "`nWARNING: CHANGES REQUIRED" -ForegroundColor Yellow
-                    Write-Host "   $($diff.TotalChanges) changes would be applied in live mode" -ForegroundColor Gray
+                    Write-Host -Object "`nWARNING: CHANGES REQUIRED" -ForegroundColor Yellow
+                    Write-Host -Object "   $($diff.TotalChanges) changes would be applied in live mode" -ForegroundColor Gray
                 }
 
                 $logger.LogInfo("WhatIf Mode: Differential analysis completed - $($diff.TotalChanges) changes identified", "Migration")
             }
             else {
-                Write-Host "`nNo differential analysis results available" -ForegroundColor Yellow
+                Write-Host -Object "`nNo differential analysis results available" -ForegroundColor Yellow
                 $logger.LogWarning("WhatIf Mode: Differential analysis results not available", "Migration")
             }
 
         }
         catch {
-            Write-Host "`n[WARNING] Target analysis failed: $($_.Exception.Message)" -ForegroundColor Yellow
-            Write-Host "Proceeding with source-only analysis..." -ForegroundColor Yellow
+            Write-Host -Object "`n[WARNING] Target analysis failed: $($_.Exception.Message)" -ForegroundColor Yellow
+            Write-Host -Object "Proceeding with source-only analysis..." -ForegroundColor Yellow
             $logger.LogWarning("WhatIf Mode: Target analysis failed - $($_.Exception.Message)", "Migration")
         }
 
         # WHATIF SUMMARY
-        Write-Host "`n" + "="*100
-        Write-Host "  WHATIF MODE: ANALYSIS SUMMARY"
-        Write-Host "="*100
+        Write-Host -Object "`n" + "="*100
+        Write-Host -Object "  WHATIF MODE: ANALYSIS SUMMARY"
+        Write-Host -Object "="*100
 
-        Write-Host "`nSOURCE CONFIGURATION ANALYSIS:" -ForegroundColor Cyan
-        Write-Host "  NSX Manager: $SourceNSXManager" -ForegroundColor White
-        Write-Host "  Objects Exported: $objectCount" -ForegroundColor White
-        Write-Host "  Manager Type: $managerType" -ForegroundColor White
-        Write-Host "  Export File: $(Split-Path $configFilePath -Leaf)" -ForegroundColor White
+        Write-Host -Object "`nSOURCE CONFIGURATION ANALYSIS:" -ForegroundColor Cyan
+        Write-Host -Object "  NSX Manager: $SourceNSXManager" -ForegroundColor White
+        Write-Host -Object "  Objects Exported: $objectCount" -ForegroundColor White
+        Write-Host -Object "  Manager Type: $managerType" -ForegroundColor White
+        Write-Host -Object "  Export File: $(Split-Path $configFilePath -Leaf)" -ForegroundColor White
 
         if ($targetResult) {
-            Write-Host "`nTARGET CONFIGURATION ANALYSIS:" -ForegroundColor Cyan
-            Write-Host "  NSX Manager: $TargetNSXManager" -ForegroundColor White
-            Write-Host "  Objects Exported: $targetObjectCount" -ForegroundColor White
-            Write-Host "  Manager Type: $targetManagerType" -ForegroundColor White
-            Write-Host "  Export File: $(Split-Path $targetMainExport -Leaf)" -ForegroundColor White
+            Write-Host -Object "`nTARGET CONFIGURATION ANALYSIS:" -ForegroundColor Cyan
+            Write-Host -Object "  NSX Manager: $TargetNSXManager" -ForegroundColor White
+            Write-Host -Object "  Objects Exported: $targetObjectCount" -ForegroundColor White
+            Write-Host -Object "  Manager Type: $targetManagerType" -ForegroundColor White
+            Write-Host -Object "  Export File: $(Split-Path $targetMainExport -Leaf)" -ForegroundColor White
         }
 
         if ($diffResult -and $diffResult.results.Differences) {
             $diff = $diffResult.results.Differences
-            Write-Host "`nDIFFERENTIAL IMPACT ANALYSIS:" -ForegroundColor Cyan
-            Write-Host "  Objects to Create: $($diff.CreateCount)" -ForegroundColor Green
-            Write-Host "  Objects to Update: $($diff.UpdateCount)" -ForegroundColor Yellow
-            Write-Host "  Objects Unchanged: $($diff.UnchangedCount)" -ForegroundColor Cyan
-            Write-Host "  Total Changes: $($diff.TotalChanges)" -ForegroundColor White
+            Write-Host -Object "`nDIFFERENTIAL IMPACT ANALYSIS:" -ForegroundColor Cyan
+            Write-Host -Object "  Objects to Create: $($diff.CreateCount)" -ForegroundColor Green
+            Write-Host -Object "  Objects to Update: $($diff.UpdateCount)" -ForegroundColor Yellow
+            Write-Host -Object "  Objects Unchanged: $($diff.UnchangedCount)" -ForegroundColor Cyan
+            Write-Host -Object "  Total Changes: $($diff.TotalChanges)" -ForegroundColor White
 
             # Calculate synchronization percentage
             $totalObjects = $diff.CreateCount + $diff.UpdateCount + $diff.UnchangedCount
             if ($totalObjects -gt 0) {
                 $syncPercentage = [math]::Round(($diff.UnchangedCount / $totalObjects) * 100, 2)
-                Write-Host "  Current Sync Rate: $syncPercentage%" -ForegroundColor Cyan
+                Write-Host -Object "  Current Sync Rate: $syncPercentage%" -ForegroundColor Cyan
             }
         }
 
-        Write-Host "`nOPERATION SUMMARY:" -ForegroundColor Cyan
-        Write-Host "  Mode: WhatIf Analysis (No Changes Made)" -ForegroundColor White
-        Write-Host "  Domain: $DomainId" -ForegroundColor White
-        Write-Host "  Resource Types: $($resourceTypesToSync -join ', ')" -ForegroundColor White
-        Write-Host "  Analysis Files Generated: Yes" -ForegroundColor Green
-        Write-Host "  Target Modified: No" -ForegroundColor Green
+        Write-Host -Object "`nOPERATION SUMMARY:" -ForegroundColor Cyan
+        Write-Host -Object "  Mode: WhatIf Analysis (No Changes Made)" -ForegroundColor White
+        Write-Host -Object "  Domain: $DomainId" -ForegroundColor White
+        Write-Host -Object "  Resource Types: $($resourceTypesToSync -join ', ')" -ForegroundColor White
+        Write-Host -Object "  Analysis Files Generated: Yes" -ForegroundColor Green
+        Write-Host -Object "  Target Modified: No" -ForegroundColor Green
 
-        Write-Host "`nNEXT STEPS:" -ForegroundColor Yellow
+        Write-Host -Object "`nNEXT STEPS:" -ForegroundColor Yellow
         if ($diffResult -and $diffResult.results.Differences -and $diffResult.results.Differences.TotalChanges -gt 0) {
-            Write-Host "  - Review the differential analysis results above" -ForegroundColor White
-            Write-Host "  - Run without -WhatIf to apply $($diffResult.results.Differences.TotalChanges) changes" -ForegroundColor White
-            Write-Host "  - Use -Force to skip confirmation prompts" -ForegroundColor White
+            Write-Host -Object "  - Review the differential analysis results above" -ForegroundColor White
+            Write-Host -Object "  - Run without -WhatIf to apply $($diffResult.results.Differences.TotalChanges) changes" -ForegroundColor White
+            Write-Host -Object "  - Use -Force to skip confirmation prompts" -ForegroundColor White
         }
         else {
-            Write-Host "  - No changes required - configurations are synchronized" -ForegroundColor White
+            Write-Host -Object "  - No changes required - configurations are synchronized" -ForegroundColor White
         }
 
-        Write-Host "`nGENERATED FILES:" -ForegroundColor Yellow
-        Write-Host "  - Source Export: $(Split-Path $configFilePath -Leaf)" -ForegroundColor Gray
+        Write-Host -Object "`nGENERATED FILES:" -ForegroundColor Yellow
+        Write-Host -Object "  - Source Export: $(Split-Path $configFilePath -Leaf)" -ForegroundColor Gray
         if ($targetResult) {
-            Write-Host "  - Target Export: $(Split-Path $targetMainExport -Leaf)" -ForegroundColor Gray
+            Write-Host -Object "  - Target Export: $(Split-Path $targetMainExport -Leaf)" -ForegroundColor Gray
         }
         if ($diffResult -and $diffResult.results.DeltaConfigPath) {
-            Write-Host "  - Delta Analysis: $(Split-Path $diffResult.results.DeltaConfigPath -Leaf)" -ForegroundColor Gray
+            Write-Host -Object "  - Delta Analysis: $(Split-Path $diffResult.results.DeltaConfigPath -Leaf)" -ForegroundColor Gray
         }
 
-        Write-Host ""
-        Write-Host "WhatIf analysis completed successfully - no changes were made to target NSX Manager" -ForegroundColor Green
+        Write-Host -Object ""
+        Write-Host -Object "WhatIf analysis completed successfully - no changes were made to target NSX Manager" -ForegroundColor Green
         $logger.LogInfo("WhatIf Mode: analysis completed successfully", "Migration")
         return
     }
 
     # Import confirmation
-    Write-Host "[DEBUG] Force: $Force"
+    Write-Host -Object "[DEBUG] Force: $Force"
     if (-not $Force -and -not $NonInteractive) {
-        Write-Host "`nWARNING: This operation will modify the target NSX Manager!"
-        Write-Host "Target: $TargetNSXManager"
-        Write-Host "Configuration: $(Split-Path $configToApply -Leaf)"
-        Write-Host "Sync Mode: $effectiveSyncMode"
-        Write-Host "Resource Types: $($resourceTypesToSync -join ', ')"
-        Write-Host "Conflict Resolution: $ConflictResolution"
+        Write-Host -Object "`nWARNING: This operation will modify the target NSX Manager!"
+        Write-Host -Object "Target: $TargetNSXManager"
+        Write-Host -Object "Configuration: $(Split-Path $configToApply -Leaf)"
+        Write-Host -Object "Sync Mode: $effectiveSyncMode"
+        Write-Host -Object "Resource Types: $($resourceTypesToSync -join ', ')"
+        Write-Host -Object "Conflict Resolution: $ConflictResolution"
         $confirm = Read-Host "`nDo you want to proceed with the import? (yes/no)"
         if ($confirm -ne 'yes') {
-            Write-Host "Import cancelled by user"
+            Write-Host -Object "Import cancelled by user"
             $logger.LogInfo("Import cancelled by user", "Migration")
             return
         }
     }
 
     # PHASE 4 FIX: Apply configuration using NSXDifferentialConfigManager approach
-    Write-Host "`n" + "-"*80
-    Write-Host "PHASE 4: Applying Configuration Using Differential Analysis"
-    Write-Host "-"*80
+    Write-Host -Object "`n" + "-"*80
+    Write-Host -Object "PHASE 4: Applying Configuration Using Differential Analysis"
+    Write-Host -Object "-"*80
 
-    Write-Host "Executing differential configuration management workflow..."
+    Write-Host -Object "Executing differential configuration management workflow..."
     $logger.LogInfo("PHASE 4: Starting differential configuration application", "Migration")
 
     # Set up differential operation options following ApplyNSXConfigDifferential.ps1 pattern
@@ -2912,30 +2912,30 @@ if (-not $BackupOnly) {
         }
 
         # Display differential operation results
-        Write-Host "`n[SUCCESS] Differential configuration applied successfully" -ForegroundColor Green
-        Write-Host "Operation ID: $($diffResult.operation_id)" -ForegroundColor Cyan
+        Write-Host -Object "`n[SUCCESS] Differential configuration applied successfully" -ForegroundColor Green
+        Write-Host -Object "Operation ID: $($diffResult.operation_id)" -ForegroundColor Cyan
 
         if ($diffResult.results.Differences) {
             $diff = $diffResult.results.Differences
-            Write-Host "Changes Applied:" -ForegroundColor Yellow
-            Write-Host "  - Created: $($diff.CreateCount) objects" -ForegroundColor Green
-            Write-Host "  - Updated: $($diff.UpdateCount) objects" -ForegroundColor Yellow
-            Write-Host "  - Unchanged: $($diff.UnchangedCount) objects" -ForegroundColor Cyan
+            Write-Host -Object "Changes Applied:" -ForegroundColor Yellow
+            Write-Host -Object "  - Created: $($diff.CreateCount) objects" -ForegroundColor Green
+            Write-Host -Object "  - Updated: $($diff.UpdateCount) objects" -ForegroundColor Yellow
+            Write-Host -Object "  - Unchanged: $($diff.UnchangedCount) objects" -ForegroundColor Cyan
             if ($diff.DeleteCount -gt 0) {
-                Write-Host "  - Deleted: $($diff.DeleteCount) objects" -ForegroundColor Red
+                Write-Host -Object "  - Deleted: $($diff.DeleteCount) objects" -ForegroundColor Red
             }
-            Write-Host "  - Total Changes: $($diff.TotalChanges)" -ForegroundColor White
+            Write-Host -Object "  - Total Changes: $($diff.TotalChanges)" -ForegroundColor White
         }
 
         $logger.LogInfo("PHASE 4: Differential configuration applied successfully", "Migration")
         $logger.LogInfo("Differential changes - Create: $($diffResult.results.Differences.CreateCount), Update: $($diffResult.results.Differences.UpdateCount), Total: $($diffResult.results.Differences.TotalChanges)", "Migration")
 
         # PHASE 5: VERIFICATION WORKFLOW - Display verification results from NSXDifferentialConfigManager
-        Write-Host "`n" + "-"*80
-        Write-Host "PHASE 5: Configuration Verification & Validation"
-        Write-Host "-"*80
+        Write-Host -Object "`n" + "-"*80
+        Write-Host -Object "PHASE 5: Configuration Verification & Validation"
+        Write-Host -Object "-"*80
 
-        Write-Host "Verifying applied configuration against expected results..."
+        Write-Host -Object "Verifying applied configuration against expected results..."
         $logger.LogInfo("PHASE 5: Starting configuration verification workflow", "Migration")
 
         # Display verification results (automatically performed by NSXDifferentialConfigManager steps 7-9)
@@ -2949,44 +2949,44 @@ if (-not $BackupOnly) {
             $filterStats = $dataObjectFilterService.GetPropertyFilteringStatistics($verify)
             $logger.LogInfo("Property filtering enabled: Inclusions=$($filterStats.PropertyInclusionsEnabled), Exclusions=$($filterStats.PropertyExclusionsEnabled)", "Migration")
 
-            Write-Host "`nVERIFICATION RESULTS (with property-level filtering):" -ForegroundColor Yellow
-            Write-Host "  - Matches: $($verify.matches)" -ForegroundColor Green
-            Write-Host "  - Mismatches: $($verify.mismatches)" -ForegroundColor Yellow
-            Write-Host "  - Not Found: $($verify.not_found)" -ForegroundColor Red
-            Write-Host "  - Total Delta Objects: $($verify.total_delta_objects)" -ForegroundColor Cyan
+            Write-Host -Object "`nVERIFICATION RESULTS (with property-level filtering):" -ForegroundColor Yellow
+            Write-Host -Object "  - Matches: $($verify.matches)" -ForegroundColor Green
+            Write-Host -Object "  - Mismatches: $($verify.mismatches)" -ForegroundColor Yellow
+            Write-Host -Object "  - Not Found: $($verify.not_found)" -ForegroundColor Red
+            Write-Host -Object "  - Total Delta Objects: $($verify.total_delta_objects)" -ForegroundColor Cyan
 
             # Calculate success rate
             $totalVerified = $verify.matches + $verify.mismatches + $verify.not_found
             $successRate = if ($totalVerified -gt 0) { [math]::Round(($verify.matches / $totalVerified) * 100, 2) } else { 0 }
-            Write-Host "  - Success Rate: $successRate%" -ForegroundColor Cyan
+            Write-Host -Object "  - Success Rate: $successRate%" -ForegroundColor Cyan
 
             # Display property filtering information
-            Write-Host "  - Property Filtering: System properties excluded, business properties focused" -ForegroundColor Gray
+            Write-Host -Object "  - Property Filtering: System properties excluded, business properties focused" -ForegroundColor Gray
 
             if ($diffResult.results.VerificationResultsPath) {
-                Write-Host "  - Verification report: $(Split-Path $diffResult.results.VerificationResultsPath -Leaf)" -ForegroundColor Gray
+                Write-Host -Object "  - Verification report: $(Split-Path $diffResult.results.VerificationResultsPath -Leaf)" -ForegroundColor Gray
                 $logger.LogInfo("Verification report saved: $($diffResult.results.VerificationResultsPath)", "Migration")
             }
 
             # Display actual payload file for debugging
             if ($diffResult.results.ActualPayloadPath) {
-                Write-Host "  - Actual payload (debugging): $(Split-Path $diffResult.results.ActualPayloadPath -Leaf)" -ForegroundColor Magenta
+                Write-Host -Object "  - Actual payload (debugging): $(Split-Path $diffResult.results.ActualPayloadPath -Leaf)" -ForegroundColor Magenta
                 $logger.LogInfo("Actual payload saved for debugging: $($diffResult.results.ActualPayloadPath)", "Migration")
             }
 
             # Final verification status
             if ($successRate -eq 100) {
-                Write-Host "`n[SUCCESS] VERIFICATION PASSED - All changes verified successfully" -ForegroundColor Green
+                Write-Host -Object "`n[SUCCESS] VERIFICATION PASSED - All changes verified successfully" -ForegroundColor Green
                 $logger.LogInfo("PHASE 5: Configuration verification completed successfully - $successRate% success rate", "Migration")
             }
             else {
-                Write-Host "`n[WARNING] VERIFICATION PARTIAL - Some changes may not have been applied correctly" -ForegroundColor Yellow
-                Write-Host "Check the verification report for detailed analysis" -ForegroundColor Yellow
+                Write-Host -Object "`n[WARNING] VERIFICATION PARTIAL - Some changes may not have been applied correctly" -ForegroundColor Yellow
+                Write-Host -Object "Check the verification report for detailed analysis" -ForegroundColor Yellow
                 $logger.LogWarning("PHASE 5: Configuration verification completed with partial success - $successRate% success rate", "Migration")
             }
         }
         else {
-            Write-Host "`n[INFO] Verification results not available (may be WhatIf mode or verification disabled)" -ForegroundColor Cyan
+            Write-Host -Object "`n[INFO] Verification results not available (may be WhatIf mode or verification disabled)" -ForegroundColor Cyan
             $logger.LogInfo("PHASE 5: Verification results not available", "Migration")
         }
 
@@ -3001,14 +3001,14 @@ if (-not $BackupOnly) {
 
 
 # Migration Summary
-Write-Host ""
-Write-Host ("=" * 100)
-Write-Host "  HIERARCHICAL MIGRATION COMPLETED SUCCESSFULLY"
-Write-Host ("=" * 100)
+Write-Host -Object ""
+Write-Host -Object ("=" * 100)
+Write-Host -Object "  HIERARCHICAL MIGRATION COMPLETED SUCCESSFULLY"
+Write-Host -Object ("=" * 100)
 
-Write-Host "`nMigration Files in Sync Directory:" -ForegroundColor Cyan
+Write-Host -Object "`nMigration Files in Sync Directory:" -ForegroundColor Cyan
 Get-ChildItem -Path $SyncPath -Filter "*$migrationSession*" | ForEach-Object {
-    Write-Host "- $($_.Name)"
+    Write-Host -Object "- $($_.Name)"
 }
 
 # Build hierarchical configs path for file listing
@@ -3018,48 +3018,48 @@ $hierConfigsPath = $script:workflowOpsService.GetToolkitPath('Exports')
 if (Test-Path $hierConfigsPath) {
     $hierConfigs = Get-ChildItem -Path $hierConfigsPath -Filter "*.json" -ErrorAction SilentlyContinue
     if ($hierConfigs) {
-        Write-Host "`nAvailable Configuration Files:" -ForegroundColor Yellow
-        Write-Host "- Configuration files in data/exports are sorted by reverse timestamp"
+        Write-Host -Object "`nAvailable Configuration Files:" -ForegroundColor Yellow
+        Write-Host -Object "- Configuration files in data/exports are sorted by reverse timestamp"
         $hierConfigs | Sort-Object Name -Descending | ForEach-Object {
             $size = [math]::Round($_.Length / 1KB, 2)
-            Write-Host "  $($_.Name) ($size KB)" -ForegroundColor White
+            Write-Host -Object "  $($_.Name) ($size KB)" -ForegroundColor White
         }
     }
 }
 
-Write-Host "`nMigration Summary:"
-Write-Host "- Migration Session: $migrationSession"
-Write-Host "- Source Manager: $SourceNSXManager"
-Write-Host "- Target Manager: $TargetNSXManager"
-Write-Host "- Migration Type: Hierarchical $effectiveSyncMode Configuration"
-Write-Host "- Resource Types: $($resourceTypesToSync -join ', ')"
-Write-Host "- Conflict Resolution: $ConflictResolution"
-Write-Host "- Sync Path: $SyncPath"
+Write-Host -Object "`nMigration Summary:"
+Write-Host -Object "- Migration Session: $migrationSession"
+Write-Host -Object "- Source Manager: $SourceNSXManager"
+Write-Host -Object "- Target Manager: $TargetNSXManager"
+Write-Host -Object "- Migration Type: Hierarchical $effectiveSyncMode Configuration"
+Write-Host -Object "- Resource Types: $($resourceTypesToSync -join ', ')"
+Write-Host -Object "- Conflict Resolution: $ConflictResolution"
+Write-Host -Object "- Sync Path: $SyncPath"
 
-Write-Host "`nFeatures Used:"
-if ($ValidateBeforeImport) { Write-Host "- [SUCCESS] Configuration validation performed" }
-if ($CreateRollbackConfig) { Write-Host "- [SUCCESS] Rollback configuration created" }
-if ($DeepValidation) { Write-Host "- [SUCCESS] Deep validation performed" }
-if ($IncludePatterns) { Write-Host "- [SUCCESS] Include patterns applied: $IncludePatterns" }
-if ($ExcludePatterns) { Write-Host "- [SUCCESS] Exclude patterns applied: $ExcludePatterns" }
-if ($ModifiedAfter) { Write-Host "- [SUCCESS] Modified after filter: $ModifiedAfter" }
-if ($MaxObjects) { Write-Host "- [SUCCESS] Max objects limit: $MaxObjects" }
+Write-Host -Object "`nFeatures Used:"
+if ($ValidateBeforeImport) { Write-Host -Object "- [SUCCESS] Configuration validation performed" }
+if ($CreateRollbackConfig) { Write-Host -Object "- [SUCCESS] Rollback configuration created" }
+if ($DeepValidation) { Write-Host -Object "- [SUCCESS] Deep validation performed" }
+if ($IncludePatterns) { Write-Host -Object "- [SUCCESS] Include patterns applied: $IncludePatterns" }
+if ($ExcludePatterns) { Write-Host -Object "- [SUCCESS] Exclude patterns applied: $ExcludePatterns" }
+if ($ModifiedAfter) { Write-Host -Object "- [SUCCESS] Modified after filter: $ModifiedAfter" }
+if ($MaxObjects) { Write-Host -Object "- [SUCCESS] Max objects limit: $MaxObjects" }
 
-Write-Host "`nRecommendations:"
-Write-Host "- Verify all objects are functioning correctly in the target environment"
-Write-Host "- Test connectivity and security policies"
-Write-Host "- Keep backup files for rollback if needed"
-Write-Host "- Update any automation scripts with new NSX Manager references"
-Write-Host "- Configuration files in exported_configs are sorted by reverse timestamp"
+Write-Host -Object "`nRecommendations:"
+Write-Host -Object "- Verify all objects are functioning correctly in the target environment"
+Write-Host -Object "- Test connectivity and security policies"
+Write-Host -Object "- Keep backup files for rollback if needed"
+Write-Host -Object "- Update any automation scripts with new NSX Manager references"
+Write-Host -Object "- Configuration files in exported_configs are sorted by reverse timestamp"
 if ($CreateRollbackConfig) {
-    Write-Host "- Use rollback configuration if rollback is needed" -ForegroundColor Yellow
+    Write-Host -Object "- Use rollback configuration if rollback is needed" -ForegroundColor Yellow
 }
 
 
 catch {
-    Write-Host "`nERROR: Migration failed!"
-    Write-Host "Error: $($_.Exception.Message)"
-    Write-Host "`nCheck the log file for detailed error information"
-    Write-Host "Sync files are available in: $SyncPath" -ForegroundColor Cyan
+    Write-Host -Object "`nERROR: Migration failed!"
+    Write-Host -Object "Error: $($_.Exception.Message)"
+    Write-Host -Object "`nCheck the log file for detailed error information"
+    Write-Host -Object "Sync files are available in: $SyncPath" -ForegroundColor Cyan
     exit 1
 }

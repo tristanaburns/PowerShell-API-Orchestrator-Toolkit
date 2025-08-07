@@ -1,4 +1,4 @@
-﻿# NSXConnectionTest.ps1 - with Endpoint Discovery
+# NSXConnectionTest.ps1 - with Endpoint Discovery
 <#
 .SYNOPSIS
     diagnostic test for NSX-T Manager connections with endpoint discovery and caching.
@@ -150,7 +150,7 @@ try {
 
   # CRITICAL: Configure SSL bypass IMMEDIATELY after service initialization and BEFORE any HTTPS operations
   if ($SkipSSLCheck) {
-    Write-Host "Configuring SSL bypass before any HTTPS operations..." -ForegroundColor Yellow
+    Write-Host -Object "Configuring SSL bypass before any HTTPS operations..." -ForegroundColor Yellow
 
     # Apply robust SSL bypass (multiple fallback methods)
     try {
@@ -170,19 +170,19 @@ try {
       [System.Net.ServicePointManager]::DefaultConnectionLimit = 50
       [System.Net.ServicePointManager]::Expect100Continue = $false
 
-      Write-Host "[SUCCESS] SSL bypass configured successfully" -ForegroundColor Green
+      Write-Host -Object "[SUCCESS] SSL bypass configured successfully" -ForegroundColor Green
     }
     catch {
-      Write-Host "[FAIL] SSL bypass configuration failed: $($_.Exception.Message)" -ForegroundColor Red
-      Write-Host "WARNING:  HTTPS operations may fail" -ForegroundColor Yellow
+      Write-Host -Object "[FAIL] SSL bypass configuration failed: $($_.Exception.Message)" -ForegroundColor Red
+      Write-Host -Object "WARNING:  HTTPS operations may fail" -ForegroundColor Yellow
     }
   }
 
-  Write-Host "NSXConnectionTest: Service framework initialized successfully" -ForegroundColor Green
-  Write-Host "  OpenAPI Schema Service: $(if ($hasOpenAPISupport) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasOpenAPISupport) { 'Green' } else { 'Yellow' })
-  Write-Host "  Data Object Filtering: $(if ($hasFilteringSupport) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasFilteringSupport) { 'Green' } else { 'Yellow' })
-  Write-Host "  Configuration Validation: $(if ($hasValidationSupport) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasValidationSupport) { 'Green' } else { 'Yellow' })
-  Write-Host "  Standard File Naming: $(if ($hasStandardFileNaming) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasStandardFileNaming) { 'Green' } else { 'Yellow' })
+  Write-Host -Object "NSXConnectionTest: Service framework initialized successfully" -ForegroundColor Green
+  Write-Host -Object "  OpenAPI Schema Service: $(if ($hasOpenAPISupport) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasOpenAPISupport) { 'Green' } else { 'Yellow' })
+  Write-Host -Object "  Data Object Filtering: $(if ($hasFilteringSupport) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasFilteringSupport) { 'Green' } else { 'Yellow' })
+  Write-Host -Object "  Configuration Validation: $(if ($hasValidationSupport) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasValidationSupport) { 'Green' } else { 'Yellow' })
+  Write-Host -Object "  Standard File Naming: $(if ($hasStandardFileNaming) { 'Available' } else { 'Unavailable' })" -ForegroundColor $(if ($hasStandardFileNaming) { 'Green' } else { 'Yellow' })
 }
 catch {
   Write-Error "Failed to initialize service framework: $($_.Exception.Message)"
@@ -2276,22 +2276,22 @@ function Assert-NSXToolkitPrerequisites {
 
   # STATE CHAINING: If ValidatedState is provided, use it instead of running validation
   if ($ValidatedState -and $ValidatedState.ConnectivityValid -and $ValidatedState.NSXManager -eq $NSXManager) {
-    Write-Host "[SUCCESS] NSX Toolkit Prerequisites: USING VALIDATED STATE FROM CHAIN" -ForegroundColor Green
-    Write-Host "Previous Tool: $($ValidatedState.ToolName)" -ForegroundColor Green
-    Write-Host "Validation Time: $($ValidatedState.ValidationTime)" -ForegroundColor Green
-    Write-Host "Valid Endpoints: $($ValidatedState.AvailableEndpoints.Count)" -ForegroundColor Green
-    Write-Host "Cache Valid: $($ValidatedState.CacheValid)" -ForegroundColor Green
-    Write-Host ""
+    Write-Host -Object "[SUCCESS] NSX Toolkit Prerequisites: USING VALIDATED STATE FROM CHAIN" -ForegroundColor Green
+    Write-Host -Object "Previous Tool: $($ValidatedState.ToolName)" -ForegroundColor Green
+    Write-Host -Object "Validation Time: $($ValidatedState.ValidationTime)" -ForegroundColor Green
+    Write-Host -Object "Valid Endpoints: $($ValidatedState.AvailableEndpoints.Count)" -ForegroundColor Green
+    Write-Host -Object "Cache Valid: $($ValidatedState.CacheValid)" -ForegroundColor Green
+    Write-Host -Object ""
 
     # Validate required endpoints against cached state
     if ($RequiredEndpoints.Count -gt 0) {
       $missingEndpoints = $RequiredEndpoints | Where-Object { $_ -notin $ValidatedState.AvailableEndpoints }
       if ($missingEndpoints.Count -gt 0 -and -not $AllowLimitedFunctionality) {
-        Write-Host ""
-        Write-Host "[WARNING] TOOLKIT PREREQUISITE WARNING" -ForegroundColor Yellow
-        Write-Host "Tool: $ToolName" -ForegroundColor Yellow
-        Write-Host "Missing endpoints: $($missingEndpoints -join ', ')" -ForegroundColor Yellow
-        Write-Host ""
+        Write-Host -Object ""
+        Write-Host -Object "[WARNING] TOOLKIT PREREQUISITE WARNING" -ForegroundColor Yellow
+        Write-Host -Object "Tool: $ToolName" -ForegroundColor Yellow
+        Write-Host -Object "Missing endpoints: $($missingEndpoints -join ', ')" -ForegroundColor Yellow
+        Write-Host -Object ""
         throw "NSX Toolkit prerequisites warning - tool requires all endpoints"
       }
     }
@@ -2315,45 +2315,45 @@ function Assert-NSXToolkitPrerequisites {
   $result = Invoke-NSXConnectionTestPrerequisite -NSXManager $NSXManager -Credential $Credential -RequiredEndpoints $RequiredEndpoints -ToolName $ToolName
 
   if (-not $result.Success -or -not $result.ToolCanProceed) {
-    Write-Host ""
-    Write-Host "[ERROR] TOOLKIT PREREQUISITE FAILURE" -ForegroundColor Red
-    Write-Host "Tool: $ToolName" -ForegroundColor Yellow
-    Write-Host "Error: $($result.Error)" -ForegroundColor Red
-    Write-Host "Phase: $($result.Phase)" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "REQUIRED ACTION:" -ForegroundColor Cyan
-    Write-Host "1. Verify NSX Manager connectivity: $NSXManager" -ForegroundColor White
-    Write-Host "2. Check network access and credentials" -ForegroundColor White
-    Write-Host "3. Run NSXConnectionTest.ps1 manually to diagnose issues" -ForegroundColor White
-    Write-Host ""
-    Write-Host "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$NSXManager'" -ForegroundColor Green
-    Write-Host ""
+    Write-Host -Object ""
+    Write-Host -Object "[ERROR] TOOLKIT PREREQUISITE FAILURE" -ForegroundColor Red
+    Write-Host -Object "Tool: $ToolName" -ForegroundColor Yellow
+    Write-Host -Object "Error: $($result.Error)" -ForegroundColor Red
+    Write-Host -Object "Phase: $($result.Phase)" -ForegroundColor Yellow
+    Write-Host -Object ""
+    Write-Host -Object "REQUIRED ACTION:" -ForegroundColor Cyan
+    Write-Host -Object "1. Verify NSX Manager connectivity: $NSXManager" -ForegroundColor White
+    Write-Host -Object "2. Check network access and credentials" -ForegroundColor White
+    Write-Host -Object "3. Run NSXConnectionTest.ps1 manually to diagnose issues" -ForegroundColor White
+    Write-Host -Object ""
+    Write-Host -Object "Example: .\tools\NSXConnectionTest.ps1 -NSXManager '$NSXManager'" -ForegroundColor Green
+    Write-Host -Object ""
     throw "NSX Toolkit prerequisites not met - tool cannot proceed safely"
   }
 
   if ($result.Warning -and -not $AllowLimitedFunctionality) {
-    Write-Host ""
-    Write-Host "[WARNING] TOOLKIT PREREQUISITE WARNING" -ForegroundColor Yellow
-    Write-Host "Tool: $ToolName" -ForegroundColor Yellow
-    Write-Host "Warning: $($result.Warning)" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "The tool can proceed but some functionality may be limited." -ForegroundColor Yellow
-    Write-Host "Use -AllowLimitedFunctionality to suppress this check." -ForegroundColor Yellow
-    Write-Host ""
+    Write-Host -Object ""
+    Write-Host -Object "[WARNING] TOOLKIT PREREQUISITE WARNING" -ForegroundColor Yellow
+    Write-Host -Object "Tool: $ToolName" -ForegroundColor Yellow
+    Write-Host -Object "Warning: $($result.Warning)" -ForegroundColor Yellow
+    Write-Host -Object ""
+    Write-Host -Object "The tool can proceed but some functionality may be limited." -ForegroundColor Yellow
+    Write-Host -Object "Use -AllowLimitedFunctionality to suppress this check." -ForegroundColor Yellow
+    Write-Host -Object ""
     throw "NSX Toolkit prerequisites warning - tool requires all endpoints"
   }
 
   if ($result.Warning) {
-    Write-Host ""
-    Write-Host "[WARNING] NSX TOOLKIT PROCEEDING WITH LIMITED FUNCTIONALITY" -ForegroundColor Yellow
-    Write-Host "Warning: $($result.Warning)" -ForegroundColor Yellow
-    Write-Host ""
+    Write-Host -Object ""
+    Write-Host -Object "[WARNING] NSX TOOLKIT PROCEEDING WITH LIMITED FUNCTIONALITY" -ForegroundColor Yellow
+    Write-Host -Object "Warning: $($result.Warning)" -ForegroundColor Yellow
+    Write-Host -Object ""
   }
 
-  Write-Host "[SUCCESS] NSX Toolkit Prerequisites: PASSED" -ForegroundColor Green
-  Write-Host "Valid Endpoints: $($result.Statistics.ValidEndpoints)" -ForegroundColor Green
-  Write-Host "Cache TTL: $([math]::Round($result.Statistics.CacheTTL, 1)) hours" -ForegroundColor Green
-  Write-Host ""
+  Write-Host -Object "[SUCCESS] NSX Toolkit Prerequisites: PASSED" -ForegroundColor Green
+  Write-Host -Object "Valid Endpoints: $($result.Statistics.ValidEndpoints)" -ForegroundColor Green
+  Write-Host -Object "Cache TTL: $([math]::Round($result.Statistics.CacheTTL, 1)) hours" -ForegroundColor Green
+  Write-Host -Object ""
 
   return $result
 }
