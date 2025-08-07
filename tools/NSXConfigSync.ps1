@@ -804,7 +804,7 @@ function Invoke-ExportOperation {
     if ($LogLevel) { $additionalParams.LogLevel = $LogLevel }
 
     $exportParams = New-ExportParameterSet -NSXManager $SourceNSXManager -OutputDirectory $OutputDirectory -ValidatedState $null -AdditionalParams $additionalParams
-    $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
+    $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
 
     try {
         # CANONICAL FIX: Convert PSCustomObject to hashtable for proper parameter splatting
@@ -920,7 +920,7 @@ function Invoke-SyncOperation {
         }
 
         $exportParams = New-ExportParameterSet -NSXManager $SourceNSXManager -OutputDirectory $sourceExportDir -ValidatedState $null
-        $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials
+        $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials
 
         # CANONICAL FIX: Convert PSCustomObject to hashtable for proper parameter splatting
         $exportParamsHash = ConvertTo-ParameterHashtable -ParameterSet $exportParams
@@ -1129,7 +1129,7 @@ function New-ExportParameterSet {
     return $params
 }
 
-function Add-StandardCredentialParams {
+function Add-StandardCredentialParam {
     param(
         [object]$ParameterSet,
         [switch]$UseCurrentUserCredentials,
@@ -1145,6 +1145,9 @@ function Add-StandardCredentialParams {
 
     return $ParameterSet
 }
+
+# Backward compatible alias for Add-StandardCredentialParam
+Set-Alias -Name Add-StandardCredentialParams -Value Add-StandardCredentialParam
 
 # CANONICAL FIX: Consolidated function to determine operation mode (eliminates duplication)
 function Get-ConsolidatedOperationMode {
@@ -1211,7 +1214,7 @@ function Get-EffectiveSyncMode {
 }
 
 # CANONICAL FIX: Consolidated function to handle all resource type determinations (eliminates duplication)
-function Get-ConsolidatedResourceTypes {
+function Get-ConsolidatedResourceType {
     param(
         [string]$OperationType = "Sync",  # "Sync", "Export", or "Import"
         [object]$ParameterFlags = [PSCustomObject]@{}
@@ -1253,6 +1256,9 @@ function Get-ConsolidatedResourceTypes {
     return $resourceTypes
 }
 
+# Backward compatible alias for Get-ConsolidatedResourceType
+Set-Alias -Name Get-ConsolidatedResourceTypes -Value Get-ConsolidatedResourceType
+
 # Function to get resource types to sync (uses consolidated logic)
 function Get-ResourceTypesToSync {
     try {
@@ -1268,7 +1274,7 @@ function Get-ResourceTypesToSync {
             'SyncSecurityPolicies' = $syncSecurityPoliciesValue
             'SyncContextProfiles'  = $syncContextProfilesValue
         }
-        return Get-ConsolidatedResourceTypes -OperationType "Sync" -ParameterFlags $flags
+        return Get-ConsolidatedResourceType -OperationType "Sync" -ParameterFlags $flags
     }
     catch {
         # Fallback to all resource types if any error occurs
@@ -1302,7 +1308,7 @@ function Resolve-ConfigurationConflict {
         }
         "Merge" {
             $logger.LogInfo("Conflict resolution: Merging $ObjectPath", "ConflictResolution")
-            return Merge-ConfigurationObjects -SourceObject $SourceObject -TargetObject $TargetObject
+            return Merge-ConfigurationObject -SourceObject $SourceObject -TargetObject $TargetObject
         }
         "Interactive" {
             if ($NonInteractive) {
@@ -1321,7 +1327,7 @@ function Resolve-ConfigurationConflict {
 }
 
 # Function to merge configuration objects
-function Merge-ConfigurationObjects {
+function Merge-ConfigurationObject {
     param(
         [object]$SourceObject,
         [object]$TargetObject
@@ -1339,6 +1345,9 @@ function Merge-ConfigurationObjects {
 
     return $mergedObject
 }
+
+# Backward compatible alias for Merge-ConfigurationObject
+Set-Alias -Name Merge-ConfigurationObjects -Value Merge-ConfigurationObject
 
 # Function to handle interactive conflict resolution
 function Resolve-InteractiveConflict {
@@ -1366,7 +1375,7 @@ function Resolve-InteractiveConflict {
         switch ($choice) {
             "1" { return $SourceObject }
             "2" { return $TargetObject }
-            "3" { return Merge-ConfigurationObjects -SourceObject $SourceObject -TargetObject $TargetObject }
+            "3" { return Merge-ConfigurationObject -SourceObject $SourceObject -TargetObject $TargetObject }
             "4" { return $null }
             "5" {
                 $script:ConflictResolution = "SourceWins"
@@ -1610,14 +1619,14 @@ function Get-OperationMode {
 }
 
 # Function to get export resource types (uses consolidated logic)
-function Get-ExportResourceTypes {
+function Get-ExportResourceType {
     $flags = [PSCustomObject]@{
         'IncludeGroups'           = $IncludeGroups
         'IncludeServices'         = $IncludeServices
         'IncludeSecurityPolicies' = $IncludeSecurityPolicies
         'IncludeContextProfiles'  = $IncludeContextProfiles
     }
-    $resourceTypes = Get-ConsolidatedResourceTypes -OperationType "Export" -ParameterFlags $flags
+    $resourceTypes = Get-ConsolidatedResourceType -OperationType "Export" -ParameterFlags $flags
 
     # Special handling for ExportAll vs filtered exports
     if (@($resourceTypes).Count -eq 4 -and -not $ExportAll) {
@@ -1630,16 +1639,22 @@ function Get-ExportResourceTypes {
     return $resourceTypes
 }
 
+# Backward compatible alias for Get-ExportResourceType
+Set-Alias -Name Get-ExportResourceTypes -Value Get-ExportResourceType
+
 # Function to get import resource types (uses consolidated logic)
-function Get-ImportResourceTypes {
+function Get-ImportResourceType {
     $flags = [PSCustomObject]@{
         'ImportGroups'           = $ImportGroups
         'ImportServices'         = $ImportServices
         'ImportSecurityPolicies' = $ImportSecurityPolicies
         'ImportContextProfiles'  = $ImportContextProfiles
     }
-    return Get-ConsolidatedResourceTypes -OperationType "Import" -ParameterFlags $flags
+    return Get-ConsolidatedResourceType -OperationType "Import" -ParameterFlags $flags
 }
+
+# Backward compatible alias for Get-ImportResourceType
+Set-Alias -Name Get-ImportResourceTypes -Value Get-ImportResourceType
 
 # Function to perform export operation using NSXPolicyConfigExport.ps1 orchestration
 function Invoke-ConfigurationExport {
@@ -2332,7 +2347,7 @@ if (-not $RestoreOnly) {
         if ($LogLevel) { $additionalParams.LogLevel = $LogLevel }
 
         $exportParams = New-ExportParameterSet -NSXManager $SourceNSXManager -OutputDirectory $sourceExportDir -ValidatedState $null -AdditionalParams $additionalParams
-        $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
+        $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
         # Add any additional mapped parameters as needed
 
         # CANONICAL FIX: Convert PSCustomObject to hashtable for proper parameter splatting
@@ -2510,7 +2525,7 @@ if (-not $BackupOnly) {
         if ($LogLevel) { $additionalParams.LogLevel = $LogLevel }
 
         $exportParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $targetExportDir -ValidatedState $null -AdditionalParams $additionalParams
-        $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
+        $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
         # Add any additional mapped parameters as needed
 
         # CANONICAL FIX: Convert PSCustomObject to hashtable for proper parameter splatting
@@ -2597,7 +2612,7 @@ if (-not $BackupOnly) {
         if ($DomainId) { $additionalParams.NSXDomain = $DomainId }
 
         $validationParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $validationDir -ValidatedState $null -AdditionalParams $additionalParams
-        $validationParams = Add-StandardCredentialParams -ParameterSet $validationParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
+        $validationParams = Add-StandardCredentialParam -ParameterSet $validationParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
 
         # CANONICAL FIX: Convert PSCustomObject to hashtable for proper parameter splatting
         $validationParamsHash = ConvertTo-ParameterHashtable -ParameterSet $validationParams
@@ -2654,7 +2669,7 @@ if (-not $BackupOnly) {
             if ($DomainId) { $additionalParams.NSXDomain = $DomainId }
 
             $rollbackParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $rollbackDir -ValidatedState $null -AdditionalParams $additionalParams
-            $rollbackParams = Add-StandardCredentialParams -ParameterSet $rollbackParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
+            $rollbackParams = Add-StandardCredentialParam -ParameterSet $rollbackParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
 
             # CANONICAL FIX: Convert PSCustomObject to hashtable for proper parameter splatting
             $rollbackParamsHash = ConvertTo-ParameterHashtable -ParameterSet $rollbackParams
@@ -2708,7 +2723,7 @@ if (-not $BackupOnly) {
             if ($DomainId) { $additionalParams.NSXDomain = $DomainId }
 
             $targetExportParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $targetExportDir -ValidatedState $null -AdditionalParams $additionalParams
-            $targetExportParams = Add-StandardCredentialParams -ParameterSet $targetExportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
+            $targetExportParams = Add-StandardCredentialParam -ParameterSet $targetExportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
 
             # CANONICAL FIX: Convert PSCustomObject to hashtable for proper parameter splatting
             $targetExportParamsHash = ConvertTo-ParameterHashtable -ParameterSet $targetExportParams
