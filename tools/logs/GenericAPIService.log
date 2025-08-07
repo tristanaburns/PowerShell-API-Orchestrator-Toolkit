@@ -112,3 +112,13 @@
 [2025-08-07 19:53:29] [INFO] [API] GenericAPIService configured for: https://jsonplaceholder.typicode.com
 [2025-08-07 19:53:29] [INFO] [API] GET request to: https://jsonplaceholder.typicode.com/posts/1
 [2025-08-07 19:53:29] [INFO] [API] GET request successful
+[2025-08-07 20:06:54] [INFO] [API] GenericAPIService initialized with authentication recovery
+[2025-08-07 20:06:54] [INFO] [API] Loaded API configuration: https://jsonplaceholder.typicode.com
+[2025-08-07 20:06:54] [INFO] [API] No authentication configured
+[2025-08-07 20:06:54] [INFO] [API] GenericAPIService configured for: https://jsonplaceholder.typicode.com
+[2025-08-07 20:06:54] [INFO] [API] GenericAPIService initialized with authentication recovery
+[2025-08-07 20:06:54] [INFO] [API] Loaded API configuration: https://jsonplaceholder.typicode.com
+[2025-08-07 20:06:54] [INFO] [API] No authentication configured
+[2025-08-07 20:06:54] [INFO] [API] GenericAPIService configured for: https://jsonplaceholder.typicode.com
+[2025-08-07 20:06:54] [INFO] [API] GET request to: https://api.github.com/user (Attempt: 1)
+[2025-08-07 20:06:55] [WARNING] [API] GET request failed (Attempt: 1): The remote server returned an error: (401) Unauthorized.

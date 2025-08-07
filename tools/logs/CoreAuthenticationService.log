@@ -46,3 +46,7 @@
 [2025-08-07 19:53:29] [INFO] [Authentication] Global SSL bypass enabled by config (defaultSkipSSL or validateSSL)
 [2025-08-07 19:53:29] [INFO] [Authentication] Setting up global SSL bypass for testing environments
 [2025-08-07 19:53:29] [INFO] [Authentication] Global SSL bypass configured successfully
+[2025-08-07 20:06:54] [INFO] [Authentication] CoreAuthenticationService initialised with dependency injection
+[2025-08-07 20:06:54] [INFO] [Authentication] Global SSL bypass enabled by config (defaultSkipSSL or validateSSL)
+[2025-08-07 20:06:54] [INFO] [Authentication] Setting up global SSL bypass for testing environments
+[2025-08-07 20:06:54] [INFO] [Authentication] Global SSL bypass configured successfully
