@@ -637,7 +637,7 @@ function Get-EndpointCache {
   }
 }
 
-function Get-NSXEndpointDefinitions {
+function Get-NSXEndpointDefinition {
   param(
     [string]$ConfigurationName = "basic_connectivity"
   )
@@ -693,7 +693,7 @@ function Get-NSXEndpointDefinitions {
 }
 
 # NSX endpoint discovery with Global Manager support
-function Get-ComprehensiveNSXEndpoints {
+function Get-ComprehensiveNSXEndpoint {
   param(
     [string]$NSXManager,
     [PSCredential]$Credential,
