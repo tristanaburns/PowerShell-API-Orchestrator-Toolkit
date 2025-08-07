@@ -1,4 +1,4 @@
-﻿# CSVDataParsingService.ps1
+# CSVDataParsingService.ps1
 # Service for parsing CSV files and converting them to JSON format
 # Extracts properties that align with NSX-T JSON object schemas
 

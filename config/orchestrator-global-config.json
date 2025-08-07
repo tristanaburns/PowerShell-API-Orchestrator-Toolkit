@@ -1,0 +1,45 @@
+{
+  "GlobalSettings": {
+    "SSLBypass": true,
+    "DefaultTimeout": 30,
+    "MaxRetries": 3,
+    "LogLevel": "Info",
+    "CacheEnabled": true,
+    "CacheTTLMinutes": 60
+  },
+  "SecuritySettings": {
+    "ValidateSSLCertificates": false,
+    "AllowSelfSignedCertificates": true,
+    "TrustAllCertificates": true,
+    "EnableTLS12": true,
+    "EnableTLS11": false,
+    "EnableTLS10": false
+  },
+  "NetworkSettings": {
+    "UserAgent": "Universal-API-Orchestrator/1.0",
+    "AcceptHeader": "application/json",
+    "ContentType": "application/json",
+    "MaxConcurrentRequests": 10,
+    "ConnectionPooling": true
+  },
+  "AuthenticationDefaults": {
+    "PreferredAuthType": "None",
+    "ApiKeyHeaderName": "X-API-Key",
+    "BearerTokenPrefix": "Bearer"
+  },
+  "DynamicOrchestration": {
+    "EnablePathParameterResolution": true,
+    "EnableQueryParameterMerging": true,
+    "EnableHeaderOverrides": true,
+    "EnableBodyTransformation": true,
+    "ShowRequestDetails": false,
+    "ShowResponseDetails": false
+  },
+  "OutputSettings": {
+    "DefaultFormat": "Json",
+    "MaxDisplayItems": 10,
+    "TruncateResponses": true,
+    "MaxResponseLength": 5000,
+    "ColoredOutput": true
+  }
+}

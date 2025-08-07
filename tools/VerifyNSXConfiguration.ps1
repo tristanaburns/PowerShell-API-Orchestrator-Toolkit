@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     NSX Configuration Verification Script
 

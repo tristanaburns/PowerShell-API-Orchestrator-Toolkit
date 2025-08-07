@@ -1,4 +1,4 @@
-﻿# NSXConnectionDiagnostics.ps1 - NSX Connection Troubleshooting Tool
+# NSXConnectionDiagnostics.ps1 - NSX Connection Troubleshooting Tool
 <#
 .SYNOPSIS
     diagnostic tool for NSX connection issues, credential problems, and SSL errors.

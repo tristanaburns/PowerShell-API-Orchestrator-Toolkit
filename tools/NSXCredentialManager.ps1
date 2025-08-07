@@ -1,4 +1,4 @@
-﻿# NSXCredentialManager.ps1
+# NSXCredentialManager.ps1
 # NSX credential management tool
 # Provides complete credential lifecycle management: CREATE, READ, UPDATE, DELETE
 

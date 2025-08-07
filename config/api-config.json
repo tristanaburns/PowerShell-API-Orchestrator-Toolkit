@@ -1,0 +1,30 @@
+{
+  "BaseUrl": "https://jsonplaceholder.typicode.com",
+  "Authentication": {
+    "Type": "None"
+  },
+  "Headers": {
+    "User-Agent": "Universal-API-Orchestrator/1.0",
+    "Accept": "application/json"
+  },
+  "Endpoints": {
+    "ListItems": "/posts",
+    "GetItem": "/posts/{id}",
+    "CreateItem": "/posts",
+    "UpdateItem": "/posts/{id}",
+    "DeleteItem": "/posts/{id}",
+    "Search": "/posts?userId={userId}"
+  },
+  "RequestSettings": {
+    "TimeoutSeconds": 30,
+    "RetryAttempts": 3,
+    "MaxConcurrentRequests": 10
+  },
+  "TestData": {
+    "SampleItem": {
+      "title": "Universal Orchestrator Test",
+      "body": "Created by the universal API orchestration framework",
+      "userId": 1
+    }
+  }
+}

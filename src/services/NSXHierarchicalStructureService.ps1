@@ -1,4 +1,4 @@
-﻿# NSXHierarchicalStructureService.ps1
+# NSXHierarchicalStructureService.ps1
 # Service for creating and managing NSX-T Hierarchical API structures
 # Handles both raw JSON objects and already-hierarchical objects with auto-detection
 

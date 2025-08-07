@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     initialise the NSX PowerShell Toolkit for use with real NSX lab environment.
 

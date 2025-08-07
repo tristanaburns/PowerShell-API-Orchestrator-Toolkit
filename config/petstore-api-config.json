@@ -1,0 +1,36 @@
+{
+  "BaseUrl": "https://petstore.swagger.io/v2",
+  "Authentication": {
+    "Type": "None"
+  },
+  "Headers": {
+    "User-Agent": "Universal-API-Orchestrator/1.0",
+    "Accept": "application/json"
+  },
+  "Endpoints": {
+    "ListItems": "/pet/findByStatus?status=available",
+    "GetItem": "/pet/{id}",
+    "CreateItem": "/pet",
+    "UpdateItem": "/pet",
+    "DeleteItem": "/pet/{id}",
+    "OpenAPISpec": "/swagger.json"
+  },
+  "TestData": {
+    "SampleItem": {
+      "id": 12345,
+      "category": {
+        "id": 1,
+        "name": "Universal Test"
+      },
+      "name": "Universal API Test Pet",
+      "photoUrls": ["https://example.com/photo.jpg"],
+      "tags": [
+        {
+          "id": 1,
+          "name": "test"
+        }
+      ],
+      "status": "available"
+    }
+  }
+}

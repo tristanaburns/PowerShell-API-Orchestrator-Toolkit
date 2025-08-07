@@ -1,4 +1,4 @@
-﻿# IAuthenticationService.ps1
+# IAuthenticationService.ps1
 # Interface for NSX authentication management following Single Responsibility Principle
 
 <#

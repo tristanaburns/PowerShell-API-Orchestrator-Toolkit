@@ -1,4 +1,4 @@
-﻿# NSXAPIService.ps1
+# NSXAPIService.ps1
 # NSX API service with hierarchical API support extending CoreAPIService
 # Functionality with bulk operations
 

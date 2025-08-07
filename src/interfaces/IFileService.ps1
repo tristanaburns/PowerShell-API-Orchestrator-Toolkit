@@ -1,4 +1,4 @@
-﻿# IFileService.ps1
+# IFileService.ps1
 # Interface for file operations following Single Responsibility Principle
 
 <#

@@ -1,4 +1,4 @@
-﻿# NSXPolicyExportService.ps1
+# NSXPolicyExportService.ps1
 # Dedicated service for NSX policy configuration exports
 # Handles GET operations for policy/../infra and stores in ./data/exports/(managername) directory
 

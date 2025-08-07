@@ -1,4 +1,4 @@
-﻿# InitServiceFramework.ps1
+# InitServiceFramework.ps1
 # Service InitServiceFramework and Initialization Script
 # Handles loading and initializing all core services for NSX configuration management
 

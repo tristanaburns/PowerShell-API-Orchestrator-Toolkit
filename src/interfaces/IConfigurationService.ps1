@@ -1,4 +1,4 @@
-﻿# IConfigurationService.ps1
+# IConfigurationService.ps1
 # Interface for configuration management service
 
 <#

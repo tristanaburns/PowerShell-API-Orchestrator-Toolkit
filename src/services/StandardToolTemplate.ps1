@@ -1,4 +1,4 @@
-﻿# StandardToolTemplate.ps1 - Phase 2: Architecture Consolidation
+# StandardToolTemplate.ps1 - Phase 2: Architecture Consolidation
 # Standardized template for NSX Toolkit tools implementing common patterns
 
 # ========================================

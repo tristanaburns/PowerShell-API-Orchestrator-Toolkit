@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Workflow Orchestration Service - Enterprise-grade multi-step workflow management
 

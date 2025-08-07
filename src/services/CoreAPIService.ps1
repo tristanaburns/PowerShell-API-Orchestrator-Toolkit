@@ -1,4 +1,4 @@
-﻿# CoreAPIService.ps1
+# CoreAPIService.ps1
 # Consolidated NSX-T API service following SOLID principles
 # Single responsibility for all NSX-T API operations with dependency injection
 

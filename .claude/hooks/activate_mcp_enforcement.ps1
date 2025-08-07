@@ -1,4 +1,4 @@
-﻿# MCP Enforcement Hook Activation Script for Windows
+# MCP Enforcement Hook Activation Script for Windows
 # Activates MCP enforcement hooks to ensure Claude Code prioritizes MCP tools
 
 param(

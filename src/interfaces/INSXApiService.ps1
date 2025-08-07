@@ -1,4 +1,4 @@
-﻿# INSXApiService.ps1
+# INSXApiService.ps1
 # Interface for NSX-T API operations abstraction layer
 
 <#

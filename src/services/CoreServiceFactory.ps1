@@ -1,4 +1,4 @@
-﻿# CoreServiceFactory.ps1
+# CoreServiceFactory.ps1
 # Factory class implementing the Factory Pattern for creating service instances
 # Follows Dependency Inversion Principle by abstracting service creation
 # NOTE: Service classes must be loaded BEFORE loading this factory

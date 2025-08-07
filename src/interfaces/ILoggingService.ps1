@@ -1,4 +1,4 @@
-﻿# ILoggingService.ps1
+# ILoggingService.ps1
 # Interface for logging services following Single Responsibility Principle
 
 <#

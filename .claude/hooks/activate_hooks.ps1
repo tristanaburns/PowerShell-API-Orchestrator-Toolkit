@@ -1,4 +1,4 @@
-﻿#  MCP Enforcement Hook Activation Script
+#  MCP Enforcement Hook Activation Script
 # Activates MCP enforcement hooks for Claude Code
 
 Write-Host "=== MCP Enforcement Hook Activation ===" -ForegroundColor Green

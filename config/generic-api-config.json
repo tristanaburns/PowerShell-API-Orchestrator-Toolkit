@@ -1,0 +1,57 @@
+{
+  "BaseUrl": "https://jsonplaceholder.typicode.com",
+  "Authentication": {
+    "Type": "None",
+    "Description": "JSONPlaceholder is a public API that requires no authentication"
+  },
+  "Endpoints": {
+    "Posts": {
+      "List": "/posts",
+      "Get": "/posts/{id}",
+      "Create": "/posts",
+      "Update": "/posts/{id}",
+      "Delete": "/posts/{id}"
+    },
+    "Users": {
+      "List": "/users",
+      "Get": "/users/{id}",
+      "Create": "/users",
+      "Update": "/users/{id}",
+      "Delete": "/users/{id}"
+    },
+    "Comments": {
+      "List": "/comments",
+      "Get": "/comments/{id}",
+      "ByPost": "/posts/{postId}/comments"
+    }
+  },
+  "TestData": {
+    "SamplePost": {
+      "title": "Universal API Orchestrator Test",
+      "body": "This post was created by the PowerShell Universal API Orchestrator to demonstrate its capabilities with any REST API endpoint.",
+      "userId": 1
+    },
+    "SampleUser": {
+      "name": "Test User",
+      "username": "testuser",
+      "email": "test@example.com",
+      "phone": "1-555-123-4567",
+      "website": "test.example.com",
+      "company": {
+        "name": "Universal Orchestrator Corp",
+        "catchPhrase": "Orchestrating APIs everywhere",
+        "bs": "revolutionize universal API management"
+      }
+    }
+  },
+  "RequestSettings": {
+    "TimeoutSeconds": 30,
+    "RetryAttempts": 3,
+    "UserAgent": "PowerShell-Universal-Orchestrator/1.0"
+  },
+  "ResponseSettings": {
+    "LogResponse": true,
+    "ValidateSchema": false,
+    "CacheResults": false
+  }
+}
