@@ -1,0 +1,38 @@
+{
+  "id": "ce70e5b8-cc59-476b-8aef-0f023b7a33e2",
+  "created_at": "2025-07-30T00:05:24.497223",
+  "task_type": "function_implementation",
+  "description": "create a list_models() method for AI provider strategies that returns available models for each provider (Claude, OpenAI, Ollama, etc.)",
+  "claude_command": "/code/code-implement",
+  "command_prefix": "[COMMAND: /code/code-implement]",
+  "model": "llama3.2:3b",
+  "context": {
+    "project_root": "C:\\GitHub_Development\\projects\\hive-mind-nexus",
+    "current_file": "backend/app/services/ai_orchestrator.py",
+    "language": "python",
+    "framework": "react"
+  },
+  "requirements": [
+    "Follow project coding standards",
+    "Include appropriate error handling",
+    "Add inline documentation/comments",
+    "Ensure thread safety where applicable",
+    "Include type hints",
+    "Handle edge cases",
+    "Optimize for readability"
+  ],
+  "devsecops_checks": {
+    "linting": true,
+    "type_checking": true,
+    "security_scan": true,
+    "unit_tests": true,
+    "coverage_threshold": 80
+  },
+  "acceptance_criteria": [
+    "Function executes without errors",
+    "All tests pass",
+    "Code passes linting",
+    "Type checking succeeds"
+  ],
+  "status": "pending"
+}

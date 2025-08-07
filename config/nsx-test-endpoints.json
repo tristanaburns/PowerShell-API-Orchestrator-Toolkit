@@ -1,0 +1,228 @@
+{
+  "metadata": {
+    "name": "NSX-T Test Endpoint Definitions",
+    "description": "Defines endpoint configurations for NSX-T API testing across different HTTP methods",
+    "version": "1.0.0",
+    "vendor": "VMware NSX-T",
+    "created": "2025-07-10",
+    "maintainer": "NSX PowerShell Toolkit"
+  },
+  "endpoint_groups": {
+    "management_api": {
+      "description": "Core NSX-T Management API endpoints",
+      "endpoints": [
+        {
+          "Name": "Management API Node",
+          "Uri": "/api/v1/node",
+          "Category": "Management",
+          "SupportedMethods": [
+            "GET",
+            "HEAD"
+          ],
+          "Description": "NSX Manager node information"
+        },
+        {
+          "Name": "Management Cluster",
+          "Uri": "/api/v1/cluster",
+          "Category": "Management",
+          "SupportedMethods": [
+            "GET",
+            "HEAD"
+          ],
+          "Description": "NSX Manager cluster status"
+        },
+        {
+          "Name": "System Health",
+          "Uri": "/api/v1/cluster/status",
+          "Category": "Management",
+          "SupportedMethods": [
+            "GET",
+            "HEAD"
+          ],
+          "Description": "Overall system health status"
+        }
+      ]
+    },
+    "policy_api": {
+      "description": "NSX-T Policy API endpoints",
+      "endpoints": [
+        {
+          "Name": "Policy Infrastructure",
+          "Uri": "/policy/api/v1/infra",
+          "Category": "Policy",
+          "SupportedMethods": [
+            "GET",
+            "PUT",
+            "PATCH"
+          ],
+          "Description": "Policy infrastructure configuration"
+        },
+        {
+          "Name": "Policy Domains",
+          "Uri": "/policy/api/v1/infra/domains",
+          "Category": "Policy",
+          "SupportedMethods": [
+            "GET",
+            "POST"
+          ],
+          "Description": "Policy domains configuration"
+        },
+        {
+          "Name": "Security Groups",
+          "Uri": "/policy/api/v1/infra/domains/default/groups",
+          "Category": "Security",
+          "SupportedMethods": [
+            "GET",
+            "POST"
+          ],
+          "Description": "Security groups in default domain"
+        },
+        {
+          "Name": "Security Policies",
+          "Uri": "/policy/api/v1/infra/domains/default/security-policies",
+          "Category": "Security",
+          "SupportedMethods": [
+            "GET",
+            "POST"
+          ],
+          "Description": "Security policies in default domain"
+        }
+      ]
+    },
+    "global_manager": {
+      "description": "NSX Global Manager endpoints (Federation)",
+      "endpoints": [
+        {
+          "Name": "Global Infrastructure",
+          "Uri": "/policy/api/v1/global-infra",
+          "Category": "Federation",
+          "SupportedMethods": [
+            "GET",
+            "PUT",
+            "PATCH"
+          ],
+          "Description": "Global infrastructure for federation"
+        },
+        {
+          "Name": "Global Policy Domains",
+          "Uri": "/policy/api/v1/global-infra/domains",
+          "Category": "Federation",
+          "SupportedMethods": [
+            "GET",
+            "POST"
+          ],
+          "Description": "Global policy domains"
+        },
+        {
+          "Name": "Federation Sites",
+          "Uri": "/policy/api/v1/infra/sites",
+          "Category": "Federation",
+          "SupportedMethods": [
+            "GET",
+            "POST"
+          ],
+          "Description": "Federation site configuration"
+        }
+      ]
+    },
+    "openapi_specs": {
+      "description": "OpenAPI specification endpoints",
+      "endpoints": [
+        {
+          "Name": "Management OpenAPI Spec",
+          "Uri": "/api/v1/spec/openapi/nsx_policy_api.json",
+          "Category": "Documentation",
+          "SupportedMethods": [
+            "GET",
+            "HEAD"
+          ],
+          "Description": "Management API OpenAPI specification"
+        },
+        {
+          "Name": "Policy OpenAPI Spec",
+          "Uri": "/policy/api/v1/spec/openapi/nsx_policy_api.json",
+          "Category": "Documentation",
+          "SupportedMethods": [
+            "GET",
+            "HEAD"
+          ],
+          "Description": "Policy API OpenAPI specification"
+        }
+      ]
+    },
+    "search_endpoints": {
+      "description": "Search and query endpoints",
+      "endpoints": [
+        {
+          "Name": "Policy Search",
+          "Uri": "/policy/api/v1/search/query",
+          "Category": "Search",
+          "SupportedMethods": [
+            "POST"
+          ],
+          "Description": "Policy object search endpoint",
+          "RequiresBody": true
+        },
+        {
+          "Name": "Management Search",
+          "Uri": "/api/v1/search/query",
+          "Category": "Search",
+          "SupportedMethods": [
+            "POST"
+          ],
+          "Description": "Management object search endpoint",
+          "RequiresBody": true
+        }
+      ]
+    }
+  },
+  "test_configurations": {
+    "basic_connectivity": {
+      "description": "Basic connectivity test - minimal endpoints",
+      "included_groups": [
+        "management_api"
+      ],
+      "max_endpoints": 3
+    },
+    "comprehensive": {
+      "description": "Comprehensive test - all available endpoints",
+      "included_groups": [
+        "management_api",
+        "policy_api",
+        "openapi_specs"
+      ],
+      "max_endpoints": 50
+    },
+    "federation_test": {
+      "description": "Federation-specific testing",
+      "included_groups": [
+        "management_api",
+        "global_manager"
+      ],
+      "max_endpoints": 10
+    },
+    "security_focused": {
+      "description": "Security-focused endpoint testing",
+      "included_groups": [
+        "management_api",
+        "policy_api"
+      ],
+      "filter_categories": [
+        "Management",
+        "Security"
+      ],
+      "max_endpoints": 20
+    }
+  },
+  "default_test_bodies": {
+    "search_query": {
+      "resource_type": "Group",
+      "query": "display_name:*",
+      "page_size": 10
+    },
+    "policy_patch": {
+      "resource_type": "Infra",
+      "display_name": "test-infrastructure"
+    }
+  }
+}

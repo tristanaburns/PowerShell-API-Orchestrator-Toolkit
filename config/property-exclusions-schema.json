@@ -1,0 +1,381 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataObjectFilterService Property Exclusions Schema",
+  "description": "JSON schema for property-level exclusion filtering configuration",
+  "type": "object",
+  "version": "2.0",
+  "properties": {
+    "property_exclusions": {
+      "type": "object",
+      "description": "Properties to exclude from filtering/comparison operations",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this exclusion filter set"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether this exclusion filter set is active"
+        },
+        "processing_mode": {
+          "type": "string",
+          "enum": [
+            "parallel",
+            "serial"
+          ],
+          "default": "parallel",
+          "description": "How to process multiple exclusion rules - parallel for performance, serial for deterministic order"
+        },
+        "execution_order": {
+          "type": "string",
+          "enum": [
+            "exclusions_first",
+            "inclusions_first"
+          ],
+          "default": "exclusions_first",
+          "description": "When combined with inclusions, whether to apply exclusions before or after inclusions"
+        },
+        "default_exclude_mode": {
+          "type": "string",
+          "enum": [
+            "blacklist",
+            "whitelist"
+          ],
+          "default": "blacklist",
+          "description": "Default behavior - blacklist excludes specified properties, whitelist excludes all except specified"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of property exclusion rules",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "description": "Unique identifier for this exclusion rule"
+              },
+              "property_path": {
+                "type": "string",
+                "description": "Property path to exclude (supports wildcards and nested paths like '_*_time', 'children.*.tags')"
+              },
+              "match_type": {
+                "type": "string",
+                "enum": [
+                  "exact",
+                  "pattern",
+                  "regex",
+                  "partial",
+                  "wildcard",
+                  "prefix",
+                  "suffix"
+                ],
+                "default": "exact",
+                "description": "How to match the property path for exclusion"
+              },
+              "value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "null"
+                ],
+                "description": "Optional specific value to match for exclusion (if not provided, excludes property regardless of value)"
+              },
+              "nested_levels": {
+                "type": "integer",
+                "default": -1,
+                "description": "How many nesting levels to apply this rule (0=current level only, -1=all levels, N=specific depth)"
+              },
+              "applies_to_object_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [
+                  "*"
+                ],
+                "description": "Object types this rule applies to (* for all, specific types for targeted filtering)"
+              },
+              "conditional_logic": {
+                "type": "object",
+                "description": "Optional conditional logic for complex exclusion rules",
+                "properties": {
+                  "if_property_exists": {
+                    "type": "string"
+                  },
+                  "if_property_value": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean"
+                    ]
+                  },
+                  "if_object_type": {
+                    "type": "string"
+                  },
+                  "if_parent_property": {
+                    "type": "string"
+                  },
+                  "then_exclude": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              },
+              "system_property_indicators": {
+                "type": "object",
+                "description": "Special handling for system-generated properties",
+                "properties": {
+                  "is_system_property": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "system_property_patterns": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Patterns that identify system properties (e.g., '_*_time', '_*_user', '_system_*')"
+                  },
+                  "exclude_if_system_owned": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              },
+              "priority": {
+                "type": "integer",
+                "default": 100,
+                "description": "Rule priority (lower numbers processed first) for complex exclusion scenarios"
+              }
+            },
+            "required": [
+              "property_path"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "global_settings": {
+          "type": "object",
+          "description": "Global settings affecting all exclusion rules",
+          "properties": {
+            "case_sensitive": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether property path matching is case sensitive"
+            },
+            "preserve_property_order": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to maintain original property ordering after exclusions"
+            },
+            "exclude_null_values": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to automatically exclude properties with null values"
+            },
+            "exclude_empty_arrays": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to automatically exclude properties with empty arrays"
+            },
+            "exclude_empty_objects": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to automatically exclude properties with empty objects"
+            },
+            "max_property_depth": {
+              "type": "integer",
+              "default": 10,
+              "description": "Maximum nesting depth for property exclusion"
+            },
+            "system_property_auto_exclusion": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to automatically exclude commonly known system properties"
+            }
+          }
+        },
+        "predefined_exclusion_sets": {
+          "type": "object",
+          "description": "Predefined sets of common exclusion patterns",
+          "properties": {
+            "system_properties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "_create_time",
+                "_create_user",
+                "_last_modified_time",
+                "_last_modified_user",
+                "_system_owned",
+                "_revision"
+              ],
+              "description": "Common system-generated properties to exclude"
+            },
+            "metadata_properties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "unique_id",
+                "metadata_id",
+                "_protection",
+                "marked_for_delete"
+              ],
+              "description": "Common metadata properties to exclude from comparisons"
+            },
+            "timestamp_properties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "*_time",
+                "*_timestamp",
+                "created_at",
+                "updated_at"
+              ],
+              "description": "Time-based properties to exclude"
+            }
+          }
+        }
+      },
+      "required": [
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about this exclusion configuration",
+      "properties": {
+        "created_by": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "property_exclusions"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "property_exclusions": {
+        "description": "Configuration Verification - System Properties Exclusion",
+        "enabled": true,
+        "processing_mode": "parallel",
+        "execution_order": "exclusions_first",
+        "default_exclude_mode": "blacklist",
+        "rules": [
+          {
+            "rule_id": "system_timestamps",
+            "property_path": "_*_time",
+            "match_type": "wildcard",
+            "nested_levels": -1,
+            "applies_to_object_types": [
+              "*"
+            ],
+            "system_property_indicators": {
+              "is_system_property": true,
+              "exclude_if_system_owned": true
+            },
+            "priority": 10
+          },
+          {
+            "rule_id": "system_users",
+            "property_path": "_*_user",
+            "match_type": "wildcard",
+            "value": "system",
+            "nested_levels": -1,
+            "applies_to_object_types": [
+              "*"
+            ],
+            "system_property_indicators": {
+              "is_system_property": true
+            },
+            "priority": 20
+          },
+          {
+            "rule_id": "metadata_exclusions",
+            "property_path": "unique_id|metadata_id|_revision|_protection",
+            "match_type": "regex",
+            "nested_levels": -1,
+            "applies_to_object_types": [
+              "*"
+            ],
+            "priority": 30
+          }
+        ],
+        "global_settings": {
+          "case_sensitive": false,
+          "preserve_property_order": true,
+          "exclude_null_values": true,
+          "exclude_empty_arrays": false,
+          "exclude_empty_objects": false,
+          "max_property_depth": 5,
+          "system_property_auto_exclusion": true
+        },
+        "predefined_exclusion_sets": {
+          "system_properties": [
+            "_create_time",
+            "_create_user",
+            "_last_modified_time",
+            "_last_modified_user",
+            "_system_owned",
+            "_revision"
+          ],
+          "metadata_properties": [
+            "unique_id",
+            "metadata_id",
+            "_protection",
+            "marked_for_delete"
+          ],
+          "timestamp_properties": [
+            "*_time",
+            "*_timestamp",
+            "created_at",
+            "updated_at"
+          ]
+        }
+      },
+      "metadata": {
+        "created_by": "ConfigurationService",
+        "created_at": "2025-01-13T00:00:00Z",
+        "version": "2.0",
+        "purpose": "Configuration verification filtering - system property exclusion",
+        "tags": [
+          "verification",
+          "system-exclusions",
+          "configuration",
+          "comparison"
+        ]
+      }
+    }
+  ]
+}

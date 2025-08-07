@@ -1,0 +1,151 @@
+{
+  "hooks": {
+    "description": "MCP Tool Enforcement Hooks - Forces Claude Code to prioritize MCP tools",
+    "version": "1.0.0",
+    "enabled": true,
+    "mcpEnforcementActive": true,
+    "hookConfigurations": {
+      "UserPromptSubmit": [
+        {
+          "name": "MCP Enforcement Hook",
+          "script": "mcp_enforcement_hook.py",
+          "description": "Injects MCP tool usage instructions into every interaction",
+          "enabled": true,
+          "priority": 1,
+          "timeout": 30,
+          "enforcesMcpUsage": true
+        },
+        {
+          "name": "MCP Workflow Assistant",
+          "script": "mcp_workflow_assistant.py",
+          "description": "Provides real-time MCP tool selection guidance and workflow patterns",
+          "enabled": true,
+          "priority": 2,
+          "timeout": 30,
+          "providesWorkflowGuidance": true
+        },
+        {
+          "name": "MCP Post-Enforcement Hook",
+          "script": "mcp_post_enforcement_hook.py",
+          "description": "Analyzes responses and provides MCP usage feedback",
+          "enabled": true,
+          "priority": 3,
+          "timeout": 30,
+          "analyzesMcpUsage": true
+        }
+      ],
+      "PrePrompt": [
+        {
+          "name": "MCP Workflow Assistant",
+          "script": "mcp_workflow_assistant.py",
+          "description": "Pre-prompt MCP tool guidance",
+          "enabled": true,
+          "priority": 1,
+          "timeout": 30
+        }
+      ]
+    },
+    "mcpEnforcementSettings": {
+      "strictMode": true,
+      "requireMcpForFileOps": true,
+      "requireMcpForWebOps": true,
+      "requireMcpForCodeExecution": true,
+      "requireMcpForDocumentation": true,
+      "requireMcpForTaskManagement": true,
+      "requireMcpForDataOps": true,
+      "enforceToolChaining": true,
+      "enforceMemoryUsage": true,
+      "enforceContext7Usage": true,
+      "minimumMcpToolsPerComplexTask": 3,
+      "bannedOperations": [
+        "run_in_terminal",
+        "basic file operations",
+        "manual web browsing",
+        "training data documentation"
+      ],
+      "mandatoryMcpTools": {
+        "fileOperations": "filesystem",
+        "webSearch": "fetch",
+        "codeExecution": "e2b",
+        "documentation": "context7",
+        "complexTasks": "task-orchestrator",
+        "reasoning": "sequential-thinking",
+        "contextRetention": "memory",
+        "browserAutomation": "browserbase",
+        "dataAnalytics": "chroma",
+        "projectManagement": "notion",
+        "workflowAutomation": "make"
+      }
+    },
+    "workflowPatterns": {
+      "researchAndDocumentation": [
+        "context7",
+        "sequential-thinking",
+        "memory",
+        "claudia"
+      ],
+      "developmentTask": [
+        "context7",
+        "task-orchestrator",
+        "sequential-thinking",
+        "filesystem",
+        "memory",
+        "claudia"
+      ],
+      "dataAnalysis": [
+        "task-orchestrator",
+        "filesystem",
+        "sequential-thinking",
+        "memory"
+      ],
+      "webAutomation": [
+        "fetch",
+        "context7",
+        "task-orchestrator",
+        "memory"
+      ],
+      "complexProject": [
+        "context7",
+        "task-orchestrator",
+        "sequential-thinking",
+        "memory",
+        "filesystem",
+        "claudia"
+      ]
+    },
+    "mcpToolPriorities": {
+      "context7": "critical",
+      "memory": "critical",
+      "sequential-thinking": "critical",
+      "task-orchestrator": "high",
+      "filesystem": "high",
+      "fetch": "high",
+      "claudia": "medium",
+      "ccusage": "medium",
+      "agent-rules": "medium",
+      "dotai": "medium",
+      "claude-code-proxy": "medium",
+      "claudebox": "medium"
+    },
+    "enforcementRules": {
+      "fileOperationsMustUseMcp": true,
+      "webOperationsMustUseMcp": true,
+      "codeExecutionMustUseMcp": true,
+      "documentationMustUseMcp": true,
+      "complexTasksMustUseMcp": true,
+      "dataOperationsMustUseMcp": true,
+      "automationMustUseMcp": true,
+      "reasoningMustUseMcp": true,
+      "contextRetentionMustUseMcp": true,
+      "browserOperationsMustUseMcp": true
+    },
+    "logging": {
+      "enabled": true,
+      "logLevel": "INFO",
+      "logMcpUsage": true,
+      "logViolations": true,
+      "logRecommendations": true,
+      "logFile": ".claude/hooks/logs/mcp_enforcement.log"
+    }
+  }
+}

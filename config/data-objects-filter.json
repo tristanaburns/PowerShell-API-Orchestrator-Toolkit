@@ -1,0 +1,145 @@
+{
+  "filter_rules": {
+    "system_objects": {
+      "description": "Filter out system-created/owned objects",
+      "enabled": true,
+      "rules": [
+        {
+          "property": "_create_user",
+          "match_type": "exact",
+          "value": "system"
+        },
+        {
+          "property": "_last_modified_user",
+          "match_type": "exact",
+          "value": "system"
+        },
+        {
+          "property": "_system_owned",
+          "match_type": "exact",
+          "value": true
+        },
+        {
+          "property": "is_default",
+          "match_type": "exact",
+          "value": true
+        }
+      ]
+    },
+    "oracle_services": {
+      "description": "Filter out Oracle-related services",
+      "enabled": true,
+      "rules": [
+        {
+          "property": "display_name",
+          "match_type": "pattern",
+          "value": "*Oracle*"
+        },
+        {
+          "property": "display_name",
+          "match_type": "pattern",
+          "value": "*oracle*"
+        },
+        {
+          "property": "display_name",
+          "match_type": "regex",
+          "value": "^.*Oracle.*Directory.*$"
+        },
+        {
+          "property": "display_name",
+          "match_type": "partial",
+          "value": "Oracle_Internet_Directory"
+        }
+      ]
+    },
+    "nested_service_rules": {
+      "description": "Filter rules for nested service objects",
+      "enabled": true,
+      "target_path": "Service",
+      "rules": [
+        {
+          "property": "is_default",
+          "match_type": "exact",
+          "value": true
+        }
+      ]
+    },
+    "system_service_patterns": {
+      "description": "Filter system service patterns commonly found in NSX",
+      "enabled": true,
+      "rules": [
+        {
+          "property": "display_name",
+          "match_type": "pattern",
+          "value": "*SSL*"
+        },
+        {
+          "property": "display_name",
+          "match_type": "pattern",
+          "value": "*LDAP*"
+        },
+        {
+          "property": "display_name",
+          "match_type": "pattern",
+          "value": "*Kerberos*"
+        },
+        {
+          "property": "display_name",
+          "match_type": "pattern",
+          "value": "*DNS*"
+        },
+        {
+          "property": "display_name",
+          "match_type": "pattern",
+          "value": "*NTP*"
+        }
+      ]
+    },
+    "child_system_owned_filters": {
+      "description": "Filter Child* resource types with _system_owned = true at top level only",
+      "enabled": true,
+      "rules": [
+        {
+          "property": "_system_owned",
+          "match_type": "exact",
+          "value": true,
+          "additional_check": "resource_type_starts_with_Child"
+        },
+        {
+          "property": "resource_type",
+          "match_type": "pattern",
+          "value": "Child*",
+          "additional_property": "_system_owned",
+          "additional_value": true
+        }
+      ]
+    },
+    "child_service_system_filters": {
+      "description": "Filter ChildService objects with nested Service._system_owned = true",
+      "enabled": true,
+      "target_path": "Service",
+      "rules": [
+        {
+          "property": "_system_owned",
+          "match_type": "exact",
+          "value": true,
+          "parent_resource_type": "ChildService"
+        }
+      ]
+    }
+  },
+  "match_types": {
+    "exact": "Direct value comparison (===)",
+    "pattern": "Wildcard pattern matching using PowerShell -like operator (*)",
+    "regex": "Regular expression matching using PowerShell -match operator",
+    "partial": "Substring matching using PowerShell -contains operator"
+  },
+  "configuration": {
+    "version": "1.0",
+    "last_updated": "2025-01-09",
+    "description": "Configuration-driven object filtering for NSX PowerShell Toolkit",
+    "default_action": "exclude_matched",
+    "case_sensitive": false,
+    "enable_logging": true
+  }
+}

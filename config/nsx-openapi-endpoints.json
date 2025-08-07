@@ -1,0 +1,107 @@
+{
+  "metadata": {
+    "name": "NSX OpenAPI Endpoint Configuration",
+    "description": "Defines NSX-specific OpenAPI and Swagger endpoints for schema discovery and validation",
+    "version": "1.0.0",
+    "created": "2025-01-10",
+    "author": "NSX PowerShell Toolkit",
+    "last_updated": "2025-01-10"
+  },
+  "nsx_manager_endpoints": {
+    "policy_api_json": "/api/v1/spec/openapi/nsx_policy_api.json",
+    "policy_api_yaml": "/api/v1/spec/openapi/nsx_policy_api.yaml",
+    "management_api_json": "/api/v1/spec/openapi/nsx_api.json",
+    "management_api_yaml": "/api/v1/spec/openapi/nsx_api.yaml",
+    "policy_spec_json": "/policy/api/v1/spec/openapi/nsx_policy_api.json",
+    "policy_spec_yaml": "/policy/api/v1/spec/openapi/nsx_policy_api.yaml"
+  },
+  "nsx_vmc_endpoints": {
+    "vmc_policy_api_json": "/api/v1/spec/openapi/nsx_vmc_policy_api.json",
+    "vmc_policy_api_yaml": "/api/v1/spec/openapi/nsx_vmc_policy_api.yaml",
+    "vmc_aws_integration_json": "/api/v1/spec/openapi/nsx_vmc_aws_integration_api.json",
+    "vmc_aws_integration_yaml": "/api/v1/spec/openapi/nsx_vmc_aws_integration_api.yaml"
+  },
+  "nsx_global_manager_endpoints": {
+    "global_policy_api_json": "/global-manager/api/v1/spec/openapi/nsx_global_policy_api.json",
+    "global_policy_api_yaml": "/global-manager/api/v1/spec/openapi/nsx_global_policy_api.yaml"
+  },
+  "endpoint_priority_order": [
+    "policy_api_json",
+    "policy_spec_json",
+    "management_api_json",
+    "policy_api_yaml",
+    "policy_spec_yaml",
+    "management_api_yaml"
+  ],
+  "vmc_endpoint_priority_order": [
+    "vmc_policy_api_json",
+    "vmc_aws_integration_json",
+    "vmc_policy_api_yaml",
+    "vmc_aws_integration_yaml"
+  ],
+  "global_manager_priority_order": [
+    "global_policy_api_json",
+    "global_policy_api_yaml"
+  ],
+  "endpoint_validation": {
+    "timeout_seconds": 30,
+    "retry_attempts": 3,
+    "retry_delay_seconds": 5,
+    "required_content_types": [
+      "application/json",
+      "application/yaml",
+      "text/yaml"
+    ]
+  },
+  "fallback_discovery_endpoints": {
+    "api_root": "/api/v1/",
+    "policy_root": "/policy/api/v1/",
+    "global_manager_root": "/global-manager/api/v1/"
+  },
+  "deprecated_endpoints": {
+    "note": "These endpoints are known to return 404 or 500 errors on NSX managers",
+    "avoid_these": [
+      "/api/v1/spec/openapi/",
+      "/api/v1/spec/swagger.json",
+      "/api/v1/swagger.json",
+      "/swagger.json"
+    ]
+  },
+  "manager_type_detection": {
+    "nsx_standard": {
+      "detection_endpoints": [
+        "/policy/api/v1/infra",
+        "/api/v1/cluster/status"
+      ],
+      "use_endpoint_group": "nsx_manager_endpoints"
+    },
+    "nsx_vmc": {
+      "detection_endpoints": [
+        "/policy/api/v1/infra",
+        "/api/v1/vmc"
+      ],
+      "use_endpoint_group": "nsx_vmc_endpoints"
+    },
+    "nsx_global_manager": {
+      "detection_endpoints": [
+        "/global-manager/api/v1/global-infra",
+        "/global-manager/api/v1/federation"
+      ],
+      "use_endpoint_group": "nsx_global_manager_endpoints"
+    }
+  },
+  "cache_configuration": {
+    "enabled": true,
+    "ttl_hours": 24,
+    "cache_successful_endpoints": true,
+    "cache_failed_endpoints": false,
+    "max_cache_entries": 100
+  },
+  "usage_notes": [
+    "This configuration replaces generic OpenAPI endpoints with NSX-specific paths",
+    "Priority order determines which endpoints are tried first",
+    "Manager type detection automatically selects the appropriate endpoint group",
+    "Failed endpoints from deprecated_endpoints.avoid_these should never be used",
+    "All tools should load this configuration instead of hardcoding endpoints"
+  ]
+}

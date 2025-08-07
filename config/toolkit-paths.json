@@ -1,0 +1,66 @@
+{
+  "toolkit_paths": {
+    "DataRoot": "./data",
+    "Exports": "./data/exports",
+    "Syncs": "./data/syncs",
+    "Tests": "./data/tests",
+    "Reports": "./data/reports",
+    "APIData": "./data/api",
+    "Logs": "./logs",
+    "Backups": "./data/backups",
+    "Cache": "./data/api/cache",
+    "Schemas": "./data/api/schemas"
+  },
+  "configuration": {
+    "version": "1.0",
+    "enable_logging": true,
+    "auto_create_directories": true,
+    "path_validation": true,
+    "case_sensitive_keys": false,
+    "default_permissions": "755"
+  },
+  "metadata": {
+    "description": "NSX PowerShell Toolkit - Centralized Directory Path Configuration",
+    "created_by": "WorkflowOperationsService",
+    "created_at": "2025-01-09T20:30:00.000Z",
+    "last_modified": "2025-01-09T20:30:00.000Z",
+    "version": "1.0"
+  },
+  "path_templates": {
+    "timestamp_format": "yyyyMMdd_HHmmss",
+    "session_format": "{operation}_{timestamp}",
+    "manager_format": "{path}/{manager_name}",
+    "backup_format": "{path}/backup_{timestamp}"
+  },
+  "directory_rules": {
+    "auto_create": [
+      "DataRoot",
+      "Exports",
+      "Syncs",
+      "Tests",
+      "Reports",
+      "APIData",
+      "Logs",
+      "Backups",
+      "Cache"
+    ],
+    "require_permissions": [
+      "Logs",
+      "Backups"
+    ],
+    "cleanup_enabled": [
+      "Tests",
+      "Reports",
+      "APIData",
+      "Cache"
+    ],
+    "retention_days": {
+      "Tests": 30,
+      "Reports": 14,
+      "APIData": 7,
+      "Logs": 7,
+      "Backups": 90,
+      "Cache": 3
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "*"
+    ],
+    "deny": [],
+    "additionalDirectories": [
+      "C:\\",
+      "D:\\",
+      "/c",
+      "/d",
+      "/mnt/c/",
+      "/mnt/d/"
+    ],
+    "defaultMode": "acceptEdits",
+    "fullAccess": true,
+    "noConfirmation": true,
+    "allowSystemModification": true,
+    "allowNetworkAccess": true,
+    "allowProcessManagement": true
+  },
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
+    "HIVE_MIND_PROJECT": "1",
+    "HIVE_MIND_HOOKS_ENABLED": "1",
+    "HIVE_MIND_AUTOMATION": "1",
+    "CLAUDE_MODEL": "claude-sonnet-4-20250514",
+    "CLAUDE_USE_SONNET_4": "1",
+    "CLAUDE_ULTRATHINK_ENABLED": "1",
+    "CLAUDE_THINKING_MODE": "ultra",
+    "CLAUDE_ADVANCED_REASONING": "1",
+    "CLAUDE_EXTENDED_THINKING": "1",
+    "CLAUDE_DEEP_THINKING": "1",
+    "CLAUDE_ENABLE_SLASH_COMMANDS": "1",
+    "CLAUDE_AUTO_LINT": "1",
+    "CLAUDE_AUTO_TYPECHECK": "1",
+    "CLAUDE_AUTO_GIT_COMMIT": "1",
+    "CLAUDE_GIT_ATOMIC_COMMITS": "1",
+    "CLAUDE_AUTONOMOUS_MODE": "1",
+    "CLAUDE_FULL_ACCESS": "1",
+    "CLAUDE_FULL_CONTROL": "1",
+    "CLAUDE_NO_CONFIRMATION": "1",
+    "CLAUDE_AUTO_FIX_ERRORS": "1",
+    "CLAUDE_AUTO_DEPLOY": "1",
+    "CLAUDE_CONTINUOUS_IMPROVEMENT": "1"
+  },
+  "includeCoAuthoredBy": true,
+  "cleanupPeriodDays": 30,
+  "enableAllProjectMcpServers": true,
+  "model": "claude-sonnet-4-20250514"
+}

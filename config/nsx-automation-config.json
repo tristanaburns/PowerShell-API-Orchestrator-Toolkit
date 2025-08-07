@@ -1,0 +1,58 @@
+﻿{
+    "Security": {
+        "CredentialTimeout": 480,
+        "SessionTimeout": 480,
+        "EncryptCredentials": false,
+        "RequireSSL": true
+    },
+    "Logging": {
+        "LogToFile": true,
+        "LogFilePath": "logs\\nsx-automation.log",
+        "MaxLogFiles": 5,
+        "Level": "Info",
+        "LogToConsole": true,
+        "MaxLogSizeMB": 10
+    },
+    "Files": {
+        "BackupEnabled": true,
+        "TempDirectory": "temp",
+        "MaxBackupFiles": 10,
+        "BackupDirectory": "backups"
+    },
+    "NSXManagers": {
+        "lab": {
+            "ApiVersion": "v1",
+            "Tags": {},
+            "RetryAttempts": 3,
+            "Environment": "Development",
+            "Description": "NSX Manager initialised via Enhanced InitServiceFramework",
+            "Timeout": 30000,
+            "Enabled": true,
+            "Hostname": "lab-nsxlm-01.lab.vdcninja.com"
+        }
+    },
+    "Automation": {
+        "BatchSize": 50,
+        "OperationTimeout": 300000,
+        "ParallelExecution": true,
+        "MaxConcurrentOperations": 5
+    },
+    "API": {
+        "RetryPolicy": {
+            "DelayMs": 1000,
+            "MaxRetries": 3,
+            "BackoffMultiplier": 2
+        },
+        "CircuitBreaker": {
+            "TimeoutMs": 30000,
+            "FailureThreshold": 5
+        },
+        "Timeout": 30000,
+        "Version": "v1"
+    },
+    "Environment": {
+        "Debug": false,
+        "Name": "Development",
+        "VerboseLogging": false
+    }
+}

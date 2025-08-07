@@ -1,0 +1,26 @@
+{
+  "id": "analytics-001-1753810473",
+  "created_at": "2025-07-30T03:04:33.210475",
+  "task_type": "function_implementation",
+  "description": "create a Python class called CodeMetricsCollector that analyzes Python files and collects metrics like lines of code, complexity, dependencies, and function count",
+  "requirements": [
+    "Analyze Python files using AST parsing",
+    "Calculate cyclomatic complexity for functions",
+    "Count lines of code, classes, functions, and imports",
+    "Extract dependency information from imports",
+    "Handle multiple file analysis with summary statistics",
+    "Include error handling and logging"
+  ],
+  "context": {
+    "language": "python",
+    "project_root": "/mnt/c/GitHub_Development/projects/hive-mind-nexus/.claude/hooks",
+    "framework": null
+  },
+  "devsecops_checks": {
+    "linting": true,
+    "type_checking": true,
+    "security_scan": true,
+    "unit_tests": true,
+    "coverage_threshold": 80
+  }
+}

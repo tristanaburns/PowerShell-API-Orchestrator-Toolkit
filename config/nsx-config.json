@@ -1,0 +1,11 @@
+{
+  "validateSSL": false,
+  "retryCount": 3,
+  "timeout": 180,
+  "logLevel": "DEBUG",
+  "apiVersion": "v1",
+  "connectionPooling": true,
+  "maxConcurrentConnections": 5,
+  "defaultSkipSSL": true,
+  "pageSize": 100
+}

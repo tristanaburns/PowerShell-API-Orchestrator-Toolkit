@@ -1,0 +1,287 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataObjectFilterService Property Inclusions Schema",
+  "description": "JSON schema for property-level inclusion filtering configuration",
+  "type": "object",
+  "version": "2.0",
+  "properties": {
+    "property_inclusions": {
+      "type": "object",
+      "description": "Properties to include in filtering/comparison operations",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this inclusion filter set"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether this inclusion filter set is active"
+        },
+        "processing_mode": {
+          "type": "string",
+          "enum": [
+            "parallel",
+            "serial"
+          ],
+          "default": "parallel",
+          "description": "How to process multiple inclusion rules - parallel for performance, serial for deterministic order"
+        },
+        "execution_order": {
+          "type": "string",
+          "enum": [
+            "inclusions_first",
+            "exclusions_first"
+          ],
+          "default": "inclusions_first",
+          "description": "When combined with exclusions, whether to apply inclusions before or after exclusions"
+        },
+        "default_include_mode": {
+          "type": "string",
+          "enum": [
+            "whitelist",
+            "blacklist"
+          ],
+          "default": "whitelist",
+          "description": "Default behavior - whitelist includes only specified properties, blacklist includes all except excluded"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Array of property inclusion rules",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_id": {
+                "type": "string",
+                "description": "Unique identifier for this inclusion rule"
+              },
+              "property_path": {
+                "type": "string",
+                "description": "Property path to include (supports wildcards and nested paths like 'tags.*.scope')"
+              },
+              "match_type": {
+                "type": "string",
+                "enum": [
+                  "exact",
+                  "pattern",
+                  "regex",
+                  "partial",
+                  "wildcard"
+                ],
+                "default": "exact",
+                "description": "How to match the property path"
+              },
+              "required": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether this property must be present for successful filtering"
+              },
+              "nested_levels": {
+                "type": "integer",
+                "default": 0,
+                "description": "How many nesting levels to apply this rule (0=current level only, -1=all levels, N=specific depth)"
+              },
+              "applies_to_object_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [
+                  "*"
+                ],
+                "description": "Object types this rule applies to (* for all, specific types for targeted filtering)"
+              },
+              "conditional_logic": {
+                "type": "object",
+                "description": "Optional conditional logic for complex inclusion rules",
+                "properties": {
+                  "if_property_exists": {
+                    "type": "string"
+                  },
+                  "if_property_value": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean"
+                    ]
+                  },
+                  "if_object_type": {
+                    "type": "string"
+                  },
+                  "then_include": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              },
+              "transformation": {
+                "type": "object",
+                "description": "Optional property value transformation during inclusion",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "lowercase",
+                      "uppercase",
+                      "trim",
+                      "normalize"
+                    ]
+                  },
+                  "custom_function": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": [
+              "property_path"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "global_settings": {
+          "type": "object",
+          "description": "Global settings affecting all inclusion rules",
+          "properties": {
+            "case_sensitive": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether property path matching is case sensitive"
+            },
+            "preserve_property_order": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to maintain original property ordering in filtered results"
+            },
+            "include_null_values": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to include properties with null values"
+            },
+            "include_empty_arrays": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to include properties with empty arrays"
+            },
+            "max_property_depth": {
+              "type": "integer",
+              "default": 10,
+              "description": "Maximum nesting depth for property inclusion"
+            }
+          }
+        }
+      },
+      "required": [
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about this inclusion configuration",
+      "properties": {
+        "created_by": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "property_inclusions"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "property_inclusions": {
+        "description": "Configuration Verification - Business Properties Only",
+        "enabled": true,
+        "processing_mode": "parallel",
+        "execution_order": "inclusions_first",
+        "default_include_mode": "whitelist",
+        "rules": [
+          {
+            "rule_id": "basic_identifiers",
+            "property_path": "display_name",
+            "match_type": "exact",
+            "required": true,
+            "nested_levels": -1,
+            "applies_to_object_types": [
+              "*"
+            ]
+          },
+          {
+            "rule_id": "object_typing",
+            "property_path": "type",
+            "match_type": "exact",
+            "required": true,
+            "nested_levels": 0,
+            "applies_to_object_types": [
+              "*"
+            ]
+          },
+          {
+            "rule_id": "business_tags",
+            "property_path": "tags",
+            "match_type": "exact",
+            "required": false,
+            "nested_levels": 2,
+            "applies_to_object_types": [
+              "Group",
+              "Service",
+              "Policy"
+            ]
+          },
+          {
+            "rule_id": "configuration_rules",
+            "property_path": "rules.*",
+            "match_type": "wildcard",
+            "required": false,
+            "nested_levels": 3,
+            "applies_to_object_types": [
+              "Policy"
+            ]
+          }
+        ],
+        "global_settings": {
+          "case_sensitive": false,
+          "preserve_property_order": true,
+          "include_null_values": false,
+          "include_empty_arrays": false,
+          "max_property_depth": 5
+        }
+      },
+      "metadata": {
+        "created_by": "ConfigurationService",
+        "created_at": "2025-01-13T00:00:00Z",
+        "version": "2.0",
+        "purpose": "Configuration verification filtering",
+        "tags": [
+          "verification",
+          "business-properties",
+          "configuration"
+        ]
+      }
+    }
+  ]
+}

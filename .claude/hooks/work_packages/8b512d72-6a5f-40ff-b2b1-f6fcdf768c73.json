@@ -1,0 +1,32 @@
+{
+  "id": "8b512d72-6a5f-40ff-b2b1-f6fcdf768c73",
+  "created_at": "2025-07-30T02:13:49.507642",
+  "task_type": "claude_code_command",
+  "description": "implement MCP configuration validator function that checks JSON structure, required fields, port conflicts, and returns detailed validation results",
+  "claude_command": "/code/code-review",
+  "command_prefix": "[COMMAND: /code/code-review]",
+  "model": "qwen3:8b",
+  "context": {
+    "project_root": "/mnt/c/GitHub_Development/projects/hive-mind-nexus/.claude/hooks",
+    "current_file": "validator.py",
+    "language": "python",
+    "framework": null
+  },
+  "requirements": [
+    "Follow project coding standards",
+    "Include appropriate error handling",
+    "Add inline documentation/comments",
+    "Ensure thread safety where applicable"
+  ],
+  "devsecops_checks": {
+    "linting": true,
+    "type_checking": true,
+    "security_scan": true,
+    "unit_tests": true,
+    "coverage_threshold": 80
+  },
+  "acceptance_criteria": [
+    "Task completed successfully"
+  ],
+  "status": "pending"
+}

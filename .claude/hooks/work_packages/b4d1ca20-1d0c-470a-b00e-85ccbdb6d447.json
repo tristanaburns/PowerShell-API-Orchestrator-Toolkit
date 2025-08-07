@@ -1,0 +1,32 @@
+{
+  "id": "b4d1ca20-1d0c-470a-b00e-85ccbdb6d447",
+  "created_at": "2025-07-30T02:08:19.542963",
+  "task_type": "claude_code_command",
+  "description": "implement a simple calculator function",
+  "claude_command": "/testing/e2e",
+  "command_prefix": "[COMMAND: /testing/e2e]",
+  "model": "qwen3:8b",
+  "context": {
+    "project_root": "/mnt/c/GitHub_Development/projects/hive-mind-nexus/.claude/hooks",
+    "current_file": "test.py",
+    "language": "python",
+    "framework": null
+  },
+  "requirements": [
+    "Follow project coding standards",
+    "Include appropriate error handling",
+    "Add inline documentation/comments",
+    "Ensure thread safety where applicable"
+  ],
+  "devsecops_checks": {
+    "linting": true,
+    "type_checking": true,
+    "security_scan": true,
+    "unit_tests": true,
+    "coverage_threshold": 80
+  },
+  "acceptance_criteria": [
+    "Task completed successfully"
+  ],
+  "status": "pending"
+}

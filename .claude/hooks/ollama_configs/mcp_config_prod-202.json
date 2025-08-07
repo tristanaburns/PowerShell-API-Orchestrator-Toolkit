@@ -1,0 +1,12 @@
+{
+  "mcpServers": {},
+  "enableAll": false,
+  "autoStart": true,
+  "connectionTimeout": 30000,
+  "ollama_integration": {
+    "enabled": true,
+    "work_package_id": "prod-20250730022637",
+    "task_type": "function_implementation",
+    "enforce_mcp_usage": true
+  }
+}

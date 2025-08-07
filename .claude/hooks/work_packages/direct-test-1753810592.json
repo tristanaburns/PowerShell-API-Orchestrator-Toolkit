@@ -1,0 +1,10 @@
+{
+  "id": "direct-test-1753810592",
+  "description": "create a Python function that calculates fibonacci numbers",
+  "requirements": [
+    "Function name: fibonacci",
+    "Takes parameter n (integer)",
+    "Returns nth fibonacci number",
+    "Include error handling for negative numbers"
+  ]
+}

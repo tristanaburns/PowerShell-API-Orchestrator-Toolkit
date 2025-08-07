@@ -1,0 +1,499 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataObjectFilterService Multi-Step Filtering Schema",
+  "description": "JSON schema for multi-level nested property filtering configuration",
+  "type": "object",
+  "version": "2.0",
+  "properties": {
+    "multi_step_filtering": {
+      "type": "object",
+      "description": "Multi-level nested property filtering with different rules per nesting level",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of this multi-step filtering configuration"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether multi-step filtering is active"
+        },
+        "max_nesting_depth": {
+          "type": "integer",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Maximum nesting depth to process (prevents infinite recursion)"
+        },
+        "processing_mode": {
+          "type": "string",
+          "enum": [
+            "serial",
+            "parallel"
+          ],
+          "default": "serial",
+          "description": "How to process steps - serial for deterministic order, parallel for performance"
+        },
+        "failure_handling": {
+          "type": "string",
+          "enum": [
+            "continue",
+            "stop",
+            "skip_level"
+          ],
+          "default": "continue",
+          "description": "How to handle failures in individual steps"
+        },
+        "step_definitions": {
+          "type": "array",
+          "description": "Array of filtering steps to apply at different nesting levels",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "step_id": {
+                "type": "string",
+                "description": "Unique identifier for this filtering step"
+              },
+              "step_order": {
+                "type": "integer",
+                "default": 100,
+                "description": "Order in which to execute this step (lower numbers first)"
+              },
+              "target_level": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Nesting level this step applies to (0=root level, 1=first nested level, etc.)"
+              },
+              "parent_property_filter": {
+                "type": "string",
+                "description": "Only process if parent object has this property (e.g., 'children')"
+              },
+              "parent_resource_type_filter": {
+                "type": "string",
+                "description": "Only process if parent object has this resource_type (supports wildcards)"
+              },
+              "execution_order": {
+                "type": "string",
+                "enum": [
+                  "exclusions_first",
+                  "inclusions_first",
+                  "exclusions_only",
+                  "inclusions_only"
+                ],
+                "default": "exclusions_first",
+                "description": "Whether to apply exclusions or inclusions first for this step"
+              },
+              "conditional_execution": {
+                "type": "object",
+                "description": "Conditions that must be met for this step to execute",
+                "properties": {
+                  "if_property_exists": {
+                    "type": "string"
+                  },
+                  "if_property_value_equals": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean"
+                    ]
+                  },
+                  "if_resource_type_matches": {
+                    "type": "string"
+                  },
+                  "if_parent_has_property": {
+                    "type": "string"
+                  },
+                  "if_nesting_depth_greater_than": {
+                    "type": "integer"
+                  },
+                  "if_nesting_depth_less_than": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "property_inclusions": {
+                "type": "object",
+                "description": "Property inclusion rules for this step",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "rules": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "property_path": {
+                          "type": "string"
+                        },
+                        "match_type": {
+                          "type": "string",
+                          "enum": [
+                            "exact",
+                            "pattern",
+                            "regex",
+                            "partial",
+                            "wildcard"
+                          ]
+                        },
+                        "required": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "applies_to_resource_types": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "property_path"
+                      ]
+                    }
+                  }
+                }
+              },
+              "property_exclusions": {
+                "type": "object",
+                "description": "Property exclusion rules for this step",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "rules": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "property_path": {
+                          "type": "string"
+                        },
+                        "match_type": {
+                          "type": "string",
+                          "enum": [
+                            "exact",
+                            "pattern",
+                            "regex",
+                            "partial",
+                            "wildcard",
+                            "prefix",
+                            "suffix"
+                          ]
+                        },
+                        "value": {
+                          "type": [
+                            "string",
+                            "number",
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "applies_to_resource_types": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "property_path"
+                      ]
+                    }
+                  }
+                }
+              },
+              "continue_to_children": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether to continue processing children after this step"
+              },
+              "modify_nesting_path": {
+                "type": "object",
+                "description": "How to modify the nesting path for subsequent processing",
+                "properties": {
+                  "change_property_name": {
+                    "type": "string"
+                  },
+                  "add_property_prefix": {
+                    "type": "string"
+                  },
+                  "remove_property_prefix": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": [
+              "step_id",
+              "target_level"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "performance_settings": {
+          "type": "object",
+          "description": "Performance optimization settings for multi-step filtering",
+          "properties": {
+            "enable_caching": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to cache filtering results for repeated patterns"
+            },
+            "max_parallel_threads": {
+              "type": "integer",
+              "default": 4,
+              "minimum": 1,
+              "maximum": 16,
+              "description": "Maximum number of parallel threads for processing (when parallel mode enabled)"
+            },
+            "batch_size": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 10,
+              "description": "Number of objects to process in each batch"
+            },
+            "timeout_seconds": {
+              "type": "integer",
+              "default": 300,
+              "minimum": 30,
+              "description": "Maximum time to spend on multi-step filtering before timeout"
+            }
+          }
+        },
+        "debugging": {
+          "type": "object",
+          "description": "Debugging and monitoring settings",
+          "properties": {
+            "enable_step_logging": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to log detailed information about each step execution"
+            },
+            "enable_performance_tracking": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to track performance metrics for each step"
+            },
+            "log_filtered_properties": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to log which properties were filtered at each step"
+            },
+            "enable_validation": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to validate step configuration before execution"
+            }
+          }
+        }
+      },
+      "required": [
+        "step_definitions"
+      ],
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about this multi-step filtering configuration",
+      "properties": {
+        "created_by": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "multi_step_filtering"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "multi_step_filtering": {
+        "description": "NSX Configuration Verification - Multi-Level System Property Filtering",
+        "enabled": true,
+        "max_nesting_depth": 5,
+        "processing_mode": "serial",
+        "failure_handling": "continue",
+        "step_definitions": [
+          {
+            "step_id": "level_0_root_exclusions",
+            "step_order": 10,
+            "target_level": 0,
+            "execution_order": "exclusions_first",
+            "property_exclusions": {
+              "enabled": true,
+              "rules": [
+                {
+                  "property_path": "_create_time",
+                  "match_type": "exact",
+                  "applies_to_resource_types": [
+                    "*"
+                  ]
+                },
+                {
+                  "property_path": "_last_modified_time",
+                  "match_type": "exact",
+                  "applies_to_resource_types": [
+                    "*"
+                  ]
+                },
+                {
+                  "property_path": "_revision",
+                  "match_type": "exact",
+                  "applies_to_resource_types": [
+                    "*"
+                  ]
+                }
+              ]
+            },
+            "continue_to_children": true
+          },
+          {
+            "step_id": "level_1_children_filtering",
+            "step_order": 20,
+            "target_level": 1,
+            "parent_property_filter": "children",
+            "execution_order": "exclusions_first",
+            "conditional_execution": {
+              "if_property_exists": "children"
+            },
+            "property_exclusions": {
+              "enabled": true,
+              "rules": [
+                {
+                  "property_path": "_system_owned",
+                  "match_type": "exact",
+                  "value": true,
+                  "applies_to_resource_types": [
+                    "Child*"
+                  ]
+                },
+                {
+                  "property_path": "_create_user",
+                  "match_type": "exact",
+                  "value": "system",
+                  "applies_to_resource_types": [
+                    "*"
+                  ]
+                }
+              ]
+            },
+            "property_inclusions": {
+              "enabled": true,
+              "rules": [
+                {
+                  "property_path": "display_name",
+                  "match_type": "exact",
+                  "required": true,
+                  "applies_to_resource_types": [
+                    "*"
+                  ]
+                },
+                {
+                  "property_path": "resource_type",
+                  "match_type": "exact",
+                  "required": true,
+                  "applies_to_resource_types": [
+                    "*"
+                  ]
+                }
+              ]
+            },
+            "continue_to_children": true
+          },
+          {
+            "step_id": "level_2_nested_services",
+            "step_order": 30,
+            "target_level": 2,
+            "parent_resource_type_filter": "ChildService",
+            "execution_order": "inclusions_first",
+            "conditional_execution": {
+              "if_parent_has_property": "service",
+              "if_nesting_depth_less_than": 4
+            },
+            "property_inclusions": {
+              "enabled": true,
+              "rules": [
+                {
+                  "property_path": "destination_ports",
+                  "match_type": "exact",
+                  "applies_to_resource_types": [
+                    "L4PortSetServiceEntry"
+                  ]
+                },
+                {
+                  "property_path": "protocol",
+                  "match_type": "exact",
+                  "applies_to_resource_types": [
+                    "L4PortSetServiceEntry"
+                  ]
+                }
+              ]
+            },
+            "property_exclusions": {
+              "enabled": true,
+              "rules": [
+                {
+                  "property_path": "unique_id",
+                  "match_type": "exact",
+                  "applies_to_resource_types": [
+                    "*"
+                  ]
+                }
+              ]
+            },
+            "continue_to_children": false
+          }
+        ],
+        "performance_settings": {
+          "enable_caching": true,
+          "max_parallel_threads": 4,
+          "batch_size": 50,
+          "timeout_seconds": 180
+        },
+        "debugging": {
+          "enable_step_logging": true,
+          "enable_performance_tracking": true,
+          "log_filtered_properties": false,
+          "enable_validation": true
+        }
+      },
+      "metadata": {
+        "created_by": "NSXConfigSync.ps1",
+        "created_at": "2025-01-13T00:00:00Z",
+        "version": "2.0",
+        "purpose": "Multi-level verification filtering for NSX configuration comparison",
+        "tags": [
+          "verification",
+          "multi-step",
+          "nested-filtering",
+          "nsx-config"
+        ]
+      }
+    }
+  ]
+}

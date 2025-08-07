@@ -1,0 +1,610 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.universal-tools.org/data-paths/v1.0.0/schema.json",
+  "title": "Universal Data Paths Configuration Schema",
+  "description": "A universal schema for defining application data paths, directory structures, and path management configurations for any software project",
+  "type": "object",
+  "required": [
+    "data_paths",
+    "configuration",
+    "metadata"
+  ],
+  "properties": {
+    "data_paths": {
+      "type": "object",
+      "title": "Application Data Paths",
+      "description": "Core directory paths used by the application for data storage and operations",
+      "patternProperties": {
+        "^[A-Za-z][A-Za-z0-9_]*$": {
+          "type": "string",
+          "pattern": "^(\\.[\\\\/]|[\\\\/]|[A-Za-z]:[\\\\/]|~[\\\\/]).*$",
+          "description": "Directory path (relative or absolute)",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1,
+      "examples": [
+        {
+          "DataRoot": "./data",
+          "Exports": "./data/exports",
+          "Imports": "./data/imports",
+          "Logs": "./logs",
+          "Config": "./config",
+          "Cache": "./cache",
+          "Temp": "./temp",
+          "Backups": "./backups"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Path Management Configuration",
+      "description": "Configuration settings for path management behavior and validation",
+      "required": [
+        "version",
+        "auto_create_directories"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+(\\.\\d+)?(-[a-zA-Z0-9]+)?$",
+          "description": "Configuration schema version",
+          "examples": [
+            "1.0",
+            "1.0.0",
+            "2.1.3",
+            "1.0.0-beta"
+          ]
+        },
+        "auto_create_directories": {
+          "type": "boolean",
+          "description": "Automatically create directories when accessed if they don't exist",
+          "default": true
+        },
+        "enable_logging": {
+          "type": "boolean",
+          "description": "Enable logging for path operations and directory creation",
+          "default": false
+        },
+        "path_validation": {
+          "type": "boolean",
+          "description": "Validate path syntax and accessibility",
+          "default": true
+        },
+        "case_sensitive_keys": {
+          "type": "boolean",
+          "description": "Whether path keys are case sensitive",
+          "default": false
+        },
+        "default_permissions": {
+          "type": "string",
+          "pattern": "^[0-7]{3,4}$",
+          "description": "Default file permissions for created directories (Unix octal notation)",
+          "default": "755",
+          "examples": [
+            "755",
+            "777",
+            "644",
+            "0755"
+          ]
+        },
+        "path_separator": {
+          "type": "string",
+          "enum": [
+            "/",
+            "\\",
+            "auto"
+          ],
+          "description": "Path separator to use (auto detects platform)",
+          "default": "auto"
+        },
+        "max_path_length": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 1000,
+          "description": "Maximum allowed path length",
+          "default": 260
+        },
+        "backup_retention_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365,
+          "description": "Number of days to retain backup files (0 = no cleanup)",
+          "default": 30
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "title": "Configuration Metadata",
+      "description": "Metadata about the configuration file and its purpose",
+      "required": [
+        "description",
+        "created_by"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "description": "Human-readable description of the configuration purpose",
+          "examples": [
+            "Application data paths configuration for MyApp v2.0",
+            "Universal toolkit directory structure for development environment"
+          ]
+        },
+        "created_by": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Service, tool, or person that created this configuration",
+          "examples": [
+            "DataPathService",
+            "MyApplication",
+            "Development Team"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when configuration was created"
+        },
+        "last_modified": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when configuration was last modified"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+(\\.\\d+)?(-[a-zA-Z0-9]+)?$",
+          "description": "Configuration file version",
+          "examples": [
+            "1.0.0",
+            "2.1.0-beta"
+          ]
+        },
+        "application": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Name of the application using this configuration",
+          "examples": [
+            "NSX PowerShell Toolkit",
+            "API Gateway",
+            "Data Pipeline"
+          ]
+        },
+        "environment": {
+          "type": "string",
+          "enum": [
+            "development",
+            "testing",
+            "staging",
+            "production",
+            "local"
+          ],
+          "description": "Environment where this configuration is used"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "uniqueItems": true,
+          "description": "Tags for categorizing and searching configurations",
+          "examples": [
+            [
+              "toolkit",
+              "powershell",
+              "nsx"
+            ],
+            [
+              "api",
+              "web",
+              "microservice"
+            ]
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "path_templates": {
+      "type": "object",
+      "title": "Dynamic Path Templates",
+      "description": "Templates for generating dynamic paths with variable substitution",
+      "properties": {
+        "timestamp_format": {
+          "type": "string",
+          "pattern": "^[yMdHms_-]+$",
+          "description": "Timestamp format for path generation",
+          "default": "yyyyMMdd_HHmmss",
+          "examples": [
+            "yyyyMMdd_HHmmss",
+            "yyyy-MM-dd",
+            "yyyyMMdd"
+          ]
+        },
+        "session_format": {
+          "type": "string",
+          "description": "Template for session-based path generation",
+          "default": "{operation}_{timestamp}",
+          "examples": [
+            "{operation}_{timestamp}",
+            "{user}_{session_id}",
+            "{environment}_{timestamp}"
+          ]
+        },
+        "user_format": {
+          "type": "string",
+          "description": "Template for user-specific paths",
+          "default": "{path}/{username}",
+          "examples": [
+            "{path}/{username}",
+            "{path}/users/{username}",
+            "{base_path}/{domain}/{username}"
+          ]
+        },
+        "environment_format": {
+          "type": "string",
+          "description": "Template for environment-specific paths",
+          "default": "{path}/{environment}",
+          "examples": [
+            "{path}/{environment}",
+            "{base_path}/env/{environment}",
+            "{path}/{env}_{version}"
+          ]
+        },
+        "backup_format": {
+          "type": "string",
+          "description": "Template for backup file/directory naming",
+          "default": "{path}/backup_{timestamp}",
+          "examples": [
+            "{path}/backup_{timestamp}",
+            "{path}/backups/{date}",
+            "{backup_root}/{operation}_{timestamp}"
+          ]
+        }
+      },
+      "additionalProperties": {
+        "type": "string",
+        "description": "Custom path template"
+      }
+    },
+    "directory_rules": {
+      "type": "object",
+      "title": "Directory Management Rules",
+      "description": "Rules for directory creation, cleanup, and management policies",
+      "properties": {
+        "auto_cleanup": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable automatic cleanup of old files/directories",
+              "default": false
+            },
+            "retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365,
+              "description": "Number of days to retain files before cleanup",
+              "default": 30
+            },
+            "file_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "File patterns to include in cleanup (glob patterns)",
+              "examples": [
+                [
+                  "*.log",
+                  "*.tmp",
+                  "backup_*"
+                ]
+              ]
+            },
+            "exclude_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "File patterns to exclude from cleanup",
+              "examples": [
+                [
+                  "*.keep",
+                  "important_*"
+                ]
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "size_limits": {
+          "type": "object",
+          "properties": {
+            "max_directory_size_mb": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum directory size in megabytes before warnings"
+            },
+            "max_file_size_mb": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum individual file size in megabytes"
+            },
+            "max_file_count": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum number of files in a directory"
+            }
+          },
+          "additionalProperties": false
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "directory_mode": {
+              "type": "string",
+              "pattern": "^[0-7]{3,4}$",
+              "description": "Default permissions for created directories",
+              "default": "755"
+            },
+            "file_mode": {
+              "type": "string",
+              "pattern": "^[0-7]{3,4}$",
+              "description": "Default permissions for created files",
+              "default": "644"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Default owner for created files/directories"
+            },
+            "group": {
+              "type": "string",
+              "description": "Default group for created files/directories"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_rules": {
+      "type": "object",
+      "title": "Path Validation Rules",
+      "description": "Custom validation rules for path values and directory structures",
+      "properties": {
+        "required_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true,
+          "description": "List of path keys that must be defined",
+          "examples": [
+            [
+              "DataRoot",
+              "Logs"
+            ],
+            [
+              "Config",
+              "Cache",
+              "Temp"
+            ]
+          ]
+        },
+        "forbidden_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Path patterns that are not allowed (regex patterns)",
+          "examples": [
+            [
+              "^/etc/",
+              ".*\\.\\./.*",
+              "^C:\\\\Windows\\\\.*"
+            ]
+          ]
+        },
+        "allowed_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only allow paths matching these patterns (regex patterns)",
+          "examples": [
+            [
+              "^\\.[\\\\/].*",
+              "^[\\\\/]var[\\\\/].*",
+              "^[A-Za-z]:[\\\\/]data[\\\\/].*"
+            ]
+          ]
+        },
+        "path_dependencies": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z][A-Za-z0-9_]*$": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Paths that must exist before this path can be created"
+            }
+          },
+          "description": "Define dependencies between paths",
+          "examples": [
+            {
+              "Exports": [
+                "DataRoot"
+              ],
+              "Backups": [
+                "DataRoot"
+              ]
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "environment_overrides": {
+      "type": "object",
+      "title": "Environment-Specific Overrides",
+      "description": "Environment-specific path overrides and configurations",
+      "patternProperties": {
+        "^(development|testing|staging|production|local)$": {
+          "type": "object",
+          "properties": {
+            "data_paths": {
+              "$ref": "#/properties/data_paths"
+            },
+            "configuration": {
+              "type": "object",
+              "properties": {
+                "auto_create_directories": {
+                  "type": "boolean"
+                },
+                "enable_logging": {
+                  "type": "boolean"
+                },
+                "path_validation": {
+                  "type": "boolean"
+                },
+                "default_permissions": {
+                  "type": "string",
+                  "pattern": "^[0-7]{3,4}$"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "examples": [
+        {
+          "development": {
+            "data_paths": {
+              "DataRoot": "./dev-data",
+              "Logs": "./dev-logs"
+            },
+            "configuration": {
+              "enable_logging": true,
+              "auto_create_directories": true
+            }
+          },
+          "production": {
+            "data_paths": {
+              "DataRoot": "/var/app/data",
+              "Logs": "/var/log/app"
+            },
+            "configuration": {
+              "enable_logging": false,
+              "path_validation": true
+            }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "data_paths": {
+        "DataRoot": "./data",
+        "Exports": "./data/exports",
+        "Imports": "./data/imports",
+        "Processing": "./data/processing",
+        "Archive": "./data/archive",
+        "Logs": "./logs",
+        "Config": "./config",
+        "Cache": "./cache",
+        "Temp": "./temp",
+        "Backups": "./backups"
+      },
+      "configuration": {
+        "version": "1.0.0",
+        "auto_create_directories": true,
+        "enable_logging": true,
+        "path_validation": true,
+        "case_sensitive_keys": false,
+        "default_permissions": "755",
+        "path_separator": "auto",
+        "max_path_length": 260,
+        "backup_retention_days": 30
+      },
+      "metadata": {
+        "description": "Universal application data paths configuration",
+        "created_by": "DataPathService",
+        "created_at": "2025-01-09T20:30:00.000Z",
+        "last_modified": "2025-01-09T20:30:00.000Z",
+        "version": "1.0.0",
+        "application": "Universal Toolkit",
+        "environment": "development",
+        "tags": [
+          "universal",
+          "toolkit",
+          "data-paths"
+        ]
+      },
+      "path_templates": {
+        "timestamp_format": "yyyyMMdd_HHmmss",
+        "session_format": "{operation}_{timestamp}",
+        "user_format": "{path}/{username}",
+        "environment_format": "{path}/{environment}",
+        "backup_format": "{path}/backup_{timestamp}"
+      },
+      "directory_rules": {
+        "auto_cleanup": {
+          "enabled": true,
+          "retention_days": 30,
+          "file_patterns": [
+            "*.log",
+            "*.tmp"
+          ],
+          "exclude_patterns": [
+            "*.keep",
+            "important_*"
+          ]
+        },
+        "size_limits": {
+          "max_directory_size_mb": 1000,
+          "max_file_size_mb": 100,
+          "max_file_count": 10000
+        },
+        "permissions": {
+          "directory_mode": "755",
+          "file_mode": "644"
+        }
+      },
+      "validation_rules": {
+        "required_paths": [
+          "DataRoot",
+          "Logs"
+        ],
+        "forbidden_patterns": [
+          "^/etc/",
+          ".*\\.\\./.*"
+        ],
+        "path_dependencies": {
+          "Exports": [
+            "DataRoot"
+          ],
+          "Backups": [
+            "DataRoot"
+          ],
+          "Archive": [
+            "DataRoot"
+          ]
+        }
+      }
+    }
+  ]
+}
