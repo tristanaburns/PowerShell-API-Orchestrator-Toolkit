@@ -1280,7 +1280,7 @@ function Resolve-ConfigurationConflict {
         }
         "Merge" {
             $logger.LogInfo("Conflict resolution: Merging $ObjectPath", "ConflictResolution")
-            return Merge-ConfigurationObjects -SourceObject $SourceObject -TargetObject $TargetObject
+            return Merge-ConfigurationObject -SourceObject $SourceObject -TargetObject $TargetObject
         }
         "Interactive" {
             if ($NonInteractive) {
@@ -1299,7 +1299,7 @@ function Resolve-ConfigurationConflict {
 }
 
 # Function to merge configuration objects
-function Merge-ConfigurationObjects {
+function Merge-ConfigurationObject {
     param(
         [object]$SourceObject,
         [object]$TargetObject
@@ -1317,6 +1317,9 @@ function Merge-ConfigurationObjects {
 
     return $mergedObject
 }
+
+# Backward compatible alias for Merge-ConfigurationObject
+Set-Alias -Name Merge-ConfigurationObjects -Value Merge-ConfigurationObject
 
 # Function to handle interactive conflict resolution
 function Resolve-InteractiveConflict {
@@ -1344,7 +1347,7 @@ function Resolve-InteractiveConflict {
         switch ($choice) {
             "1" { return $SourceObject }
             "2" { return $TargetObject }
-            "3" { return Merge-ConfigurationObjects -SourceObject $SourceObject -TargetObject $TargetObject }
+            "3" { return Merge-ConfigurationObject -SourceObject $SourceObject -TargetObject $TargetObject }
             "4" { return $null }
             "5" {
                 $script:ConflictResolution = "SourceWins"
