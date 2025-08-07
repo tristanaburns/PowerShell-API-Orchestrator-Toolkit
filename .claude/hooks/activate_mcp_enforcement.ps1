@@ -25,7 +25,8 @@ function Write-Log {
   Add-Content -Path $LogFile -Value $LogMessage
 }
 
-function Test-HookFiles {
+# New compliant function name (singular)
+function Test-HookFile {
   Write-Log "Validating MCP enforcement hook files..."
 
   $RequiredHooks = @(
@@ -50,6 +51,9 @@ function Test-HookFiles {
   Write-Log "All required hook files validated "
   return $true
 }
+
+# Backward compatible alias
+Set-Alias -Name Test-HookFiles -Value Test-HookFile
 
 function Test-MCPConfig {
   Write-Log "Checking MCP configuration for hook integration..."
@@ -78,7 +82,8 @@ function Test-MCPConfig {
   }
 }
 
-function Start-MCPEnforcementHooks {
+# New compliant function name (singular)
+function Start-MCPEnforcementHook {
   Write-Log "Activating MCP enforcement hooks..."
 
   $ActivationStatus = @{
@@ -90,8 +95,8 @@ function Start-MCPEnforcementHooks {
   }
 
   try {
-    # Validate hook files
-    if (-not (Test-HookFiles)) {
+    # Validate hook files (use new function name)
+    if (-not (Test-HookFile)) {
       return $ActivationStatus
     }
 
@@ -140,6 +145,9 @@ function Start-MCPEnforcementHooks {
     return $ActivationStatus
   }
 }
+
+# Backward compatible alias
+Set-Alias -Name Start-MCPEnforcementHooks -Value Start-MCPEnforcementHook
 
 function New-ActivationSummary {
   param([hashtable]$Status)
@@ -203,8 +211,8 @@ if ($DryRun) {
   Write-Log "Running in dry-run mode - no changes will be made"
 }
 
-# Activate hooks
-$Status = Start-MCPEnforcementHooks
+# Activate hooks (use new function name)
+$Status = Start-MCPEnforcementHook
 
 # Create summary
 New-ActivationSummary -Status $Status
