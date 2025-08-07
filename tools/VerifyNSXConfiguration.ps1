@@ -523,7 +523,7 @@ function Measure-AllNSXObject {
     return $counts
 }
 
-function Test-ConfigurationFiles {
+function Test-ConfigurationFile {
     param(
         [string]$SourceFilePath,
         [string]$TargetFilePath
@@ -692,7 +692,7 @@ try {
         Write-Host "Target File: $(Split-Path $TargetFile -Leaf)"
         Write-Host ""
 
-        $validationResult = Test-ConfigurationFiles -SourceFilePath $SourceFile -TargetFilePath $TargetFile
+        $validationResult = Test-ConfigurationFile -SourceFilePath $SourceFile -TargetFilePath $TargetFile
 
         if ($DetailedReport) {
             Show-FileValidationReport -ValidationResult $validationResult
