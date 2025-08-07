@@ -712,7 +712,7 @@ catch {
 
 <#region Functions#>
 
-function Get-SyncManagerCredentials {
+function Get-SyncManagerCredential {
     param(
         [string]$Manager,
         [bool]$UseCurrentUser,
@@ -742,6 +742,9 @@ function Get-SyncManagerCredentials {
     }
 }
 
+# Backward compatible alias for Get-SyncManagerCredential
+Set-Alias -Name Get-SyncManagerCredentials -Value Get-SyncManagerCredential
+
 # Hierarchical Configuration Manager is already initialised via factory
 
 # CANONICAL FIX: Single Responsibility Operation Functions (eliminates SRP violations)
@@ -754,7 +757,7 @@ function Invoke-ExportOperation {
     Write-Host -Object "-"*80
 
     # Use SharedToolCredentialService for credential collection (eliminates duplication)
-    $credential = Get-SyncManagerCredentials -Manager $SourceNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Export-Source"
+    $credential = Get-SyncManagerCredential -Manager $SourceNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Export-Source"
 
     # Test source connection (optional)
     if (-not $SkipConnectionTest) {
@@ -832,7 +835,7 @@ function Invoke-ImportOperation {
     Write-Host -Object "-"*80
 
     # Use SharedToolCredentialService for credential collection (eliminates duplication)
-    $credential = Get-SyncManagerCredentials -Manager $TargetNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Import-Target"
+    $credential = Get-SyncManagerCredential -Manager $TargetNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Import-Target"
 
     # Test target connection (optional)
     if (-not $SkipConnectionTest) {
@@ -877,10 +880,10 @@ function Invoke-SyncOperation {
     Write-Host -Object "-"*80
 
     # Use SharedToolCredentialService for credential collection (eliminates duplication)
-    $credential = Get-SyncManagerCredentials -Manager $SourceNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Sync-Source"
+    $credential = Get-SyncManagerCredential -Manager $SourceNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Sync-Source"
 
     # Use SharedToolCredentialService for target manager
-    $targetCredential = Get-SyncManagerCredentials -Manager $TargetNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Sync-Target"
+    $targetCredential = Get-SyncManagerCredential -Manager $TargetNSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials -SaveCreds $SaveCredentials -AuthConfigFile $AuthenticationConfigFile -Operation "Sync-Target"
 
     # CANONICAL FIX: Complete sync logic implementation (eliminates incomplete placeholder)
 
