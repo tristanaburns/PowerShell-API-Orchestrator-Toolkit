@@ -1,4 +1,4 @@
-﻿{
+{
     "Security": {
         "CredentialTimeout": 480,
         "SessionTimeout": 480,

@@ -15,7 +15,7 @@
 
 .PARAMETER NSXManager
     NSX Manager FQDN or IP address to test connectivity against.
-    Default: "lab-nsxlm-01.lab.vdcninja.com"
+    Default: "lab-api-01.lab.vdcninja.com"
 
 .PARAMETER Username
     Username for basic authentication. Default: "admin"
@@ -67,7 +67,7 @@
 param(
   [Parameter(HelpMessage = "NSX Manager FQDN or IP address")]
   [ValidateNotNullOrEmpty()]
-  [string]$NSXManager = "lab-nsxlm-01.lab.vdcninja.com",
+  [string]$NSXManager = "lab-api-01.lab.vdcninja.com",
 
   [Parameter(HelpMessage = "Username for basic authentication")]
   [ValidateNotNullOrEmpty()]

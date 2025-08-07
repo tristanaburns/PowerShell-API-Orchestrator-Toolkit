@@ -20,7 +20,7 @@
     "default_permissions": "755"
   },
   "metadata": {
-    "description": "NSX PowerShell Toolkit - Centralized Directory Path Configuration",
+    "description": "PowerShell API Orchestrator Toolkit - Centralized Directory Path Configuration",
     "created_by": "WorkflowOperationsService",
     "created_at": "2025-01-09T20:30:00.000Z",
     "last_modified": "2025-01-09T20:30:00.000Z",

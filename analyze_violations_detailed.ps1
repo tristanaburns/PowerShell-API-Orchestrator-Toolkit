@@ -2,7 +2,7 @@
 
 Import-Module PSScriptAnalyzer -ErrorAction Stop
 
-$projectPath = "C:\github_development\projects\nsx-powershell-toolkit"
+$projectPath = "C:\github_development\projects\powershell-api-orchestrator-toolkit"
 
 # Function to extract function name from script content
 function Get-FunctionNameFromLine {

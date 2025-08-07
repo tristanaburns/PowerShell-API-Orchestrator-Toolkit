@@ -8,7 +8,7 @@
       CRITICAL SYSTEM UTILITY - DO NOT REMOVE OR MODIFY
 
     This utility service provides PowerShell static code analysis
-    capabilities using PSScriptAnalyzer for the NSX PowerShell Toolkit codebase.
+    capabilities using PSScriptAnalyzer for the PowerShell API Orchestrator Toolkit codebase.
 
      ANALYSIS CAPABILITIES:
     - Single File Analysis: Analyze individual PowerShell files
@@ -153,7 +153,7 @@ $UTILITY_VERSION = "2.0.0"
 $UTILITY_PURPOSE = "MANDATORY CODE QUALITY ENFORCEMENT WITH AUTO-FIX (DEFAULT)"
 $UTILITY_STATUS = "CRITICAL SYSTEM UTILITY - DO NOT REMOVE OR MODIFY"
 $PROTOCOL_COMPLIANCE = "MANDATORY - ALL CODE MUST PASS ANALYSIS"
-$LOG_FILE = "C:\GitHub_Development\nsx-powershell-toolkit\src\utilities\PSScriptAnalyzerUtility.log"
+$LOG_FILE = "C:\GitHub_Development\powershell-api-orchestrator-toolkit\src\utilities\PSScriptAnalyzerUtility.log"
 
 # PSScriptAnalyzer severity mapping
 $SEVERITY_LEVELS = [PSCustomObject]@{

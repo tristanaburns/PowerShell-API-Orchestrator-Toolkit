@@ -3,7 +3,7 @@
 # Import PSScriptAnalyzer module
 Import-Module PSScriptAnalyzer -ErrorAction Stop
 
-$projectPath = "C:\github_development\projects\nsx-powershell-toolkit"
+$projectPath = "C:\github_development\projects\powershell-api-orchestrator-toolkit"
 $settingsPath = Join-Path $projectPath "PSScriptAnalyzerSettings.psd1"
 
 Write-Host "`n=== Analyzing PSUseSingularNouns Violations ===" -ForegroundColor Yellow

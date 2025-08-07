@@ -24,14 +24,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Testing Commands
 ```powershell
-# Test NSX manager connectivity
-.\tools\NSXConnectionTest.ps1 -NSXManager "lab-nsxlm-01.test.lab"
+# Test API endpoint connectivity
+.\tools\APIConnectionTest.ps1 -APIEndpoint "lab-api-01.test.lab"
 
 # Run connection diagnostics
-.\tools\NSXConnectionDiagnostics.ps1
+.\tools\APIConnectionDiagnostics.ps1
 
-# Verify NSX configuration
-.\tools\VerifyNSXConfiguration.ps1
+# Verify API configuration
+.\tools\VerifyAPIConfiguration.ps1
 
 # Test service framework availability
 Test-ServiceFrameworkAvailability
@@ -58,7 +58,7 @@ Services must be loaded in specific dependency order (managed by InitServiceFram
 4. CredentialService.ps1 (depends on LoggingService)
 5. CoreAuthenticationService.ps1 (depends on multiple core services)
 6. CoreAPIService.ps1 (depends on LoggingService, CoreAuthenticationService)
-7. NSXAPIService.ps1 (extends CoreAPIService)
+7. UniversalAPIService.ps1 (extends CoreAPIService)
 8. Higher-level services (depend on foundation services)
 
 ### Service Factory Pattern
@@ -68,9 +68,9 @@ All services are managed through CoreServiceFactory using singleton pattern:
 - Uses PSCustomObject instead of hashtables for better PowerShell integration
 
 ### Configuration Management
-- **Base Configuration**: `config/nsx-config.json`
-- **Automation Configuration**: `config/nsx-automation-config.json`
-- **Test Endpoints**: `config/nsx-test-endpoints.json`
+- **Base Configuration**: `config/api-config.json`
+- **Automation Configuration**: `config/api-automation-config.json`
+- **Test Endpoints**: `config/api-test-endpoints.json`
 - **Encrypted Credentials**: Stored in `config/credentials/` using Windows DPAPI
 
 ## Key Development Patterns
@@ -94,9 +94,9 @@ CoreSSLManager handles certificate validation and SSL protocol management across
 ## Testing Requirements
 
 ### Lab Environment
-All testing MUST use designated test NSX managers:
-- Primary: `lab-nsxlm-01.test.lab`
-- Secondary: `lab-nsxlm-02.test.lab`
+All testing MUST use designated test API endpoints:
+- Primary: `lab-api-01.test.lab`
+- Secondary: `lab-api-02.test.lab`
 
 ### Code Quality Standards
 - All code must pass PSScriptAnalyzer analysis
@@ -108,27 +108,27 @@ All testing MUST use designated test NSX managers:
 
 ### Configuration Synchronization
 ```powershell
-# Sync configurations between managers
-.\tools\NSXConfigSync.ps1 -SourceManager "source.domain.com" -TargetManager "target.domain.com"
+# Sync configurations between API endpoints
+.\tools\APIConfigSync.ps1 -SourceEndpoint "source.domain.com" -TargetEndpoint "target.domain.com"
 ```
 
 ### Credential Management
 ```powershell
 # Manage encrypted credentials
-.\tools\NSXCredentialManager.ps1
+.\tools\APICredentialManager.ps1
 
 # Setup new credentials
-.\tools\SetupNSXCredentials.ps1
+.\tools\SetupAPICredentials.ps1
 ```
 
 ### Export/Import Operations
 ```powershell
-# Export NSX policy configuration
-.\tools\NSXPolicyConfigExport.ps1
+# Export API policy configuration
+.\tools\APIPolicyConfigExport.ps1
 
 # Apply configuration changes
-.\tools\ApplyNSXConfig.ps1
+.\tools\ApplyAPIConfig.ps1
 
 # Apply differential configuration
-.\tools\ApplyNSXConfigDifferential.ps1
+.\tools\ApplyAPIConfigDifferential.ps1
 ```

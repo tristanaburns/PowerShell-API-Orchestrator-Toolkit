@@ -1,4 +1,4 @@
-# NSX PowerShell Toolkit - Quality Remediation Summary
+# PowerShell API Orchestrator Toolkit - Quality Remediation Summary
 
 **Date:** 2025-08-07  
 **Remediation Engineer:** Claude-Opus-4.1  

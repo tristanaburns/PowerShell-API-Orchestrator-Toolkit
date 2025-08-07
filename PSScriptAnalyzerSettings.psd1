@@ -1,5 +1,5 @@
 @{
-    # PSScriptAnalyzer settings for NSX PowerShell Toolkit
+    # PSScriptAnalyzer settings for PowerShell API Orchestrator Toolkit
     # This configuration excludes rules that are intentionally violated for CLI tools
     
     # Exclude Write-Host rule - appropriate for CLI tools requiring colored console output

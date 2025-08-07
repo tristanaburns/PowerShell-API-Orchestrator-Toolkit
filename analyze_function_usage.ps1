@@ -1,6 +1,6 @@
 # Script to analyze function usage across the codebase to assess rename risk
 
-$projectPath = "C:\github_development\projects\nsx-powershell-toolkit"
+$projectPath = "C:\github_development\projects\powershell-api-orchestrator-toolkit"
 
 # List of functions with violations that need to be analyzed
 $functionsToAnalyze = @(

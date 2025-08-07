@@ -1,39 +1,39 @@
-# NSX-T PowerShell Automation Toolkit
+# PowerShell API Orchestrator Toolkit
 
 ```powershell
 # Load the core services
 . ".\src\services\InitServiceFramework.ps1"
 
 # Test connectivity
-.\tools\NSXConnectionTest.ps1 -NSXManager "your-nsx-manager.domain.com"
+.\tools\APIConnectionTest.ps1 -APIEndpoint "your-api-endpoint.domain.com"
 
 # Manage credentials
-.\tools\ManageNSXCredentials.ps1
+.\tools\ManageAPICredentials.ps1
 
 # Sync configurations between managers
-.\tools\NSXConfigSyncTool.ps1 -SourceManager "source.domain.com" -TargetManager "target.domain.com"
+.\tools\APIConfigSyncTool.ps1 -SourceManager "source.domain.com" -TargetManager "target.domain.com"
 
 # Migrate configurations using Hierarchical API
-.\tools\NSXMigrationTool.ps1 -SourceManager "source.domain.com" -TargetManager "target.domain.com"
+.\tools\APIMigrationTool.ps1 -SourceManager "source.domain.com" -TargetManager "target.domain.com"
 ```
 
 ## 📁 Directory Structure
 
 ```
-nsx-powershell-toolkit/
+powershell-api-orchestrator-toolkit/
 ├── src/                        # Core source code
 │   ├── services/              # Business logic services
 │   ├── interfaces/            # Service contracts
 │   └── models/                # Data models
 ├── tools/                     # End-user tools and utilities
-│   ├── NSXConfigSyncTool.ps1     # Configuration synchronization
-│   ├── NSXMigrationTool.ps1      # Hierarchical API migration
-│   ├── NSXConnectionTest.ps1      # Connectivity testing
-│   ├── ManageNSXCredentials.ps1  # Credential management
+│   ├── APIConfigSyncTool.ps1     # Configuration synchronization
+│   ├── APIMigrationTool.ps1      # Hierarchical API migration
+│   ├── APIConnectionTest.ps1      # Connectivity testing
+│   ├── ManageAPICredentials.ps1  # Credential management
 │   └── DiagnoseHTTPSConnection.ps1 # HTTPS troubleshooting
 ├── config/                    # Configuration files
-│   ├── nsx-config.json           # Base configuration template
-│   ├── nsx-automation-config.json # Enhanced automation configuration
+│   ├── api-config.json           # Base configuration template
+│   ├── api-automation-config.json # Enhanced automation configuration
 │   ├── group-membership-config.json # Group membership operations
 │   ├── credentials/              # Encrypted credential storage (.cred files)
 │   ├── test_configs/             # Test environment configurations
@@ -48,24 +48,24 @@ nsx-powershell-toolkit/
 
 ### Core Production Tools
 
-1. **NSXConfigSyncTool.ps1** - Configuration synchronization between NSX managers
+1. **APIConfigSyncTool.ps1** - Configuration synchronization between API endpoints
    - Compare configurations
    - Selective patching
    - Rollback capabilities
    - Current user authentication support
 
-2. **NSXMigrationTool.ps1** - Bulk configuration migration using Hierarchical API
+2. **APIMigrationTool.ps1** - Bulk configuration migration using Universal API
    - Export/import configurations
    - Multiple authentication methods
    - Non-interactive mode for automation
    - logging
 
-3. **NSXConnectionTest.ps1** - NSX manager connectivity testing
+3. **APIConnectionTest.ps1** - API endpoint connectivity testing
    - Multiple authentication methods
    - SSL certificate validation testing
    - Network connectivity verification
 
-4. **ManageNSXCredentials.ps1** - Credential management interface
+4. **ManageAPICredentials.ps1** - Credential management interface
    - Encrypted credential storage (Windows DPAPI)
    - View and manage stored credentials
    - Clear expired credentials
@@ -75,14 +75,14 @@ nsx-powershell-toolkit/
    - SSL/TLS protocol testing
    - Certificate validation testing
 
-6. **SimpleNSXCredentialTest.ps1** - Real NSX manager testing and credential setup
-   - Setup and test credentials for real NSX managers
+6. **SimpleAPICredentialTest.ps1** - Real API endpoint testing and credential setup
+   - Setup and test credentials for real API endpoints
    - Connection validation
    - Configuration inventory
 
-7. **SetupNSXCredentials.ps1** - Enhanced credential setup wizard
+7. **SetupAPICredentials.ps1** - Enhanced credential setup wizard
    - Guided credential configuration
-   - Multiple NSX manager support
+   - Multiple API endpoint support
    - Validation and testing
 
 8. **QuickValidation.ps1** - Quick environment validation
@@ -90,14 +90,14 @@ nsx-powershell-toolkit/
    - Test service loading
    - Environment health checks
 
-9. **VerifyNSXConfig.ps1** - Configuration verification tool
-   - Verify NSX manager configurations
+9. **VerifyAPIConfig.ps1** - Configuration verification tool
+   - Verify API endpoint configurations
    - Compare configurations between managers
    - Generate configuration reports
 
 ### Core Services Architecture
 
-- **AuthenticationService** - NSX-T authentication and session management
+- **AuthenticationService** - Universal API authentication and session management
 - **CoreAPIService** - Low-level REST API operations
 - **EnhancedLoggingService** - Structured logging with multiple outputs
 - **ConfigurationService** - Configuration file management
@@ -112,4 +112,4 @@ nsx-powershell-toolkit/
 
 ### Testing Requirements
 
-- **Lab Environment**: All testing MUST use `lab-nsxlm-01.test.lab` and `lab-nsxlm-02.test.lab` as NSX managers.
+- **Lab Environment**: All testing MUST use `lab-api-01.test.lab` and `lab-api-02.test.lab` as API endpoints.
