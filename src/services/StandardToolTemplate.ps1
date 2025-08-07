@@ -111,7 +111,7 @@ param(
 # STANDARDIZED SERVICE INITIALIZATION
 # ========================================
 
-function Initialize-StandardServices {
+function Initialize-StandardService {
   <#
     .SYNOPSIS
         Standardized service initialization for all NSX tools
@@ -155,7 +155,7 @@ function Initialize-StandardServices {
   }
 }
 
-function Get-StandardCredentials {
+function Get-StandardCredential {
   <#
     .SYNOPSIS
         Standardized credential collection for all NSX tools
@@ -364,7 +364,7 @@ STANDARDIZED TOOL IMPLEMENTATION TEMPLATE:
 # ========================================
 
 # Initialize services
-$services = Initialize-StandardServices
+$services = Initialize-StandardService
 
 # Extract services
 $logger = $services.Logger
@@ -382,7 +382,7 @@ try {
     Initialize-StandardOutputDirectory -OutputDirectory $OutputDirectory
 
     # Get credentials
-    $credential = Get-StandardCredentials -AuthService $authService -NSXManager $NSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials
+    $credential = Get-StandardCredential -AuthService $authService -NSXManager $NSXManager -UseCurrentUser $UseCurrentUserCredentials -ForceNew $ForceNewCredentials
 
     # ========================================
     # IMPLEMENT TOOL-SPECIFIC LOGIC HERE
@@ -413,4 +413,4 @@ catch {
 #>
 
 # Export standardized functions for use by tools
-Export-ModuleMember -Function Initialize-StandardServices, Get-StandardCredentials, Initialize-StandardOutputDirectory, Write-StandardToolHeader, Write-StandardToolFooter, Invoke-StandardErrorHandler
+Export-ModuleMember -Function Initialize-StandardService, Get-StandardCredential, Initialize-StandardOutputDirectory, Write-StandardToolHeader, Write-StandardToolFooter, Invoke-StandardErrorHandler
