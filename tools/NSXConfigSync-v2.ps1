@@ -1187,7 +1187,7 @@ function Get-EffectiveSyncMode {
 }
 
 # CANONICAL FIX: Consolidated function to handle all resource type determinations (eliminates duplication)
-function Get-ConsolidatedResourceTypes {
+function Get-ConsolidatedResourceType {
     param(
         [string]$OperationType = "Sync",  # "Sync", "Export", or "Import"
         [object]$ParameterFlags = [PSCustomObject]@{}
@@ -1228,6 +1228,9 @@ function Get-ConsolidatedResourceTypes {
     return $resourceTypes
 }
 
+# Backward compatible alias for Get-ConsolidatedResourceType
+Set-Alias -Name Get-ConsolidatedResourceTypes -Value Get-ConsolidatedResourceType
+
 # Function to get resource types to sync (uses consolidated logic)
 function Get-ResourceTypesToSync {
     try {
@@ -1243,7 +1246,7 @@ function Get-ResourceTypesToSync {
             'SyncSecurityPolicies' = $syncSecurityPoliciesValue
             'SyncContextProfiles'  = $syncContextProfilesValue
         }
-        return Get-ConsolidatedResourceTypes -OperationType "Sync" -ParameterFlags $flags
+        return Get-ConsolidatedResourceType -OperationType "Sync" -ParameterFlags $flags
     }
     catch {
         # Fallback to all resource types if any error occurs
@@ -1592,7 +1595,7 @@ function Get-ExportResourceType {
         'IncludeSecurityPolicies' = $IncludeSecurityPolicies
         'IncludeContextProfiles'  = $IncludeContextProfiles
     }
-    $resourceTypes = Get-ConsolidatedResourceTypes -OperationType "Export" -ParameterFlags $flags
+    $resourceTypes = Get-ConsolidatedResourceType -OperationType "Export" -ParameterFlags $flags
 
     # Special handling for ExportAll vs filtered exports
     if ($resourceTypes.Count -eq 4 -and -not $ExportAll) {
@@ -1613,7 +1616,7 @@ function Get-ImportResourceType {
         'ImportSecurityPolicies' = $ImportSecurityPolicies
         'ImportContextProfiles'  = $ImportContextProfiles
     }
-    return Get-ConsolidatedResourceTypes -OperationType "Import" -ParameterFlags $flags
+    return Get-ConsolidatedResourceType -OperationType "Import" -ParameterFlags $flags
 }
 
 # Function to perform export operation using NSXPolicyConfigExport.ps1 orchestration
