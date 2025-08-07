@@ -804,7 +804,7 @@ function Invoke-ExportOperation {
     if ($LogLevel) { $additionalParams.LogLevel = $LogLevel }
 
     $exportParams = New-ExportParameterSet -NSXManager $SourceNSXManager -OutputDirectory $OutputDirectory -ValidatedState $null -AdditionalParams $additionalParams
-    $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
+    $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
 
     try {
         $exportResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @exportParams
@@ -918,7 +918,7 @@ function Invoke-SyncOperation {
         }
 
         $exportParams = New-ExportParameterSet -NSXManager $SourceNSXManager -OutputDirectory $sourceExportDir -ValidatedState $null
-        $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials
+        $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials
 
         $sourceResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @exportParams
 
@@ -1104,7 +1104,7 @@ function New-ExportParameterSet {
     return $params
 }
 
-function Add-StandardCredentialParams {
+function Add-StandardCredentialParam {
     param(
         [object]$ParameterSet,
         [switch]$UseCurrentUserCredentials,
@@ -1120,6 +1120,9 @@ function Add-StandardCredentialParams {
 
     return $ParameterSet
 }
+
+# Backward compatible alias for Add-StandardCredentialParam
+Set-Alias -Name Add-StandardCredentialParams -Value Add-StandardCredentialParam
 
 # CANONICAL FIX: Consolidated function to determine operation mode (eliminates duplication)
 function Get-ConsolidatedOperationMode {
@@ -2336,7 +2339,7 @@ try {
             if ($LogLevel) { $additionalParams.LogLevel = $LogLevel }
 
             $exportParams = New-ExportParameterSet -NSXManager $SourceNSXManager -OutputDirectory $sourceExportDir -ValidatedState $null -AdditionalParams $additionalParams
-            $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
+            $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
             # Add any additional mapped parameters as needed
 
             $sourceExportResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @exportParams
@@ -2512,7 +2515,7 @@ try {
             if ($LogLevel) { $additionalParams.LogLevel = $LogLevel }
 
             $exportParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $targetExportDir -ValidatedState $null -AdditionalParams $additionalParams
-            $exportParams = Add-StandardCredentialParams -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
+            $exportParams = Add-StandardCredentialParam -ParameterSet $exportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials
             # Add any additional mapped parameters as needed
 
             $targetBackupResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @exportParams
@@ -2597,7 +2600,7 @@ try {
             if ($DomainId) { $additionalParams.NSXDomain = $DomainId }
 
             $validationParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $validationDir -ValidatedState $null -AdditionalParams $additionalParams
-            $validationParams = Add-StandardCredentialParams -ParameterSet $validationParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
+            $validationParams = Add-StandardCredentialParam -ParameterSet $validationParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
 
             $targetValidationResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @validationParams
 
@@ -2652,7 +2655,7 @@ try {
                 if ($DomainId) { $additionalParams.NSXDomain = $DomainId }
 
                 $rollbackParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $rollbackDir -ValidatedState $null -AdditionalParams $additionalParams
-                $rollbackParams = Add-StandardCredentialParams -ParameterSet $rollbackParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
+                $rollbackParams = Add-StandardCredentialParam -ParameterSet $rollbackParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
 
                 $rollbackResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @rollbackParams
 
@@ -2704,7 +2707,7 @@ try {
                 if ($DomainId) { $additionalParams.NSXDomain = $DomainId }
 
                 $targetExportParams = New-ExportParameterSet -NSXManager $TargetNSXManager -OutputDirectory $targetExportDir -ValidatedState $null -AdditionalParams $additionalParams
-                $targetExportParams = Add-StandardCredentialParams -ParameterSet $targetExportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
+                $targetExportParams = Add-StandardCredentialParam -ParameterSet $targetExportParams -UseCurrentUserCredentials:$UseCurrentUserCredentials -ForceNewCredentials:$ForceNewCredentials -SaveCredentials:$SaveCredentials -NonInteractive:$NonInteractive
 
                 $targetResult = & "$scriptPath\NSXPolicyConfigExport.ps1" @targetExportParams
 
