@@ -1452,7 +1452,7 @@ class NSXDifferentialConfigManager {
           # Check for system object indicators
           $isSystemObject = $false
           if ($child.is_default -eq $true) { $isSystemObject = $true }
-          if ($child._system_owned -eq $true) { $isSystemObject = $true }  # FIXED: Added missing underscore
+          if ($child._system_owned -eq $true) { $isSystemObject = $true }  
           if ($child._create_user -eq "system") { $isSystemObject = $true }
           if ($child._last_modified_user -eq "system") { $isSystemObject = $true }
           if ($child.managed_by) { $isSystemObject = $true }

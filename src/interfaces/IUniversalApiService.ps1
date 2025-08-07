@@ -1,23 +1,23 @@
 # IUniversalApiService.ps1
-# Interface for Universal API operations abstraction layer
+# Interface for API operations abstraction layer
 
 <#
 .SYNOPSIS
-    Interface for Universal API operations services.
+    Interface for API operations services.
 
 .DESCRIPTION
-    Defines the contract for Universal API operations, providing abstraction over
+    Defines the contract for API operations, providing abstraction over
     REST API calls with retry, circuit breaker, and error handling capabilities.
 
     SOLID Principles Applied:
-    - Single Responsibility: Only handles Universal API operations
-    - Interface Segregation: Clean contract for API operations
+    - Single Responsibility: Only handles API operations
+    - Interface Segregation: contract for API operations
     - Dependency Inversion: Abstract interface for concrete implementations
 #>
 
-# Universal API Service Interface Contract
+# API Service Interface Contract
 <#
-    Universal API Service Implementation Contract:
+    API Service Implementation Contract:
 
     Core API Operations:
 
@@ -36,10 +36,10 @@
     [bool] Delete([string]$endpoint)
         - Executes HTTP DELETE request to specified endpoint
 
-    Specialized Universal API Operations:
+    Specialized API Operations:
 
     [object] GetDomains()
-        - Retrieves all domains from Universal API
+        - Retrieves all domains from API
 
     [object] GetGroups([string]$domain)
         - Retrieves all groups from specified domain
@@ -54,7 +54,7 @@
         - Creates new security policy in specified domain with configuration
 
     [object] GetServices()
-        - Retrieves all services from Universal API
+        - Retrieves all services from API
 
     [object] CreateService([object]$serviceConfig)
         - Creates new service with specified configuration
@@ -68,7 +68,7 @@
         - Tests connection to API endpoint
 
     [string] GetApiVersion()
-        - Gets current Universal API version
+        - Gets current API version
 
     [object] ExecuteBatch([array]$operations)
         - Executes batch of operations in single transaction

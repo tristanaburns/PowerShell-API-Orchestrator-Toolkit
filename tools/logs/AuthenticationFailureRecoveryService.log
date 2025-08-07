@@ -1,6 +1,0 @@
-﻿[2025-08-07 20:06:54] [INFO] [AuthRecovery] AuthenticationFailureRecoveryService initialized
-[2025-08-07 20:06:54] [INFO] [AuthRecovery] AuthenticationFailureRecoveryService initialized
-[2025-08-07 20:06:55] [INFO] [AuthRecovery] Handling authentication failure for: https://api.github.com
-[2025-08-07 20:06:55] [WARNING] [AuthRecovery] Authentication failure detected: 401 authentication failure
-[2025-08-07 20:06:55] [INFO] [AuthRecovery] Detected authentication type: Bearer
-[2025-08-07 20:06:55] [INFO] [AuthRecovery] Prompting for authentication details for: https://api.github.com

@@ -1,6 +1,6 @@
 # GenericAPIService.ps1
-# Universal API service for any REST endpoint
-# Demonstrates the universal orchestration capabilities of the framework
+# API service for any REST endpoint
+# Demonstrates the orchestration capabilities of the framework
 
 class GenericAPIService {
     hidden [object] $logger
@@ -54,7 +54,7 @@ class GenericAPIService {
             # Set default headers
             $this.headers = @{
                 'Content-Type' = 'application/json'
-                'User-Agent' = 'PowerShell-Universal-Orchestrator/1.0'
+                'User-Agent'   = 'PowerShell-Universal-Orchestrator/1.0'
             }
 
             # Apply additional configuration if provided
@@ -139,9 +139,9 @@ class GenericAPIService {
                 $this.logger.LogInfo("$method request to: $url (Attempt: $attempt)", "API")
                 
                 $restParams = @{
-                    Uri = $url
-                    Method = $method
-                    Headers = $currentHeaders
+                    Uri         = $url
+                    Method      = $method
+                    Headers     = $currentHeaders
                     ErrorAction = 'Stop'
                 }
                 
@@ -213,7 +213,7 @@ class GenericAPIService {
         try {
             $this.logger.LogInfo("Testing connection to API", "API")
             
-            # Try a simple GET request to test connectivity
+            # GET request to test connectivity
             $testResponse = $this.Get("")
             
             $this.logger.LogInfo("Connection test successful", "API")
@@ -228,10 +228,10 @@ class GenericAPIService {
     # Get service information
     [object] GetServiceInfo() {
         $info = @{
-            BaseUrl = $this.baseUrl
-            Headers = $this.headers.Clone()
-            ServiceType = "GenericAPIService"
-            Version = "1.1.0"
+            BaseUrl                = $this.baseUrl
+            Headers                = $this.headers.Clone()
+            ServiceType            = "GenericAPIService"
+            Version                = "1.1.0"
             AuthenticationRecovery = "Enabled"
         }
         
@@ -257,7 +257,7 @@ class GenericAPIService {
         try {
             # Create a mock 401 response to test the recovery system
             $mockResponse = @{
-                Exception = @{
+                Exception    = @{
                     Response = @{
                         StatusCode = 401
                     }
@@ -273,7 +273,7 @@ class GenericAPIService {
         catch {
             return @{
                 Success = $false
-                Error = $_.Exception.Message
+                Error   = $_.Exception.Message
                 Message = "Authentication recovery test failed"
             }
         }

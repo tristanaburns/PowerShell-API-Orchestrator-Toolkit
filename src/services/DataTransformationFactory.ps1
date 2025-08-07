@@ -230,7 +230,6 @@ class DataTransformationFactory {
     return $resolvedPath
   }
 
-  # Clean up resources
   [void] Dispose() {
     if ($this.serviceInstances.Count -gt 0) {
       $this.logger.LogInfo("Cleaning up service instances", "Factory")

@@ -7,10 +7,10 @@
     including credential setup, configuration validation, and connectivity testing.
 
 .PARAMETER NSXManager1
-    First API Endpoint hostname (default: lab-api-01.lab.vdcninja.com)
+    First API Endpoint hostname (default: lab-api-01.test.com)
 
 .PARAMETER NSXManager2
-    Second API Endpoint hostname (default: lab-api-02.lab.vdcninja.com)
+    Second API Endpoint hostname (default: lab-api-02.test.com)
 
 .PARAMETER SetupCredentials
     Setup and test credentials for both NSX managers
@@ -32,8 +32,8 @@
 #>
 
 param(
-    [string]$NSXManager1 = "lab-api-01.lab.vdcninja.com",
-    [string]$NSXManager2 = "lab-api-02.lab.vdcninja.com",
+    [string]$NSXManager1 = "lab-api-01.test.com",
+    [string]$NSXManager2 = "lab-api-02.test.com",
     [switch]$SetupCredentials,
     [switch]$ValidateOnly
 )

@@ -12,7 +12,7 @@
     - Network connectivity tests
 
 .PARAMETER NSXManager
-    NSX Manager FQDN or IP address to diagnose. Default: "lab-nsxlm-01.lab.vdcninja.com"
+    NSX Manager FQDN or IP address to diagnose. Default: "lab-nsxlm-01.test.com"
 
 .PARAMETER RepairCredentials
     Automatically attempt to repair credential issues.
@@ -30,11 +30,11 @@
     Enable verbose diagnostic output.
 
 .EXAMPLE
-    .\NSXConnectionDiagnostics.ps1 -NSXManager "lab-nsxlm-01.lab.vdcninja.com" -RepairCredentials
+    .\NSXConnectionDiagnostics.ps1 -NSXManager "lab-nsxlm-01.test.com" -RepairCredentials
     Diagnose and repair credential issues for the specified NSX Manager.
 
 .EXAMPLE
-    .\NSXConnectionDiagnostics.ps1 -NSXManager "lab-nsxlm-01.lab.vdcninja.com" -ResetSSL -TestNetwork
+    .\NSXConnectionDiagnostics.ps1 -NSXManager "lab-nsxlm-01.test.com" -ResetSSL -TestNetwork
     Run full diagnostic with SSL reset and network tests.
 #>
 
@@ -42,7 +42,7 @@
 param(
   [Parameter(HelpMessage = "NSX Manager FQDN or IP address")]
   [ValidateNotNullOrEmpty()]
-  [string]$NSXManager = "lab-nsxlm-01.lab.vdcninja.com",
+  [string]$NSXManager = "lab-nsxlm-01.test.com",
 
   [Parameter(HelpMessage = "Automatically repair credential issues")]
   [switch]$RepairCredentials,

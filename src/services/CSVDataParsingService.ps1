@@ -545,7 +545,7 @@ class CSVDataParsingService {
       return "generated_" + [System.Guid]::NewGuid().ToString().Substring(0, 8)
     }
 
-    # Create a clean ID from display name by replacing spaces with underscores
+    # Create a ID from display name by replacing spaces with underscores
     $cleanId = $displayName.Trim()
     # Replace spaces with underscores
     $cleanId = $cleanId -replace '\s+', '_'

@@ -11,7 +11,7 @@
 
     SOLID Principles Applied:
     - Single Responsibility: Only handles authentication operations
-    - Interface Segregation: Clean contract without optional parameters
+    - Interface Segregation: contract without optional parameters
     - Dependency Inversion: Abstract interface for concrete implementations
 #>
 

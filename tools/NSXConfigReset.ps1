@@ -35,15 +35,15 @@ Path to save inventory results to JSON file
 Required flag to confirm destructive operations when using -ActualReset
 
 .EXAMPLE
-    .\NSXConfigReset.ps1 -NSXManager "lab-nsxlm-01.lab.vdcninja.com" -InventoryOnly
+    .\NSXConfigReset.ps1 -NSXManager "lab-nsxlm-01.test.com" -InventoryOnly
     Inventory configuration objects without any changes
 
 .EXAMPLE
-    .\NSXConfigReset.ps1 -NSXManager "lab-nsxlm-01.lab.vdcninja.com" -WhatIf Mode -VerboseLogging
+    .\NSXConfigReset.ps1 -NSXManager "lab-nsxlm-01.test.com" -WhatIf Mode -VerboseLogging
     WhatIf Mode reset with verbose logging
 
 .EXAMPLE
-    .\NSXConfigReset.ps1 -NSXManager "lab-nsxlm-01.lab.vdcninja.com" -ActualReset -ConfirmDestruction -NonInteractive
+    .\NSXConfigReset.ps1 -NSXManager "lab-nsxlm-01.test.com" -ActualReset -ConfirmDestruction -NonInteractive
     Perform actual reset with confirmation (destructive operation)
 
 .EXAMPLE

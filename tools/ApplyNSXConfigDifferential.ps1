@@ -96,7 +96,7 @@ if ($Help) {
   Write-Host "PARAMETERS:" -ForegroundColor White
   Write-Host "  -NSXManager      Target NSX Manager FQDN (required)"
   Write-Host "  -ConfigFile      Path to proposed configuration JSON file (required)"
-  Write-Host "  -WhatIf Mode          Perform comparison and generate delta without applying"
+  Write-Host "  -WhatIf Mode     Perform comparison and generate delta without applying"
   Write-Host "  -EnableDeletes   Allow deletion of objects not in proposed config"
   Write-Host "  -VerboseLogging  Enable verbose logging"
   Write-Host "  -Help            Show this help information"

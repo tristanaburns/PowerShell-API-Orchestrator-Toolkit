@@ -363,7 +363,7 @@ class CoreAuthenticationService {
         return $headers
     }
 
-    # Clean up method for proper resource management
+    # up method for proper resource management
     [void] Dispose() {
         if ($this.certificateCallbacks.Count -gt 0) {
             $this.logger.LogInfo("Cleaning up certificate callbacks", "Authentication")

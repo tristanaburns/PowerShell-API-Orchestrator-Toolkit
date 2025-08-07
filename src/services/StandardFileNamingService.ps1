@@ -48,7 +48,7 @@ class StandardFileNamingService {
     }
 
     # Extract hostname only (first part before the first dot)
-    # e.g., "lab-nsxgm-01.lab.vdcninja.com"  "lab-nsxgm-01"
+    # e.g., "lab-nsxgm-01.test.com"  "lab-nsxgm-01"
     $hostname = $name
     if ($name.Contains('.')) {
       $hostname = $name.Split('.')[0]

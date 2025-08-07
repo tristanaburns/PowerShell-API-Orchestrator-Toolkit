@@ -7,11 +7,11 @@
 
 .DESCRIPTION
     Defines the contract for configuration management operations, providing
-    clean abstraction for configuration loading, saving, validation, and manipulation.
+    abstraction for configuration loading, saving, validation, and manipulation.
 
     SOLID Principles Applied:
     - Single Responsibility: Only handles configuration management operations
-    - Interface Segregation: Clean contract for configuration services
+    - Interface Segregation: contract for configuration services
     - Dependency Inversion: Abstract interface for concrete implementations
 #>
 

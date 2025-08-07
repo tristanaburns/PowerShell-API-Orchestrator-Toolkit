@@ -1,10 +1,10 @@
 # APIConnectionTest.ps1 - with Endpoint Discovery
 <#
 .SYNOPSIS
-    diagnostic test for Universal API connections with endpoint discovery and caching.
+    diagnostic test for API connections with endpoint discovery and caching.
 
 .DESCRIPTION
-    Tests connectivity to Universal API endpoints with support for:
+    Tests connectivity to API endpoints with support for:
     - Basic authentication with username/password
     - Current user authentication using Windows/AD credentials
     - OpenAPI endpoint discovery (100+ endpoints)
@@ -15,7 +15,7 @@
 
 .PARAMETER APIEndpoint
     API Endpoint FQDN or IP address to test connectivity against.
-    Default: "lab-api-01.lab.vdcninja.com"
+    Default: "lab-api-01.test.com"
 
 .PARAMETER Username
     Username for basic authentication. Default: "admin"
@@ -66,7 +66,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$false)]
-    [string]$APIEndpoint = "lab-api-01.lab.vdcninja.com",
+    [string]$APIEndpoint = "lab-api-01.test.com",
 
     [Parameter(Mandatory=$false)]
     [string]$Username = "admin",
@@ -93,9 +93,9 @@ param(
     [switch]$Force
 )
 
-# Script header information for Universal API Orchestrator Toolkit
+# Script header information for API Orchestrator Toolkit
 Write-Host "===========================================" -ForegroundColor Green
-Write-Host "Universal API Connection Test Tool" -ForegroundColor Green
+Write-Host "API Connection Test Tool" -ForegroundColor Green
 Write-Host "PowerShell API Orchestrator Toolkit v2.0" -ForegroundColor Green
 Write-Host "===========================================" -ForegroundColor Green
 Write-Host ""
@@ -107,7 +107,7 @@ $global:FrameworkPath = Join-Path $rootPath "src\services\InitServiceFramework.p
 
 try {
     if (Test-Path $FrameworkPath) {
-        Write-Host "Loading Universal API Orchestrator Framework..." -ForegroundColor Yellow
+        Write-Host "Loading API Orchestrator Framework..." -ForegroundColor Yellow
         . $FrameworkPath
         Write-Host "Framework loaded successfully." -ForegroundColor Green
     } else {
@@ -141,7 +141,7 @@ function Test-APIConnection {
     try {
         Write-Host "Testing connection to API endpoint: $endpoint" -ForegroundColor Cyan
         
-        # Create Universal API service instance
+        # Create API service instance
         $apiService = [UniversalAPIService]::new($endpoint, $loggingService, $authService, $configService)
         
         # Test basic connectivity
@@ -213,7 +213,8 @@ try {
     $credential = $null
     if ($UseCurrentUserCredentials) {
         Write-Host "Using current Windows user credentials" -ForegroundColor Yellow
-        $credential = [System.Management.Automation.PSCredential]::new("current_user", (ConvertTo-SecureString "CURRENT_USER_CONTEXT" -AsPlainText -Force))
+        $secureString = [System.Security.SecureString]::new()
+        $credential = [System.Management.Automation.PSCredential]::new("current_user", $secureString)
     } else {
         # Try to get saved credentials first
         try {

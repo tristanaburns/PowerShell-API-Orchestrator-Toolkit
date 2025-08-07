@@ -11,7 +11,7 @@
 
     SOLID Principles Applied:
     - Single Responsibility: Only handles NSX-T API operations
-    - Interface Segregation: Clean contract for API operations
+    - Interface Segregation: contract for API operations
     - Dependency Inversion: Abstract interface for concrete implementations
 #>
 

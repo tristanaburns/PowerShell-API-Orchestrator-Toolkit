@@ -1,5 +1,5 @@
 # AuthenticationFailureRecoveryService.ps1
-# Comprehensive authentication failure recovery system for Universal API Orchestrator
+# Comprehensive authentication failure recovery system for API Orchestrator
 # Handles detection, interactive prompts, auto-detection, secure storage, and retry logic
 
 class AuthenticationFailureRecoveryService {
@@ -439,9 +439,9 @@ class AuthenticationFailureRecoveryService {
                     $this.SaveAuthMetadata($safeUrl, $metadata)
                 }
                 "Custom" {
-                    # For custom headers, serialize as JSON and store as secure string
+                    # For custom headers, serialize as JSON and store as secure string (encrypted with user context)
                     $headersJson = $authDetails.AuthDetails.Headers | ConvertTo-Json
-                    $secureJson = ConvertTo-SecureString -String $headersJson -AsPlainText -Force
+                    $secureJson = $headersJson | ConvertTo-SecureString
                     $credential = [PSCredential]::new("Custom", $secureJson)
                     $metadata = @{
                         Type = "Custom"

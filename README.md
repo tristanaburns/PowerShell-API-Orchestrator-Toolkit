@@ -17,7 +17,7 @@
 .\tools\APIMigrationTool.ps1 -SourceManager "source.domain.com" -TargetManager "target.domain.com"
 ```
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 powershell-api-orchestrator-toolkit/
@@ -33,7 +33,7 @@ powershell-api-orchestrator-toolkit/
 │   └── DiagnoseHTTPSConnection.ps1 # HTTPS troubleshooting
 ├── config/                    # Configuration files
 │   ├── api-config.json           # Base configuration template
-│   ├── api-automation-config.json # Enhanced automation configuration
+│   ├── api-automation-config.json # automation configuration
 │   ├── group-membership-config.json # Group membership operations
 │   ├── credentials/              # Encrypted credential storage (.cred files)
 │   ├── test_configs/             # Test environment configurations
@@ -44,60 +44,9 @@ powershell-api-orchestrator-toolkit/
 └── README.md                  # This file
 ```
 
-## Available Tools
-
-### Core Production Tools
-
-1. **APIConfigSyncTool.ps1** - Configuration synchronization between API endpoints
-   - Compare configurations
-   - Selective patching
-   - Rollback capabilities
-   - Current user authentication support
-
-2. **APIMigrationTool.ps1** - Bulk configuration migration using Universal API
-   - Export/import configurations
-   - Multiple authentication methods
-   - Non-interactive mode for automation
-   - logging
-
-3. **APIConnectionTest.ps1** - API endpoint connectivity testing
-   - Multiple authentication methods
-   - SSL certificate validation testing
-   - Network connectivity verification
-
-4. **ManageAPICredentials.ps1** - Credential management interface
-   - Encrypted credential storage (Windows DPAPI)
-   - View and manage stored credentials
-   - Clear expired credentials
-
-5. **DiagnoseHTTPSConnection.ps1** - HTTPS troubleshooting tool
-   - Test various .NET connection methods
-   - SSL/TLS protocol testing
-   - Certificate validation testing
-
-6. **SimpleAPICredentialTest.ps1** - Real API endpoint testing and credential setup
-   - Setup and test credentials for real API endpoints
-   - Connection validation
-   - Configuration inventory
-
-7. **SetupAPICredentials.ps1** - Enhanced credential setup wizard
-   - Guided credential configuration
-   - Multiple API endpoint support
-   - Validation and testing
-
-8. **QuickValidation.ps1** - Quick environment validation
-   - Validate framework configuration
-   - Test service loading
-   - Environment health checks
-
-9. **VerifyAPIConfig.ps1** - Configuration verification tool
-   - Verify API endpoint configurations
-   - Compare configurations between managers
-   - Generate configuration reports
-
 ### Core Services Architecture
 
-- **AuthenticationService** - Universal API authentication and session management
+- **AuthenticationService** - API authentication and session management
 - **CoreAPIService** - Low-level REST API operations
 - **EnhancedLoggingService** - Structured logging with multiple outputs
 - **ConfigurationService** - Configuration file management

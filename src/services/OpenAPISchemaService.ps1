@@ -1,5 +1,5 @@
 # OpenAPISchemaService.ps1
-# Universal service for retrieving and caching OpenAPI schemas from any OpenAPI-compliant service
+# service for retrieving and caching OpenAPI schemas from any OpenAPI-compliant service
 # Following SOLID principles for schema management and validation
 
 class OpenAPISchemaService {

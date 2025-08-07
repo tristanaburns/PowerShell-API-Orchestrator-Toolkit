@@ -48,7 +48,7 @@
 
 .EXAMPLE
     # CREATE new credentials
-    .\NSXCredentialManager.ps1 -Setup -NSXManager lab-nsxlm-01.lab.vdcninja.com
+    .\NSXCredentialManager.ps1 -Setup -NSXManager lab-nsxlm-01.test.com
 
 .EXAMPLE
     # READ stored credentials
@@ -56,11 +56,11 @@
 
 .EXAMPLE
     # UPDATE existing credentials
-    .\NSXCredentialManager.ps1 -UpdateCredentials -NSXManager lab-nsxlm-01.lab.vdcninja.com
+    .\NSXCredentialManager.ps1 -UpdateCredentials -NSXManager lab-nsxlm-01.test.com
 
 .EXAMPLE
     # DELETE specific credentials
-    .\NSXCredentialManager.ps1 -ClearSpecific lab-nsxlm-01.lab.vdcninja.com
+    .\NSXCredentialManager.ps1 -ClearSpecific lab-nsxlm-01.test.com
 
 .EXAMPLE
     # Interactive mode (shows all options)
@@ -160,7 +160,7 @@ function Show-CRUDHelp {
     Write-Host "CRUD OPERATIONS:" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "CREATE (Setup New Credentials):" -ForegroundColor Green
-    Write-Host "  .\NSXCredentialManager.ps1 -Setup -NSXManager lab-nsxlm-01.lab.vdcninja.com"
+    Write-Host "  .\NSXCredentialManager.ps1 -Setup -NSXManager lab-nsxlm-01.test.com"
     Write-Host "  .\NSXCredentialManager.ps1 -Setup  # Interactive mode"
     Write-Host ""
     Write-Host "READ (List Stored Credentials):" -ForegroundColor Green
@@ -168,15 +168,15 @@ function Show-CRUDHelp {
     Write-Host "  .\NSXCredentialManager.ps1 -ShowInfo  # Detailed info"
     Write-Host ""
     Write-Host "UPDATE (Modify Existing Credentials):" -ForegroundColor Green
-    Write-Host "  .\NSXCredentialManager.ps1 -UpdateCredentials -NSXManager lab-nsxlm-01.lab.vdcninja.com"
+    Write-Host "  .\NSXCredentialManager.ps1 -UpdateCredentials -NSXManager lab-nsxlm-01.test.com"
     Write-Host "  .\NSXCredentialManager.ps1 -UpdateCredentials  # Interactive mode"
     Write-Host ""
     Write-Host "DELETE (Remove Credentials):" -ForegroundColor Green
-    Write-Host "  .\NSXCredentialManager.ps1 -ClearSpecific lab-nsxlm-01.lab.vdcninja.com"
+    Write-Host "  .\NSXCredentialManager.ps1 -ClearSpecific lab-nsxlm-01.test.com"
     Write-Host "  .\NSXCredentialManager.ps1 -ClearAll  # Remove all (with confirmation)"
     Write-Host ""
     Write-Host "TEST (Verify Credentials):" -ForegroundColor Green
-    Write-Host "  .\NSXCredentialManager.ps1 -TestConnection -NSXManager lab-nsxlm-01.lab.vdcninja.com"
+    Write-Host "  .\NSXCredentialManager.ps1 -TestConnection -NSXManager lab-nsxlm-01.test.com"
     Write-Host ""
     Write-Host "INTERACTIVE MODE:" -ForegroundColor Yellow
     Write-Host "  .\NSXCredentialManager.ps1  # Shows menu with all options"

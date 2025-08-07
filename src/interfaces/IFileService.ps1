@@ -7,7 +7,7 @@
 
 .DESCRIPTION
     Defines the contract for file operations, separating from UI concerns and
-    providing clean abstraction for file handling operations.
+    providing abstraction for file handling operations.
 
     SOLID Principles Applied:
     - Single Responsibility: Only handles file operations

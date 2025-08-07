@@ -970,7 +970,6 @@ class NSXConfigValidator {
     }
   }
 
-  # Clean deprecated fields from configuration
   [object] CleanDeprecatedFields([object] $configObject) {
     try {
       $this.logger.LogInfo("Cleaning deprecated fields from configuration", "ConfigValidator")
@@ -999,7 +998,6 @@ class NSXConfigValidator {
       # Fix PolicyContextProfile structure - move app_id to attributes array
       $cleanedJson = $this.FixPolicyContextProfileStructure($cleanedJson)
 
-      # Clean up any double commas or trailing commas that might result
       $cleanedJson = $cleanedJson -replace ',\s*,', ','
       $cleanedJson = $cleanedJson -replace ',\s*}', '}'
       $cleanedJson = $cleanedJson -replace ',\s*]', ']'
@@ -1295,7 +1293,6 @@ class NSXConfigValidator {
         $structureValidation.warnings += "Corrected configuration with hierarchical wrappers saved to: $correctedFileName"
       }
 
-      # Clean deprecated fields BEFORE validation to fix PolicyContextProfile structure
       $this.logger.LogInfo("Cleaning deprecated fields before validation", "ConfigValidator")
       $cleanedConfig = $this.CleanDeprecatedFields($structureValidation.parsed_json)
 

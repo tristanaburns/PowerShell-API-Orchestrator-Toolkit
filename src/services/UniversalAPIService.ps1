@@ -1,13 +1,21 @@
 # UniversalAPIService.ps1
-# Universal API service with hierarchical API support extending CoreAPIService
+# API service with hierarchical API support extending CoreAPIService
 # Generic functionality for any REST API with bulk operations
+
+# Ensure CoreAPIService is defined or imported before this class
+if (-not ('CoreAPIService' -as [type])) {
+    . "$PSScriptRoot\CoreAPIService.ps1"
+    if (-not ('CoreAPIService' -as [type])) {
+        throw "CoreAPIService class could not be loaded. Please ensure CoreAPIService.ps1 defines the class."
+    }
+}
 
 class UniversalAPIService : CoreAPIService {
     [string]$APIEndpoint
 
     UniversalAPIService([string] $apiEndpoint, [object] $loggingService, [object] $authService, [object] $configService) : base($loggingService, $authService, $configService) {
         $this.APIEndpoint = $apiEndpoint
-        $this.logger.LogInfo("Universal API Service initialised with hierarchical support", "UniversalAPI")
+        $this.logger.LogInfo("API Service initialised with hierarchical support", "UniversalAPI")
         $this.logger.LogInfo("API Endpoint: $apiEndpoint", "UniversalAPI")
     }
 

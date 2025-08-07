@@ -25,10 +25,10 @@
             "Tags": {},
             "RetryAttempts": 3,
             "Environment": "Development",
-            "Description": "API Endpoint initialised via Enhanced InitServiceFramework",
+            "Description": "API Endpoint initialised via InitServiceFramework",
             "Timeout": 30000,
             "Enabled": true,
-            "Hostname": "lab-api-01.lab.vdcninja.com"
+            "Hostname": "lab-api-01.test.com"
         }
     },
     "Automation": {
